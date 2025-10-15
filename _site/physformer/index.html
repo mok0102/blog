@@ -1,0 +1,1819 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="AI,rPPG,transformer,temporal difference convolution," />
+
+
+
+
+
+  <link rel="alternate" href="/blog/atom.xml" title="M0kI's bloG" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/blog/assets/profile.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="회사 인턴을 하면서 heart rate estimation을 해야 하는데 쓸만한 걸 못찾아서 잔뜩 스트레스 받고 있다가 찾은 모델이다. 트랜스포머 기반으로 해서 현재 SOTA 모델이다. 2D CNN기반은 거의 사용 못할 결과가 나오고, 대부분의 모델이 rPPG만 predict해서 실제 rPPG로 심박수를 계산해보면 처참한 수준의 결과만 얻을 수 있다. 그런데 이 모델은 rPPG에서 psd로 심박수로 추출하여 loss term에 활용하고 있기 때문에 심박수만 필요한 내 task에서 심박수가 쓸만한 정도로 나온다. 정말 한 줄기 빛의 모델이다.">
+<meta name="keywords" content="AI, rPPG, transformer, temporal difference convolution">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[AI] PhysFormer: Facial Video-based Physiological Measurement with Temporal Difference Transformer">
+<meta property="og:url" content="http://localhost:4000/blog/physformer/">
+<meta property="og:site_name" content="M0kI's bloG">
+<meta property="og:description" content="회사 인턴을 하면서 heart rate estimation을 해야 하는데 쓸만한 걸 못찾아서 잔뜩 스트레스 받고 있다가 찾은 모델이다. 트랜스포머 기반으로 해서 현재 SOTA 모델이다. 2D CNN기반은 거의 사용 못할 결과가 나오고, 대부분의 모델이 rPPG만 predict해서 실제 rPPG로 심박수를 계산해보면 처참한 수준의 결과만 얻을 수 있다. 그런데 이 모델은 rPPG에서 psd로 심박수로 추출하여 loss term에 활용하고 있기 때문에 심박수만 필요한 내 task에서 심박수가 쓸만한 정도로 나온다. 정말 한 줄기 빛의 모델이다.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_1.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_2.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_3.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_4.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_5.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_6.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_7.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_8.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_9.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_10.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_11.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_12.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_13.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_14.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_15.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_16.png?raw=true">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[AI] PhysFormer: Facial Video-based Physiological Measurement with Temporal Difference Transformer">
+<meta name="twitter:description" content="회사 인턴을 하면서 heart rate estimation을 해야 하는데 쓸만한 걸 못찾아서 잔뜩 스트레스 받고 있다가 찾은 모델이다. 트랜스포머 기반으로 해서 현재 SOTA 모델이다. 2D CNN기반은 거의 사용 못할 결과가 나오고, 대부분의 모델이 rPPG만 predict해서 실제 rPPG로 심박수를 계산해보면 처참한 수준의 결과만 얻을 수 있다. 그런데 이 모델은 rPPG에서 psd로 심박수로 추출하여 loss term에 활용하고 있기 때문에 심박수만 필요한 내 task에서 심박수가 쓸만한 정도로 나온다. 정말 한 줄기 빛의 모델이다.">
+<meta name="twitter:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_1.png?raw=true">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/blog"/>
+
+
+
+
+
+  <title>[AI] PhysFormer: Facial Video-based Physiological Measurement with Temporal Difference Transformer | M0kI's bloG</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-298875661', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">M0kI's bloG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">뭐가 올라올지 저도 몰라요</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/physformer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mok">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="assets/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M0kI's bloG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            [AI] PhysFormer: Facial Video-based Physiological Measurement with Temporal Difference Transformer
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-10-28T09:00:00+09:00">
+                2022-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/category/#/AI" itemprop="url" rel="index">
+                    <span itemprop="name">AI</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+                <div class="post-description">
+                    
+                </div>
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <p>회사 인턴을 하면서 heart rate estimation을 해야 하는데 쓸만한 걸 못찾아서 잔뜩 스트레스 받고 있다가 찾은 모델이다. 트랜스포머 기반으로 해서 현재 SOTA 모델이다. 2D CNN기반은 거의 사용 못할 결과가 나오고, 대부분의 모델이 rPPG만 predict해서 실제 rPPG로 심박수를 계산해보면 처참한 수준의 결과만 얻을 수 있다. 그런데 이 모델은 rPPG에서 psd로 심박수로 추출하여 loss term에 활용하고 있기 때문에 심박수만 필요한 내 task에서 심박수가 쓸만한 정도로 나온다. 정말 한 줄기 빛의 모델이다.</p>
+
+<p><a href="https://arxiv.org/abs/2111.12082">논문 링크</a></p>
+
+<h2 id="배경지식-ppg란">배경지식 (ppg란?)</h2>
+<p><a href="https://news.samsungdisplay.com/30140">링크</a></p>
+
+<ul>
+  <li>신체에서 얇은 부분(손끝, 볼, 귀)은 빛이 약간 통과 → 혈액의 흐름 관찰 가능</li>
+  <li>심장이 피를 보내기 위해서 뛸 때 생기는 미세한 변화 : 맥파, Plethysmogram
+    <ul>
+      <li>맥파에 따라 변하는 미세한 혈류량을 조사해서 파악.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>PPG센서에서 피부로 빛을 쏠 때, 혈류량에 따라(심장이 이완 시 혈류량 증가, 수축시 혈류량 감소 ⇒ 심장의 이완, 수축 주기를 알 수 있음 ⇒ 심박수) 흡수되는 빛의 양이 달라지므로 빛이 얼마나 흡수되었는지를 측정하여 혈액량의 변화를 detect</p>
+
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_1.png?raw=true" alt="이미지" /></p>
+
+<ul>
+  <li>심박수 = \(1/PPI*60\)</li>
+  <li>반면 ecg는 심박동과 관련되어 나타나는 전위변화 (전기신호 세기와 간격)</li>
+</ul>
+
+<p><strong>rppg는 remote PPG로, facial video에서 얼굴의 혈류 변화량을 보고 ppg를 예측하는 방식</strong></p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>Electrocardiography(ECG)와 Photoplethysmography(PPG)가 심장 활동을 측정하는 가장 큰 두 방식이다. 그러나 두 방식 모두 몸에 부착되어야 하는 불편함이 있기 때문에 remote Photoplethy-smography(rPPG) 가 떠오르고 있다.</p>
+
+<h3 id="3-stage-module">3 stage module</h3>
+<p>보통의 rppg 연구는 3 stage를 띈다. <a href="https://arxiv.org/pdf/2111.09748v1.pdf">paper</a></p>
+
+<ol>
+  <li>a pre-processing stage, to minimize nuisance variation (face ROI 추출 및 전처리)
+    <ul>
+      <li>detection + skin segmentation and tracking/ landmark</li>
+      <li>얼굴 이미지 추출이 얼마나 잘 되느냐가 rppg의 성능을 좌지우지 해서 초반에는 이쪽이 많이 발전</li>
+    </ul>
+  </li>
+  <li>ppg signal extraction stage
+    <ul>
+      <li>ex. CNN</li>
+    </ul>
+  </li>
+  <li>a heart rate estimation stage from the estimated PPG signal (ppg를 bpm(heart rate)로 바꾸는 단)
+    <ul>
+      <li>peak detection</li>
+      <li>FFT (PSD)</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="가장-기본적인-방식">가장 기본적인 방식</h3>
+
+<ul>
+  <li>analyze subtle color changes on facial regions of interest with classical signal processing approaches</li>
+</ul>
+
+<p>그 다음 color 부분 처리를 통한 feature 맵 변환(color subspace transformation methods, which utilize all skin pixels for rPPG measurement)</p>
+
+<h3 id="위-방식을-바탕으로-roi-preprocess된-feature-map에서-rppg를-추출하는-learning-based-model-등장-non-end-to-end">위 방식을 바탕으로 ROI preprocess된 feature map에서 rppg를 추출하는 learning-based model 등장 (non end-to-end)</h3>
+
+<ul>
+  <li>ROI based preprocessed signal representations(e.g., time-frequency map and spatio-temporal map) are generated first, and then learnable models could capture rPPG features from these maps.</li>
+  <li>그러나 굉장히 strict하게 preprocessing 요구</li>
+</ul>
+
+<h3 id="아예-processing된-feature-map이-아닌-video-자체를-input으로-받는-end-to-end-모델들이-등장">아예 processing된 feature map이 아닌 video 자체를 input으로 받는 end-to-end 모델들이 등장</h3>
+
+<ul>
+  <li>treat facial video frames as input and predict rPPG and other physiological signals directly</li>
+  <li>그러나
+    <ul>
+      <li>전처리단이 사라졌으므로 complex scenarios(e.g, head movement)에서 무너져내리는 경향이 있음</li>
+      <li>rPPG-unrelated feature가 학습에 주 부분을 차지할 가능성 → large performance decrease in realistic dataset</li>
+      <li>전처리단에서 정제+증폭해줬던 부분이 없으므로 ppg추출 단이 훨씬 어려운 task로 바뀜</li>
+    </ul>
+  </li>
+</ul>
+
+<p>ppg → Heart rate</p>
+
+<ul>
+  <li>
+    <p>보통 모델 output이 ppg 추출에서 끝나는 모델이 많다</p>
+
+    <p>→ heart rate 변환 시 noise 제거 등 signal processing이 또 필요할 수도 있음</p>
+  </li>
+  <li>dl based이 아닌 traditional 방법론을 사용
+    <ul>
+      <li>fft(PSD), peak detection</li>
+    </ul>
+  </li>
+  <li>그래프 개형이 비슷한 것(mse)과 주기(bpm=heart rate)가 비슷한 것은 다르다고 생각!
+    <ul>
+      <li>heart rate를 loss term에 사용하지 않는 이상 ppg 그래프보다도 heart rate가 실제와 많이 다른 경우가 존재</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="transformer의-사용">Transformer의 사용</h3>
+
+<ul>
+  <li>rppg에서도 CNN based 모델이 대거 등장</li>
+  <li>NLP, image / video analysis에서도 성공적으로 작동했으므로 rppg에서도 적용할 수 있을 것
+    <ul>
+      <li>기존과 다른 점은, subtle한 픽셀 변화에 의존하기 때문에 global spatio-temporal perception이 challenging</li>
+      <li>the long-range spatio-temporal attention이 필요</li>
+    </ul>
+  </li>
+  <li>rPPG measurement from facial videos can be treated as a video sequence to signal sequence problem
+    <ul>
+      <li>LONG RANGE contextual clues should be exploited for semantic modeling</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="contribution">Contribution</h3>
+
+<ul>
+  <li>powerful video temporal difference transformer backbone으로 이루어진 physformer 모델의 제안
+    <ul>
+      <li>long-range spatio-temporal relationship을 고려한 첫 rppg model</li>
+    </ul>
+  </li>
+  <li>PhysFormer의 supervise 방법론들 제안
+    <ul>
+      <li>label distribution learning</li>
+      <li>curriculum learning guided dynamic loss in frequency domain</li>
+    </ul>
+  </li>
+  <li>pretrain 없이 SOTA 달성</li>
+</ul>
+
+<h1 id="related-works">Related Works</h1>
+
+<h2 id="remote-physiological-measurement">Remote physiological measurement</h2>
+
+<h3 id="plenty-of-traditional-hand-crafted-approaches">Plenty of traditional hand-crafted approaches</h3>
+
+<p>Face input에서 feature map 추출 단:</p>
+<ul>
+  <li>Selective merging information from different color channels / different ROIs</li>
+</ul>
+
+<p>feature map에서 rppg 추출 단:</p>
+<ul>
+  <li>to improve signal-to-noise ratio of the recovered rPPG signals, several signal decomposition methods such as independent component analysis(ICA), and matrix completion이 제안</li>
+</ul>
+
+<h3 id="learning-based-approach의-등장">Learning based approach의 등장</h3>
+
+<ul>
+  <li>
+    <p>deep learning based approaches dominate the field of rPPG measurement due to the strong spatio-temporal representation capabilities.</p>
+  </li>
+  <li><strong>not end-to-end (facial ROI 전처리단 + rppg 추출단)</strong>
+    <ul>
+      <li>facial ROI based spatial-temporal signal map 생성 단:
+        <ul>
+          <li>alleviate the interference from non-skin regions</li>
+          <li>ROI 전처리가 꽤 많은 비중을 차지</li>
+          <li>ROI 바깥 부분을 전혀 고려하지 못함(배경 밝기 변화 같은)</li>
+        </ul>
+      </li>
+      <li>map들에서 feature를 잡아내는 rppg단 (2D-CNN)
+        <ul>
+          <li>실시간성에는 좋음</li>
+        </ul>
+      </li>
+      <li>따라서 spatial-temporal 정보들을 고려하기가 힘듬</li>
+    </ul>
+  </li>
+  <li><strong>end-to-end</strong>
+    <ul>
+      <li>
+        <p>인접한 프레임만 고려하고 long range relationship의 주기적인 정보는 고려하지 않음</p>
+
+        <p>(previous methods only consider the spatio-temporal rPPG features from adjacent frames and neglect the long-range relationship among quasi-periodic rPPG features)</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="transformer-for-vision-tasks">Transformer for vision tasks</h2>
+
+<blockquote>
+  <p>Most of these works are incompatible for long-video-sequence (over 150 frames)</p>
+
+</blockquote>
+
+<p>rppg in vision transformer</p>
+
+<ul>
+  <li>trans-rppg
+    <ul>
+      <li>extracts rPPG features from the preprocessed signal maps via ViT for face 3D mask presentation attack detection</li>
+    </ul>
+  </li>
+  <li>efficientphys (temporal shift networks)
+    <ul>
+      <li>Based on the temporal shift networks, efficientphys adds several swin transformer layers for global spatial attention</li>
+    </ul>
+  </li>
+</ul>
+
+<p>위 두 모델은 non-end-to-end모델 (feature map에서 rppg 추출 단)</p>
+
+<h1 id="materials-and-methods">Materials and Methods</h1>
+
+<h2 id="physformer-architecture">PhysFormer Architecture.</h2>
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_2.png?raw=true" alt="이미지" /></p>
+
+<h3 id="shallow-stem">Shallow stem</h3>
+<ul>
+  <li>Video를 바로 patch로 쪼개서 multi head self attention에 넣는 것이 아니라 얇은 stem을 한번 거친 output을 patch로 쪼개서 MHSA에 넣음
+    <ul>
+      <li>coarse한 local spatio-temporal feature 추출에 도움</li>
+      <li>benefits the fast convergence and clearer subsequent global self-attention</li>
+    </ul>
+  </li>
+  <li>3개의 convolution blocks이루어져 있다 (커널 사이즈: 1x5x5, 3x3x3, 3x3x3)</li>
+  <li>각 convolution에 Batch Normalization, ReLU, MaxPool을 순차적으로 사용</li>
+  <li>Pooling layer가 spational dimension을 반으로 나누므로
+    <ul>
+      <li>Facial video input size가 3xTxHxW 일때 shallow stem output size는 D x T x H/8 x W/8</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="tube-tokenization">Tube tokenization</h3>
+
+<ul>
+  <li>이 shallow stem의 output이 N개의 tube token으로 나뉘어지고, 이렇게 나뉘어진 tube token들이 N개의 temporal transformer block으로 들어가고, global-local refined rPPG 피처인 X_trans을 얻을 수 있다. (X_tube와 동일한 dimension)</li>
+  <li>stem에서 나온 output을 X_stem이라고 할때, X_stem을 non-overlapping한 tube token들로 나뉘어진다.</li>
+  <li>stem이 있으므로 position embedding과정을 따로 진행해주지 않았다.</li>
+</ul>
+
+<h3 id="temporal-difference-multi-head-self-attention">Temporal difference multi-head self-attention</h3>
+<ul>
+  <li>AutoHR 논문에서 등장한 temporal difference convolution 개념</li>
+  <li>기존의 self attention은 Query, Key, Value를 단순히 matmul 해주는 형태(1x1 conv)</li>
+  <li>matmul (point-wise linear projection) 하는 대신 Temporal difference convolution을 사용
+    <ul>
+      <li>동영상의 밝기와 같은 값들을 인접한 프레임끼리 빼줌으로써 무시 가능
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_3.png?raw=true" alt="이미지" /></li>
+    </ul>
+  </li>
+  <li>TDC with learnable w</li>
+</ul>
+
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_4.png?raw=true" alt="이미지" /></p>
+
+<p>p0 : current spatio-temporal location, R : sampled local (3x3x3) neighborhood, R’ : sampled adjacent neighborhood</p>
+
+<ul>
+  <li>
+    <p>temporal difference convolution을 Q(query)/K(key)의 projection에 사용.</p>
+
+    <p>⇒ 미묘한 색 변화 감지를 위해 미세 특징을 포착할 수 있음 (can capture fine-grained local temporal difference features for subtle color change description)</p>
+  </li>
+</ul>
+
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_5.png?raw=true" alt="이미지" /></p>
+
+<ul>
+  <li>V(value) projection 때에는 temporal difference convolution projection을 사용하지 않고 기존의 point-wise linear projection을 사용</li>
+</ul>
+
+<p>i번째 head의 self-attention:
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_6.png?raw=true" alt="Untitled" /></p>
+
+<ul>
+  <li>기존의 self-attention식처럼 τ =√Dh_i를 사용한 것이 rppg에서 효과가 좋지 못했으므로, 더 작은 τ를 사용해 sharper attention activation을 진행. (변수로 받아서 진행)</li>
+  <li>여기에 residual connection, layer normalization이 마지막으로 진행된다.</li>
+</ul>
+
+<h3 id="spatio-temporal-feed-forward">Spatio-temporal feed-forward</h3>
+
+<ul>
+  <li>
+    <p>TD-MHSA의 output이 피드포워드 NN의 input
+FFNN(x) = MAX(0, xW1+b1)*W2+b2 (두개의 linear 층)</p>
+  </li>
+  <li>vanilla feed-forward network
+    <ul>
+      <li>두개의 linear transformation layer로 구성</li>
+      <li>두 레이어 사이에서 더 많은 feature 표현을 위해서 hidden dimension이 확장됨 (the hidden dimension D’ between two layers is expanded to learn a richer feature representation)</li>
+      <li>temporal한 정보 고려가 힘듬</li>
+    </ul>
+  </li>
+  <li>depthwise 3D convolution(with BN and nonlinear activation)을 이 두 레이어 사이에 사용
+    <ul>
+      <li>ST-FF가 local inconsistency와 parts of noisy features를 다듬어 줄 수 있다고 제안</li>
+      <li>richer locality는 TD-MHSA에게 충분한 relative position 신호를 제공</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="label-distribution-learning">Label Distribution Learning</h2>
+
+<p>Facial age estimation task에서, 나이 차이가 적을수록 얼굴이 비슷해보이는 점을 이용</p>
+
+<p>⇒ Facial rPPG signals with close HR values usually have similar periodicity.</p>
+
+<ul>
+  <li>하나의 얼굴 video에 대한 output이 하나의 label(HR)이기보다는, label distribution을 이용해 output이 여러 개의 HR value label에 대한 distribution으로 표현되도록 함.
+    <ul>
+      <li>label distribution은 HR의 특정 범위(42, 180)을 포함하고, output은 각 label들이 얼마나 유력한지에 대한 정도를 표현함.</li>
+      <li>Through this way, one facial video can contribute to both targeted HR value and its adjacent HRs.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>💡 rPPG-based HR estimation problem을 specific L-classes multi-label classification problem으로 정의했다. (L=139, 42 to 180)</p>
+
+<h3 id="gt-label을-어떻게-label-distribution으로-만들었는가">GT label을 어떻게 label distribution으로 만들었는가?</h3>
+
+<ul>
+  <li>각 label의 entry p는 [0,1] 사이의 real value이고, 모든 label의 p 합은 1이 되도록 했다. (확률)</li>
+  <li>Gaussian distribution function을 이용
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_7.png?raw=true" alt="이미지" /></li>
+  <li>
+    <p>오히려 real distribution을 사용했을 때보다 gaussian distribution을 사용했을 때 더 성능이 괜찮았다!</p>
+  </li>
+  <li>결국 loss function은 L_LD = KL(p, Softmax(ˆp)) 나타낼 수 있다. KL은 Kullback-Leibler divergence이고, p hat은 power spectral density(PSD) of predicted rPPG signals. ⇒ rppg에서 HR 추출을 어떻게 했는지를 알려주고 있음
+    <ul>
+      <li>Kullback-Leibler divergence - 두 확률분포의 차이를 계산하는데 사용하는 함수 (정보 엔트로피 차이를 계산)</li>
+      <li>Power Spectral density(PSD)
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_8.png?raw=true" alt="이미지" /></li>
+    </ul>
+  </li>
+</ul>
+
+<p>이전에도 label distribution을 이용한 사례(A robust rppg approach with distribution learning)가 있었지만, 우리와 차이점은</p>
+
+<ol>
+  <li>이전에 이 방식을 사용한 이유는 frame마다의 얼굴 움직임에 대해 temporal HR outliers를 smoothen하는 것이지만, 우리는 adjacent label간의 efficient feature를 배우도록 하기 위해 진행하였다.</li>
+  <li>이전 연구에서는 hand-crafted rppg signal 추출 이후에 HR-estimation를 위한 post HR estimation이지만, 우리는 딥러닝 단에서 적용하였다.</li>
+</ol>
+
+<h2 id="curriculum-learning-guided-dynamic-loss">Curriculum Learning Guided Dynamic Loss</h2>
+
+<ul>
+  <li>Curriculum Learning - 쉬운 task부터 학습</li>
+</ul>
+
+<h3 id="temporal-domain-loss">temporal domain loss</h3>
+<ul>
+  <li>mean square error loss, negative Pearson loss
+    <ul>
+      <li>negative Pearson correlation : maximize the trend similarity and minimize peak location errors (Remote Photoplethysmograph Signal Measurement from Facial Videos Using Spatio-Temporal Networks에서 등장한 loss)</li>
+    </ul>
+  </li>
+  <li>signal-trend-level constraints을 주므로 금방 학습 → 쉬운 overfitting</li>
+</ul>
+
+<h3 id="frequency-domain-loss">frequency domain loss</h3>
+<ul>
+  <li>cross-entropy loss, signal to noise ratio loss</li>
+  <li>target frequency bands에서 주기적인 피처들을 학습해야 함</li>
+  <li>realistic한 rPPG-irrelevant 노이즈 때문에 주파수단의 강한 constraints</li>
+</ul>
+
+<p>이게 중요하다. frequency domain loss가 심박수를 loss term으로 활용할 거라는 말이기 때문에 rPPG prediction에서만 잘 작동하는 것이 아니라 heart rate estimation에서도 잘 작동할 수 있게 된다.</p>
+
+<p>또한, <strong>dynamic supervision to gradually enlarge the frequency constraints</strong>를 제안.
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_9.png?raw=true" alt="이미지" />
+linear increment strategy/exponential increment strategy 중 exponential strategy를 적용 (alpha = 0.1, beta_0 = 1.0, n = 5.0)</p>
+
+<ul>
+  <li>pretrain을 사용하면 HR로만으로도 학습 가능할 수도 있을 것 같다!! 지금 가지고 있는 rPPG 데이터가 없어서 한 줄기 빛이 된다.</li>
+</ul>
+
+<h1 id="results">Results</h1>
+
+<p>세개의 physiological signal에 대해 진행 :</p>
+
+<p>heart rate(HR), heart rate variability(HRV), respiration frequency(RF)</p>
+
+<h3 id="사용한-데이터셋">사용한 데이터셋</h3>
+
+<h3 id="vipl-hr">VIPL-HR</h3>
+
+<ul>
+  <li>large-scale dataset for remote physiological measurement under less-constrained scenarios
+    <ul>
+      <li>head movement, illumination을 포함</li>
+    </ul>
+  </li>
+  <li>2378 RGB videos of 107 subjects recorded with different head movements, lighting conditions and acquisition devices</li>
+</ul>
+
+<h3 id="mahnob-hci">MAHNOB-HCI</h3>
+
+<ul>
+  <li>one of the most widely used benchmark for remote HR measurement evaluations</li>
+  <li>527 facial videos with 61 fps from 27 subjects</li>
+</ul>
+
+<h3 id="mmse-hr">MMSE-HR</h3>
+
+<ul>
+  <li>102 RGB videos from 40 subjects</li>
+</ul>
+
+<h3 id="obf">OBF</h3>
+
+<ul>
+  <li>high-quality dataset for remote physiological signal emeasurement</li>
+  <li>200 5 min ong RGB videos with 60 fps recorded from 100 healthy adults</li>
+</ul>
+
+<hr />
+
+<ul>
+  <li>mean HR estimation은 위의 네개 데이터셋에서 진행</li>
+  <li>HRV, RF estimation은 OBF에서만 진행
+    <ul>
+      <li>follow existing methods, and report low frequency(LF), high frequency(HF), and LF/HF ratio for HRV and RF estimation</li>
+    </ul>
+  </li>
+  <li>SD, MAE, RMSE, pcc(peason’s correlation coefficient)</li>
+</ul>
+
+<h3 id="implementation-details">Implementation Details</h3>
+
+<ul>
+  <li>MTCNN face detector을 이용하여 첫번째 프레임의 enlarged face area를 crop, 이후 frame들도 이 region으로 fix</li>
+  <li>MAHNOB-HCI, OBF는 fps=30으로 내렸음</li>
+  <li>Physformer 세팅 :
+    <ul>
+      <li>N=12, h=4, D=96, D’=144,</li>
+      <li>TD-MHSA : θ=0.7 (for TDC), τ=2.0</li>
+      <li>tube size T_s x H_s x W_s = 4x4x4</li>
+    </ul>
+  </li>
+  <li>train시에 randomly sample RGB face clips with size 160x128x128(TxHxW)</li>
+  <li>Random horizontal flipping and temporally up/down-sampling for data augmentation</li>
+  <li>Adam optimizer</li>
+  <li>lr = 1e-4, weight decay = 5e-5</li>
+  <li>batch size=4</li>
+  <li>25 epoch으로
+    <ul>
+      <li>alpha=0.1 for temporal loss,</li>
+      <li>exponentially increased parameter beta=[1,5] for frequency loss.</li>
+    </ul>
+  </li>
+  <li>σ=1.0 for label distriution learning (gaussian distribution)</li>
+  <li>testing : seperate 30-second videos into three short clips with 10 seconds, and video-level HR is calculated via averaging HR from three short clips</li>
+</ul>
+
+<h3 id="intra-dataset-testing">Intra-dataset Testing</h3>
+
+<h3 id="hr-estimation-on-vipl-hr">HR estimation on VIPL-HR</h3>
+
+<ul>
+  <li>traditional methods(Tulyakov2016, POS, CHROM) perform poorly due to the complex scenarios</li>
+  <li>end-to-end learning based methods(PhysNet, DeepPhys, AutoHR) predict unreliable HR values with large RMSE compared with non-end-to-end learning approaches(PhythmNet, ST-Attention, NAS-HR, CVD, Dual-GAN)</li>
+  <li>all five non-end-to-end methods first extract fine-grained signal maps from multiple facial ROIs, and then more dedicated rPPG clues would be extracted via the cascaded models.</li>
+  <li>Physformer는 pretrain 없이도 좋은 결과를 낸다!</li>
+</ul>
+
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_10.png?raw=true" alt="이미지" /></p>
+
+<h3 id="hr-estimation-on-mahnob-hci">HR estimation on MAHNOB-HCI</h3>
+<ul>
+  <li>finetune the VIPL-HR pretrained model on MAHNOB-HCI for further 15 epoc
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_11.png?raw=true" alt="이미지" /></li>
+</ul>
+
+<h3 id="hr-hrv-and-rf-estimation-on-obf">HR, HRV and RF estimation on OBF</h3>
+<p>Physformer also gives more accurate estimation in terms of HR, RF, and LF/HF compared with the preprocessed signal map based non-end-to-end learning method CVD.
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_12.png?raw=true" alt="이미지" /></p>
+
+<h3 id="cross-dataset-testing">Cross-dataset Testing</h3>
+
+<ul>
+  <li>VIPL에 train 후 MMSE-HR에 finetune 하지 않고 바로 testing</li>
+  <li>SOTA 달성
+    <ol>
+      <li>The predicted HRs are highly correlated with the ground truth HRs</li>
+      <li>The model learns domain invariant intrinsic rPPG-aware features.</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="ablation-study">Ablation Study</h2>
+
+<p><strong>Impact of tube tokenization</strong>
+four tokenization configuration 유무
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_13.png?raw=true" alt="이미지" /></p>
+<ul>
+  <li>stem을 사용했을 때가 더 결과가 좋았음</li>
+  <li>input resolution을 내릴수록 결과가 안좋아짐</li>
+</ul>
+
+<p><strong>Impact of TD-MHSA and ST-FF</strong>
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_14.png?raw=true" alt="이미지" /></p>
+
+<ul>
+  <li>Spatio-temporal attention 없을 때 performance degrades sharply</li>
+  <li>τ가 MHSA에 영향을 많이 준다 ⇒ ViT처럼 타우를 사용하면 성능 drop</li>
+  <li>ViT보다 τ를 작게 잡았을 때(sharp) 성능이 더 향상 되었다.</li>
+</ul>
+
+<p><strong>Impact of label distribution learning</strong>
+<strong>Impact of dynamic supervision</strong>
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_15.png?raw=true" alt="이미지" /></p>
+<ul>
+  <li>Temporal loss와 frequency cross-entropy loss에서, frequency loss쪽이 label distribution</li>
+  <li>label distribution을 exponential strategy로 사용했을 때 가장 결과가 좋음</li>
+  <li>label distribution을 아예 사용하지 않았을 때는, exponential strategy를 적용해도 결과가 좋지 않았음
+    <ul>
+      <li>It is interesting to find from the last two rows that using real PSD distribution from ground truth PPG signals as p, the performance is inferior due to the lack of an obvious peak and partial noise. (real PSD distribution보다 가우시안 distribution이 더 좋았다)</li>
+    </ul>
+  </li>
+  <li>Fold-1 VIPL-HR로 fixed/dynamic supervision을 실험하였을 때
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_16.png?raw=true" alt="이미지" /></li>
+</ul>
+
+<p><strong>Impact of theta and layer/head numbers</strong></p>
+
+<p>Physformer could achieve smaller RMSE when theta=0.4 and 0.7, indicating the importance of the normalized local temporal difference features for global spatio-temporal attention.</p>
+
+<p>With deeper temporal transformer blocks, the RMSE are reduced progressively despite heavier computational cost.</p>
+
+<p>In terms of the impact of head numbers, it is clear to find that PhysFormer with four heads perform the best while fewer heads lead to sharp performance drops.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<ul>
+  <li>rppg를 위한 End-to-end video transformer architecture를 만듬</li>
+  <li>
+    <p>Temporal difference transformer를 사용한 성능 향상</p>
+  </li>
+  <li>더 효율적인 architecture
+    <ul>
+      <li>모바일에서는 사용하기 어려운 parameter 수</li>
+    </ul>
+  </li>
+  <li>More accurate yet efficient spatio-temporal self-attention mechanism for long sequence rPPG monitoring</li>
+</ul>
+
+<p>rPPG라는 게 얼굴에서 사람의 눈으로 감지하기 어려운 혈색의 변화를 감지해서 ppg 그래프를 그려야 하는 문제이기 때문에, 이게 진짜 가능한거냐라고 말하는 사람들도 있고 나도 어느 정도는 동감한다. 그래서 많은 rPPG 추출 모델들이 이 subtle한 혈색 변화를 증폭시킬 수 있는 모듈을 사용하는데 여기서는 그게 TDC였던 거다.</p>
+
+<p>그런데 직접 physformer 실험을 해보면 30fps에서는 잘 작동하더라도 frame interpolation으로 fps를 바꿔줬을 때 잘 작동하지 않는다. 이게 모델이 30 fps에서만 주로 학습이 되어서 일수도 있지만, 내가 생각하기에는 모델이 프레임 간의 차이(temporal difference)를 보고 있다기보다 그 순간의 혈색이 얼마나 붉은지를 보는, temporal 정보를 고려하고 있지 않을 수도 있는 것 같다. 사람 혈색이 얼마나 빠르게 주기적으로 변하냐보다도, 특정 프레임에서 사람 얼굴이 붉으면 이 사람이 운동 중이라고 생각하고 높은 심박수를 뱉는 경향성이 있다. 그래서 인종에 대한 bias도 많이 걸리고, 아무튼 참 어려운 문제이다.</p>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/blog/tag/#/AI" rel="tag"># AI</a>
+          
+            
+            <a href="/blog/tag/#/rPPG" rel="tag"># rPPG</a>
+          
+            
+            <a href="/blog/tag/#/transformer" rel="tag"># transformer</a>
+          
+            
+            <a href="/blog/tag/#/temporal%20difference%20convolution" rel="tag"># temporal difference convolution</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/MAR-beta-cycleGAN/" rel="next" title="[MAR] Unsupervised CT Metal Artifact Learning Attention-guided β-CycleGAN">
+                <i class="fa fa-chevron-left"></i> [MAR] Unsupervised CT Metal Artifact Learning Attention-guided β-CycleGAN
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/10775-%EA%B3%B5%ED%95%AD/" rel="prev" title="[백준] 10775 공항">
+                [백준] 10775 공항 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/assets/images/avatar.gif"
+               alt="Mok" />
+          <p class="site-author-name" itemprop="name">Mok</p>
+           
+              <p class="site-description motion-element" itemprop="description">My blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/blog/archives/">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags/">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/blog/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-1"> <a class="nav-link" href="#introduction"> <span class="nav-number">1</span> <span class="nav-text">Introduction</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#3-stage-module"> <span class="nav-number">1.1</span> <span class="nav-text">3 stage module</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#가장-기본적인-방식"> <span class="nav-number">1.2</span> <span class="nav-text">가장 기본적인 방식</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#위-방식을-바탕으로-roi-preprocess된-feature-map에서-rppg를-추출하는-learning-based-model-등장-non-end-to-end"> <span class="nav-number">1.3</span> <span class="nav-text">위 방식을 바탕으로 ROI preprocess된 feature map에서 rppg를 추출하는 learning-based model 등장 (non end-to-end)</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#아예-processing된-feature-map이-아닌-video-자체를-input으로-받는-end-to-end-모델들이-등장"> <span class="nav-number">1.4</span> <span class="nav-text">아예 processing된 feature map이 아닌 video 자체를 input으로 받는 end-to-end 모델들이 등장</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#transformer의-사용"> <span class="nav-number">1.5</span> <span class="nav-text">Transformer의 사용</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#contribution"> <span class="nav-number">1.6</span> <span class="nav-text">Contribution</span> </a> </li> </ol> </li> <li class="nav-item nav-level-1"> <a class="nav-link" href="#related-works"> <span class="nav-number">2</span> <span class="nav-text">Related Works</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-2"> <a class="nav-link" href="#remote-physiological-measurement"> <span class="nav-number">2.1</span> <span class="nav-text">Remote physiological measurement</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#plenty-of-traditional-hand-crafted-approaches"> <span class="nav-number">2.1.1</span> <span class="nav-text">Plenty of traditional hand-crafted approaches</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#learning-based-approach의-등장"> <span class="nav-number">2.1.2</span> <span class="nav-text">Learning based approach의 등장</span> </a> </li> </ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#transformer-for-vision-tasks"> <span class="nav-number">2.2</span> <span class="nav-text">Transformer for vision tasks</span> </a> </li> </ol> </li> <li class="nav-item nav-level-1"> <a class="nav-link" href="#materials-and-methods"> <span class="nav-number">3</span> <span class="nav-text">Materials and Methods</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-2"> <a class="nav-link" href="#physformer-architecture"> <span class="nav-number">3.1</span> <span class="nav-text">PhysFormer Architecture.</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#shallow-stem"> <span class="nav-number">3.1.1</span> <span class="nav-text">Shallow stem</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#tube-tokenization"> <span class="nav-number">3.1.2</span> <span class="nav-text">Tube tokenization</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#temporal-difference-multi-head-self-attention"> <span class="nav-number">3.1.3</span> <span class="nav-text">Temporal difference multi-head self-attention</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#spatio-temporal-feed-forward"> <span class="nav-number">3.1.4</span> <span class="nav-text">Spatio-temporal feed-forward</span> </a> </li> </ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#label-distribution-learning"> <span class="nav-number">3.2</span> <span class="nav-text">Label Distribution Learning</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#gt-label을-어떻게-label-distribution으로-만들었는가"> <span class="nav-number">3.2.1</span> <span class="nav-text">GT label을 어떻게 label distribution으로 만들었는가?</span> </a> </li> </ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#curriculum-learning-guided-dynamic-loss"> <span class="nav-number">3.3</span> <span class="nav-text">Curriculum Learning Guided Dynamic Loss</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#temporal-domain-loss"> <span class="nav-number">3.3.1</span> <span class="nav-text">temporal domain loss</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#frequency-domain-loss"> <span class="nav-number">3.3.2</span> <span class="nav-text">frequency domain loss</span> </a> </li> </ol> </li> </ol> </li> <li class="nav-item nav-level-1"> <a class="nav-link" href="#results"> <span class="nav-number">4</span> <span class="nav-text">Results</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-2"> <a class="nav-link" href="#ablation-study"> <span class="nav-number">4.1</span> <span class="nav-text">Ablation Study</span> </a> </li> </ol> </li> <li class="nav-item nav-level-1"> <a class="nav-link" href="#conclusion"> <span class="nav-number">5</span> <span class="nav-text">Conclusion</span> </a> </li>
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mok</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://jekyllrb.com">Jekyll</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/blog/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/blog/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/blog/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+
+
+  
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <div>
+    <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fmok0102.github.io%2Fhit-counter&count_bg=%233D8CC8&title_bg=%23555555&icon=kickstarter.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
+  </div>
+  <div></div>
+</body>
+</html>
+

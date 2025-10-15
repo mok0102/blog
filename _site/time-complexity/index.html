@@ -1,0 +1,1346 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CS,algorithm,시간복잡도,time complexity,코딩 테스트 합격자 되기," />
+
+
+
+
+
+  <link rel="alternate" href="/blog/atom.xml" title="M0kI's bloG" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/blog/assets/profile.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다! 코딩 테스트 합격자 되기 - 파이썬 편">
+<meta name="keywords" content="CS, algorithm, 시간복잡도, time complexity, 코딩 테스트 합격자 되기">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[알고리즘/코테 합격자 되기] 시간복잡도/문법">
+<meta property="og:url" content="http://localhost:4000/blog/time-complexity/">
+<meta property="og:site_name" content="M0kI's bloG">
+<meta property="og:description" content="**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다! 코딩 테스트 합격자 되기 - 파이썬 편">
+<meta property="og:locale" content="en">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[알고리즘/코테 합격자 되기] 시간복잡도/문법">
+<meta name="twitter:description" content="**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다! 코딩 테스트 합격자 되기 - 파이썬 편">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/blog"/>
+
+
+
+
+
+  <title>[알고리즘/코테 합격자 되기] 시간복잡도/문법 | M0kI's bloG</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-298875661', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">M0kI's bloG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">뭐가 올라올지 저도 몰라요</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/time-complexity/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mok">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="assets/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M0kI's bloG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            [알고리즘/코테 합격자 되기] 시간복잡도/문법
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2023-10-24T00:00:00+09:00">
+                2023-10-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/category/#/CS" itemprop="url" rel="index">
+                    <span itemprop="name">CS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+                <div class="post-description">
+                    
+                </div>
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <p>**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다!
+<a href="https://wikidocs.net/222560">코딩 테스트 합격자 되기 - 파이썬 편</a></p>
+
+<h2 id="시간복잡도">시간복잡도</h2>
+<p>보통 시간복잡도와 공간복잡도는 알고리즘의 성능을 나타내는 지표로써 쓰인다. 이때 공간복잡도보다도 시간복잡도가 주로 고려되야 할 사항인 것 같다.</p>
+
+<p>시간복잡도는 보통 연산 횟수와 관련이 있어서, 나는 1번 연산이 들어갈 때 (변수에 값 할당, 또는 연산) 시간복잡도가 1이 늘어난다고 생각하며 계산한다. 따라서 내가 짠 코드에서 최대 n번 연산이 들어갈 때 시간복잡도를 O(n)이라고 표현한다. (빅오 표기법)</p>
+
+<p>보통은 시간복잡도를 최악의 상황에서 도는 빅오 표기법을 사용하지만, 빅-세타 표기법(평균적인 경우)과 빅-오메가 표기법(최선의 경우) 또한 존재한다. 이것은 시간복잡도 계산 방식 자체는 비슷하고, 최선의 경우와 평균 경우를 고려하여 시간복잡도를 계산하면 된다.</p>
+
+<h3 id="빅오-표기법">빅오 표기법</h3>
+<p>빅오 표기법은 최악의 상황을 고려하기 때문에 계산이 간결해지는 경향이 있다. 만약 시간복잡도가 O(1n^2+2n-1)이라면 이 시간복잡도는 O(n^2)과 동일하다. 빅오는 최악의 상황을 고려하기 때문에, n이 무한히 커지는 상황(최악의 상황)을 고려한다. 따라서 무한히 커지는 n이 있을 때, 최고차항만 남기고 나머지 차수는 버려도 되는 것이다.</p>
+
+<p>이는 아래 빅오 표기법의 수식을 보면 알 수 있다.</p>
+
+<p><strong>특정 x 시점 이후부터 항상 \(f(x) ≤ C * g(x)\)를 만족</strong></p>
+
+<p><strong>C는 상수</strong></p>
+
+<p>따라서 \(n^2+2n-1&lt;=C*n^2\)가 특정 n에서 만족되기 때문에 (여기서는 n=1부터 만족된다) 시간복잡도를 단순히 O(n^2)이라고 표현할 수 있다.</p>
+
+<!-- ![이미지](https://wikidocs.net/images/page/222560/03-1-4.png)
+1. there exists x such that $$3x^2+5x+6<=C*(x^2)$$, c is constant
+이므로 어떤 x를 찾기만 하면 된다. 이때 C가 4, x가 5 이상이면 항상 이 조건을 만족한다. ($$(x-5)(x+1)$$)
+
+2. $$x+logx<=C*(x)$$ 인 x, C
+C가 2이고 -->
+
+<hr />
+
+<h2 id="코딩-테스트-필수-문법">코딩 테스트 필수 문법</h2>
+
+<h3 id="빌트인-데이터-타입">빌트인 데이터 타입</h3>
+<p>정수형(int), 부동소수형(float), 문자열 타입이 있음.
+산술연산, 비교연산, 비트연산, 논리연산이 모두 가능함.
+심지어 c에서는 math.h include 해야 가능한 abs도 가능함.</p>
+
+<p>부동소수형에서는 엡실론을 주의해야함. 부동소수를 이진법으로 표현하는 과정에서 오차가 발생하기 때문인데, 이 오차 때문에 문제 통과를 못하는 경우도 있으므로 주의해야 한다.</p>
+
+<h3 id="컬렉션-데이터-타입">컬렉션 데이터 타입</h3>
+<p>리스트(list), 튜플(tuple), 딕셔너리(dictionary), 셋(set), 문자열(string) 등이 있음.
+특히 나는 리스트에서 중복 원소 제거할 때 for문 돌면서 막 지우지 말고 그냥 set변환 한번 했다가 다시 리스트로 변환하곤 했음.!</p>
+
+<p>뮤터블 객체는 리스트, 튜플, 셋임. 따라서 뮤터블 객체를 다른 변수에 담고 수정하면 함께 수정이 됨. 따라서 .copy() 같은 걸 이용해서 복사해서 넣어줘야 같이 동시에 수정이 안됨.
+이 외에 이뮤터블 객체들은 복사해서 넣어주지 않아도 동시에 수정이 안됨.!</p>
+
+<p>리스트 슬라이싱, 딕셔너리 사용법은 내가 대충 알고 있으므로 따로 자세히 정리하지는 않겠음.
+!!튜플은 삽입, 삭제가 안됨.</p>
+
+<h4 id="리스트의-시간복잡도">리스트의 시간복잡도</h4>
+<ul>
+  <li>list.append() : 맨 뒤에 그냥 넣으면 되므로 O(1)</li>
+  <li>list.insert(i, num) : i번째까지 가야하므로 O(n)</li>
+  <li>list.pop() : 맨 뒤에 그냥 제거하면 되므로 O(1)</li>
+  <li>list.remove(num) : num을 list에서 찾아내는데 걸리는 시간 O(n), 삽입 시간 O(1) =&gt; O(n)</li>
+  <li>list.extend([list2]) : 맨 뒤에 list2 원소들을 하나씩 append 하므로 O(1)이 k번 =&gt; O(k)</li>
+  <li>list[k] : 접근 자체는 상수 시간 O(1) (연결리스트는 O(n)으로 알고 있는데 그 리스트가 아닌 것 같다.?)</li>
+  <li>list1+list2 : list.extend는 기존 리스트에 append하므로 O(k)였지만 얘는 새로 빈 리스트에 list1, list2원소를 모두 append하기 때문에 O(n+m)</li>
+  <li>list(set(list)) : 시간복잡도가 O(n)</li>
+  <li>k in list : k를 찾아서 존재여부를 리턴하므로 탐색 시 걸리는 O(n)</li>
+</ul>
+
+<h4 id="딕셔너리의-시간복잡도">딕셔너리의 시간복잡도</h4>
+<p>딕셔너리는 리스트와 달리 탐색에 걸리는 시간이 모두 상수시간이다.</p>
+
+<p>따라서 dic.get[key], dic[key], dic.pop(key) 모두 O(1).</p>
+
+<h4 id="셋의-시간복잡도">셋의 시간복잡도</h4>
+<p>set은 add, remove, discard는 모두 O(1) 상수시간에 이루어진다. 나머지는</p>
+<ul>
+  <li>set1.union(set2): O(len(set1)+len(set2)) (셋 안에 모든 요소를 흩으므로)</li>
+  <li>set1.intersection(set2): O(min(len(set1), len(set2)))</li>
+  <li>set1.difference(set2) : O(len(set1))</li>
+  <li>list(set(set1)) : O(len(set1)) (모든 요소를 list에 append)</li>
+  <li>k in set1 : 탐색은 O(1)</li>
+</ul>
+
+<h4 id="문자열의-시간복잡도">문자열의 시간복잡도</h4>
+<p>문자열은 내가 잘 모르는 문법도 있어서 좀 정리를 해보겠다. (ㅠ)</p>
+<ul>
+  <li>str1 + str2 : O(str1+str2) 두 문자열을 더함</li>
+  <li>delimiter.join(string_list) : O(총 문자열 길이) string list를 delimiter로 연결</li>
+  <li>str.replace(old, new) : O(n) 특정 문자를 찾아 변경</li>
+  <li>str.split(sep) : O(n) sep 기준으로 문자열 split (리스트 리턴)</li>
+  <li>str.startswith(prefix) : O(len(prefix)) prefix로 문자열이 시작하는지 체크</li>
+  <li>str.endswith(suffix) : O(len(suffix)) suffix로 문자열이 끝나는지 체크 (뒤에서부터 탐색)</li>
+</ul>
+
+<h3 id="람다식함수">람다식(함수)</h3>
+<p>람다식은 다음처럼 정의함! c에는 못 본 거라 내가 잘 쓸 줄 모름(ㅠ)</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><table style="margin: 0px"><tbody><tr><td class="gutter"><pre>1</pre></td><td class="code"><pre class="highlight"><code><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> 
+</code></pre></td></tr></tbody></table></div></div>
+<p>람다로 간단하게 함수를 위처럼 정의하고 변수에 담아서 부를 수도 있고, 아니면 인수로 람다식을 넘기는 방법도 있다. 두번째를 오며가며 더 많이 본 것 같다..?</p>
+
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/blog/tag/#/CS" rel="tag"># CS</a>
+          
+            
+            <a href="/blog/tag/#/algorithm" rel="tag"># algorithm</a>
+          
+            
+            <a href="/blog/tag/#/%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84" rel="tag"># 시간복잡도</a>
+          
+            
+            <a href="/blog/tag/#/time%20complexity" rel="tag"># time complexity</a>
+          
+            
+            <a href="/blog/tag/#/%EC%BD%94%EB%94%A9%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%ED%95%A9%EA%B2%A9%EC%9E%90%20%EB%90%98%EA%B8%B0" rel="tag"># 코딩 테스트 합격자 되기</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/wireshark-packet-analysis/" rel="prev" title="[Computer Network] 와이어샤크를 이용해 패킷 분석하기">
+                [Computer Network] 와이어샤크를 이용해 패킷 분석하기 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/assets/images/avatar.gif"
+               alt="Mok" />
+          <p class="site-author-name" itemprop="name">Mok</p>
+           
+              <p class="site-description motion-element" itemprop="description">My blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/blog/archives/">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags/">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/blog/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#시간복잡도"> <span class="nav-number">1</span> <span class="nav-text">시간복잡도</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#빅오-표기법"> <span class="nav-number">1.1</span> <span class="nav-text">빅오 표기법</span> </a> </li> </ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#코딩-테스트-필수-문법"> <span class="nav-number">2</span> <span class="nav-text">코딩 테스트 필수 문법</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#빌트인-데이터-타입"> <span class="nav-number">2.1</span> <span class="nav-text">빌트인 데이터 타입</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#컬렉션-데이터-타입"> <span class="nav-number">2.2</span> <span class="nav-text">컬렉션 데이터 타입</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-4"> <a class="nav-link" href="#리스트의-시간복잡도"> <span class="nav-number">2.2.1</span> <span class="nav-text">리스트의 시간복잡도</span> </a> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#딕셔너리의-시간복잡도"> <span class="nav-number">2.2.2</span> <span class="nav-text">딕셔너리의 시간복잡도</span> </a> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#셋의-시간복잡도"> <span class="nav-number">2.2.3</span> <span class="nav-text">셋의 시간복잡도</span> </a> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#문자열의-시간복잡도"> <span class="nav-number">2.2.4</span> <span class="nav-text">문자열의 시간복잡도</span> </a> </li> </ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#람다식함수"> <span class="nav-number">2.3</span> <span class="nav-text">람다식(함수)</span> </a> </li> </ol> </li>
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mok</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://jekyllrb.com">Jekyll</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/blog/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/blog/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/blog/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+
+
+  
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <div>
+    <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fmok0102.github.io%2Fhit-counter&count_bg=%233D8CC8&title_bg=%23555555&icon=kickstarter.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
+  </div>
+  <div></div>
+</body>
+</html>
+

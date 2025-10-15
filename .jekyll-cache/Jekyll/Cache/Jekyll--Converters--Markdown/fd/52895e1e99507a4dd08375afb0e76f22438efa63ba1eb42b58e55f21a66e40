@@ -1,0 +1,74 @@
+I"9<p><br /></p>
+
+<h2 id="문제-설명">문제 설명</h2>
+<p>삘 붙어서 문제를 계속 풀고 있다!!! 그런데 신기하게도 계속 연결 요소와 관련된 문제가 걸린다. 그런데 굉장히 알맞은 순서로 문제가 걸려서 신기하긴 하다 ㅋㅋ 이 문제는 이전의 <a href="https://www.acmicpc.net/problem/11724">연결 요소의 개수</a> 문제나 <a href="https://www.acmicpc.net/problem/1012">유기농 배추</a> 문제처럼 basic하게 연결 요소를 count하는 게 아니라 조금의 응용이 들어간다. 그래프의 값이 0, 1로 표현 되서 연결 된다 vs 안된다 두개로 표현 되는 게 아니라 0 이상의 값을 가지고, 높이라고 표현한다. 그래서 일정 높이 이상이 되어야 안 잠긴다고 표현하고, 이 안 잠긴 노드끼리만 해서 그래프 탐색을 진행하고 연결 요소의 개수를 세는 것이다.</p>
+
+<h2 id="문제-풀이">문제 풀이</h2>
+<p>문제 설명도 안하고 냅다 어떻게 푸는지를 설명한 거 같아서 문제가 뭔지부터 설명해야겠다 ..ㅎㅎ 문제는 지역의 높이 행보?를 input으로 준다. 결국 지역의 높이가 x,y로 2차원 배열 형태로 주어진다는 말이다!! n은 가로 세로 길이를 뜻한다. (가로길이=세로길이) 이때, 물이 k만큼 차게 되면 k보다 작은 위치의 높이들은 잠기게 된다. k랑 동일한 높이를 가진 위치 좌표는 잠기지 않는다. 결국 잠기지 않은 위치 좌표들에 대해서 그래프 탐색을 진행하고, 이렇게 되면 몇 번의 탐색이 진행되는지를 세면 된다. 여기서 기존의 연결 요소 문제보다 응용된 부분이 물이 차는 높이 k에 따라서 잠기는 위치 좌표들도 달라지게 되는데(k가 작을수록 살아남은 위치 좌표들이 많아지겠다), k를 바꿔 가면서 가장 최대의 그래프 탐색 횟수가 필요한 경우를 출력하면 된다. 따라서 k에 대한 for문이 dfs 바깥에서 한번 더 돌게 된다. 문제만 읽고 처음에 나는 k의 범위가 어디까지인지 파악할 수가 없어서 이 부분만 풀이를 아주 살짝 봤는데, nxn 지역에서 최대, 최소 높이를 k의 범위로 잡으면 된다.</p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;cstdio&gt;
+#include &lt;string.h&gt;
+</span><span class="n">using</span> <span class="n">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">adj</span><span class="p">[</span><span class="mi">101</span><span class="p">][</span><span class="mi">101</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">v</span><span class="p">[</span><span class="mi">101</span><span class="p">][</span><span class="mi">101</span><span class="p">];</span>
+
+<span class="kt">int</span> <span class="n">dx</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
+<span class="kt">int</span> <span class="n">dy</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+
+<span class="kt">void</span> <span class="nf">dfs</span><span class="p">(</span><span class="kt">int</span> <span class="n">sub</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">adj</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">-</span><span class="n">sub</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span> <span class="c1">// 잠기면 세지 마!</span>
+    <span class="n">v</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+    <span class="c1">//printf("%d %d passed\n", y, x);</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="kt">int</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dx</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="n">ny</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">dy</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">nx</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">nx</span><span class="o">&lt;</span><span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">ny</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">ny</span><span class="o">&lt;</span><span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">v</span><span class="p">[</span><span class="n">ny</span><span class="p">][</span><span class="n">nx</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">adj</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">-</span><span class="n">sub</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">)</span> <span class="n">dfs</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nx</span><span class="p">);</span>
+    <span class="p">}</span>   
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">cnt</span><span class="p">(</span><span class="kt">int</span> <span class="n">sub</span><span class="p">){</span>
+    <span class="kt">int</span> <span class="n">cnt</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">){</span>
+            <span class="c1">//printf("~%d %d\n", adj[j][i], sub);</span>
+            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">adj</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">sub</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">){</span>
+                <span class="c1">//printf("%d %d\n", j, i);</span>
+                <span class="n">cnt</span><span class="o">++</span><span class="p">;</span>
+                <span class="n">dfs</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">cnt</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="n">scanf</span><span class="p">(</span><span class="s">"%d"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">min</span><span class="o">=</span><span class="mi">101</span><span class="p">,</span> <span class="n">max</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">){</span>
+            <span class="n">scanf</span><span class="p">(</span><span class="s">"%d"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">adj</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">adj</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">&lt;</span><span class="n">min</span><span class="p">)</span> <span class="n">min</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">adj</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">&gt;</span><span class="n">max</span><span class="p">)</span> <span class="n">max</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">//printf("%d %d\n", min, max);</span>
+
+    <span class="kt">int</span> <span class="n">max_k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">min</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">max</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+        <span class="c1">//printf("k = %d\n", k);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">max_k</span><span class="o">&lt;</span><span class="n">k</span><span class="p">)</span> <span class="n">max_k</span><span class="o">=</span><span class="n">k</span><span class="p">;</span>
+        <span class="n">memset</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">v</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">max_k</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+
+<span class="p">}</span></code></pre></figure>
+
+<h4 id="코드-풀이">코드 풀이</h4>
+<p>예전까지 문제 풀 때는 dfs 하나만 함수로 뺐었는데, 이 문제에서는 연결 요소의 개수를 세는 부분도 함수로 빼버렸다. 삼중 포문이 돈다고 생각하니까 헷갈려서 이렇게 했다. main안을 먼저 보면, scanf로 입력을 받으면서 min과 max를 계속 갱신해준다. 이 과정으로 홍수가 날 때의 물 높이의 범위를 구할 수 있다. 그 다음에는 이 min, max를 높이의 기준선으로 잡고 연결 요소를 하나의 k에 대해 각각 구해주면 된다. (위 코드의 k, max_k는 사실 물의 높이가 아니라 각 경우의 연결 요소의 개수를 의미한다. 헷갈리지 말기!!!) 이때 나는 cnt 함수를 정의해서 각 좌표에 있는 지역의 높이가 물의 높이보다 크거나 같은 경우에 dfs탐색을 진행 하도록 하였다. 이때 기존의 cnt할 때와 동일하게 이미 방문한 곳은 dfs와 cnt++을 해주지 않는다. 그리고 결국 dfs 함수로 들어가서, 잠기는 경우(물의 높이&lt;지역의 높이)에는 바로 return 해주었다. 이후는 평소의 dfs와 동일하지만, sub 인자를 주어서 물의 높이&gt;=지역의 높이 일 경우만 노드가 존재한다고 보았다. (dfs를 진행했다)</p>
+:ET

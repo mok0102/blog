@@ -1,0 +1,1495 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="AI,diffusion,ddpm," />
+
+
+
+
+
+  <link rel="alternate" href="/blog/atom.xml" title="M0kI's bloG" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/blog/assets/profile.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="diffusion 공부를 시작하고 수식 파티에서 헤어나오지 못하고 있다가 정신차리고 유도과정을 차근차근 기록해보려고 한다. 너무너무 복잡하고 내용도 많아서 이거 유도하는데만 며칠을 쓴 것 같다. 아무튼 이번에는 ddpm loss 유도 관련된 수식 정리이고 이전까지 했던 논문리뷰와는 좀 다를 수도 있다. (논문 정리가 아니라 수식 정리에 가깝다) 나중에 내가 다시 보려고 올리는 거라 내맘대로일 수 있다. ㅎ">
+<meta name="keywords" content="AI, diffusion, ddpm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[AI] DDPM: Denoising Diffusion Probabilistic Model">
+<meta property="og:url" content="http://localhost:4000/blog/ddpm/">
+<meta property="og:site_name" content="M0kI's bloG">
+<meta property="og:description" content="diffusion 공부를 시작하고 수식 파티에서 헤어나오지 못하고 있다가 정신차리고 유도과정을 차근차근 기록해보려고 한다. 너무너무 복잡하고 내용도 많아서 이거 유도하는데만 며칠을 쓴 것 같다. 아무튼 이번에는 ddpm loss 유도 관련된 수식 정리이고 이전까지 했던 논문리뷰와는 좀 다를 수도 있다. (논문 정리가 아니라 수식 정리에 가깝다) 나중에 내가 다시 보려고 올리는 거라 내맘대로일 수 있다. ㅎ">
+<meta property="og:locale" content="en">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[AI] DDPM: Denoising Diffusion Probabilistic Model">
+<meta name="twitter:description" content="diffusion 공부를 시작하고 수식 파티에서 헤어나오지 못하고 있다가 정신차리고 유도과정을 차근차근 기록해보려고 한다. 너무너무 복잡하고 내용도 많아서 이거 유도하는데만 며칠을 쓴 것 같다. 아무튼 이번에는 ddpm loss 유도 관련된 수식 정리이고 이전까지 했던 논문리뷰와는 좀 다를 수도 있다. (논문 정리가 아니라 수식 정리에 가깝다) 나중에 내가 다시 보려고 올리는 거라 내맘대로일 수 있다. ㅎ">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/blog"/>
+
+
+
+
+
+  <title>[AI] DDPM: Denoising Diffusion Probabilistic Model | M0kI's bloG</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-298875661', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">M0kI's bloG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">뭐가 올라올지 저도 몰라요</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/ddpm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mok">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="assets/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M0kI's bloG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            [AI] DDPM: Denoising Diffusion Probabilistic Model
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2023-10-01T00:00:00+09:00">
+                2023-10-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/category/#/AI" itemprop="url" rel="index">
+                    <span itemprop="name">AI</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+                <div class="post-description">
+                    
+                </div>
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <p>diffusion 공부를 시작하고 수식 파티에서 헤어나오지 못하고 있다가 정신차리고 유도과정을 차근차근 기록해보려고 한다. 너무너무 복잡하고 내용도 많아서 이거 유도하는데만 며칠을 쓴 것 같다. 아무튼 이번에는 ddpm loss 유도 관련된 수식 정리이고 이전까지 했던 논문리뷰와는 좀 다를 수도 있다. (논문 정리가 아니라 수식 정리에 가깝다) 나중에 내가 다시 보려고 올리는 거라 내맘대로일 수 있다. ㅎ</p>
+
+<p>수식 파티를 넘기고 코드만 돌리는 게 아니라 이해하기 위해서 내가 읽었던 논문/포스트 링크들을 남겨 놓는다.
+<a href="https://lilianweng.github.io/posts/2021-07-11-diffusion-models/#speed-up-diffusion-model-sampling">수식 파티1</a>
+<a href="https://developers-shack.tistory.com/8">loss 유도만 보려면</a>
+<a href="https://arxiv.org/abs/2208.11970">Understanding Diffusion Models: A Unified Perspective</a></p>
+
+<h2 id="q-p">q, p</h2>
+<p>ddpm은 vae랑 비슷하게 수식을 가져가는 경향이 있다. (likelihood 모델이니까) vae에서는 맞추지 못하는 p(intractable하다고 표현한다)를 q로 근사하고 ELBO를 이용해 q가 p에 가까워지게 optimize 했다면, ddpm은 q forward를 우리가 아는 가우시안으로 정의해놓은 후 p reverse를 q를 이용해 ELBO로 추론해가는(학습하는) 과정이다. 
+그리고 Marcov chain과 각 step의 확률이 Gaussian distribution을 따른다는 가정이 들어간다. (저 두 가정 때문에 모든 유도가 가능해진다.) ddim에서는 Marcov chain을 안쓴다는데 ddpm 정리 끝나면 읽어봐야겠다.</p>
+
+<h3 id="forward-process">forward process</h3>
+<p>우리는 각 step에서의 q를 다음과 같이 정의한다. 각 step에서 gaussian을 따른다.
+즉 내가 t-1 step을 알면 t step에서의 이미지를 추론할 수 있게 된다 (q를 알고 있으므로)</p>
+
+\[q(x_t|x_{t-1})=\mathbf{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t I)\]
+
+\[q(x_{1:T}|x_0)=\prod_{t=1}^T q(x_t|x_{t-1})\]
+
+<h3 id="backward-process">backward process</h3>
+<p>비슷한 방법으로 추론해야하는 p또한 정의할 수 있다. p를 알기 위해 우리가 맞춰야 하는(학습해야 하는) 게 각 step의 평균, 분산이 되겠다. (가우시안이므로)</p>
+
+\[p_\theta(x_0:T):=p(x_T)\cdot \prod_{t=1}^Y p(x_{t-1}|x_t)\]
+
+\[p_\theta(x_{t-1}|x_t):=\mathbf{N}(\mu_\theta(x_t,t),\Sigma_\theta(x_t,t))\]
+
+<p>VAE ELBO 유도랑 비슷한 감이 있는데 내가 <a href="https://mok0102.github.io/MAR-beta-cycleGAN/">링크</a> 여기서 VAE ELBO 유도를 했으므로 이걸로 퉁치겠다. DDPM도 여러 ELBO를 유도할 수 있는데, 그중에 가장 tractable한 ELBO, 즉 ddpm에서 사용하는 ELBO만 여기서 설명하겠다. (intractable한 ELBO는 내가 힘이 닿으면 추가하겠다)</p>
+
+<h2 id="minimize-negative-log-likelihood-elbo">minimize negative log likelihood (ELBO)</h2>
+
+\[\mathbf{E}_{x_1:T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0)}]\]
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0, x_1, ..., x_T) \over p_\theta(x_1, x_2, ..., x_T|x_0)}]\]
+
+<p>양변에 $q(x_{1:T}\mid x_0)\over q(x_{1:T}\mid x+0)$ 를 쑤셔넣자.</p>
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0, x_1, ..., x_T) \over p_\theta(x_1, x_2, ..., x_T|x_0)}*{q(x_{1:T}\mid x_0)\over q(x_{1:T}\mid x_0)}]\]
+
+<p>$p_\theta(x_0, x_1, …, x_T)$ 랑 $q(x_{1:T}\mid x_0)$ 랑 묶고 $p_\theta(x_1, x_2, …, x_T\mid x_0)$랑 $q(x_{1:T}\mid x_0)$ 랑 묶자. 그리고 로그니까 뺄셈으로 분리하면 두번째 항이 kl-divergence 폼이 된다.</p>
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0, x_1, ..., x_T) \over q(x_{1:T}\mid x_0)}- \log{q(x_{1:T}\mid x_0)\over p_\theta(x_1, x_2, ..., x_T|x_0)}]\]
+
+<p>kl-divergence는 대충 이렇게 생겼다. 인테그랄을 지금 보이는 평균 notation으로 바꾸면 된다(이정도는 미래의 나도 기억하겠지?)</p>
+
+\[D_{KL}(P||Q)=\int_{\infty} p(x)log{p(x) \over q(x)}dx\]
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0, x_1, ..., x_T) \over q(x_{1:T}\mid x_0)}]-D_{KL}(p\mid\mid q)\]
+
+<p>그런데 kl-divergence는 항상 0보다 크므로 앞에 항만 써서 부등식으로 나타낼 수 있게 된다.</p>
+
+\[&lt;= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0, x_1, ..., x_T) \over q(x_{1:T}\mid x_0)}]\]
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_{1:T}) \over q(x_{1:T}\mid x_0)}]\]
+
+<p>마르코브 체인에 의해,</p>
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T)\cdot \prod_{t=1}^T p_\theta(x_{t-1}\mid x_t) \over \prod_{t=1}^T q(x_t\mid x_{t-1}) }]\]
+
+<p>로그니까 또 뺄셈으로 빼내면,</p>
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) - \sum_{t=1}^T \log{p_\theta(x_{t-1}\mid x_t) \over q(x_t\mid x_{t-1})} }]\]
+
+<p>일단 여기까지 하면 loss 반의반정도 유도까지 왔다. 근데 저 \(q(x_t\mid x_{t-1})\) 를 위에 p처럼 뒤집어 주고 싶다. 우리가 \(q(x_t\mid x_{t-1})\) 얘를 알고 있기 때문에 \(q(x_{t-1}\mid x_{t})\)를 유도해낼 수만 있으면 무적이 된다. 유도해보자.</p>
+
+<hr />
+
+<p>마르코브 체인 때문에 x_0라는 조건을 걸어 줘도 상관이 없다. (어차피 initialization 조건 이니까.)</p>
+
+\[q(x_t|x_{t-1})=q(x_t\mid x_{t-1}, x_0)\]
+
+<p>베이즈 룰 때문에 다음과 같은 식이 성립한다.</p>
+
+\[q(x_t\mid x_{t-1}, x_0)={q(x_t, x_{t-1}, x_0)\over q(x_{t-1}, x_0)}\]
+
+<p>얘를 저기다 끼워 넣고 \(q(x_t, x_0)\over q(x_t, x_0)\) 를 곱하자</p>
+
+\[q(x_t|x_{t-1})= {q(x_t, x_{t-1}, x_0)\over q(x_{t-1}, x_0)} \cdot {q(x_t, x_0)\over q(x_t, x_0)}\]
+
+<p>\(q(x_t, x_{t-1}, x_0)\) 랑 \(q(x_t, x_0)\)랑 묶고 남은 애들 둘이 또 묶어주면</p>
+
+\[q(x_t|x_{t-1})= {q(x_t, x_{t-1}, x_0)\over q(x_t, x_0)} \cdot {q(x_t, x_0)\over q(x_{t-1}, x_0)}\]
+
+<p>결국 둘 사이의 관계성을 이끌어낼 수 있다.</p>
+
+\[q(x_t|x_{t-1})= {q(x_{t-1}\mid x_t, x_0)} \cdot {q(x_t, x_0)\over q(x_{t-1}, x_0)}\]
+
+<hr />
+<p>다시 loss 유도 항을 살펴보자. 여기다가 방금 유도한 저 q를 끼워 넣으면,</p>
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) - \sum_{t=1}^T \log{p_\theta(x_{t-1}\mid x_t) \over q(x_t\mid x_{t-1})} }]\]
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) - \sum_{t=1}^T \log{p_\theta(x_{t-1}\mid x_t) \over {q(x_{t-1}\mid x_t, x_0)} \cdot {q(x_t, x_0)\over q(x_{t-1}, x_0)}} }]\]
+
+<p>열심히 분리한다.</p>
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) - \sum_{t=2}^T \log{p_\theta(x_{t-1}\mid x_t)\cdot q(x_{t-1}, x_0) \over {q(x_{t-1}\mid x_t, x_0)} \cdot {q(x_t, x_0)} } }]\]
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T)} - \sum_{t=2}^T \log{p_\theta(x_{t-1}\mid x_t) \over {q(x_{t-1}\mid x_t, x_0)} } - \sum_{t=2}^T \log {q(x_{t-1}, x_0) \over {q(x_t, x_0)}} - \log {p_\theta (x_0\mid x_1) \over q(x_1\mid x_0)}]\]
+
+<p>보면 \(\sum_{t=2}^T \log {q(x_{t-1}, x_0) \over {q(x_t, x_0)}}\) 얘가 소거되는 형태의 항이다. 소거하고 보면 제일 첫번째 항(t=2)의 첫번째 항이랑 제일 마지막 항(t=T)의 두번쩨 항만 남는다. 결국</p>
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T)} - \sum_{t=2}^T \log{p_\theta(x_{t-1}\mid x_t) \over {q(x_{t-1}\mid x_t, x_0)} } - \log {q(x_0, x_1) \over q(x_T, x_0)} - \log {p_\theta (x_0\mid x_1) \over q(x_1\mid x_0)}]\]
+
+<p>다시 로그를 잘 분해해서 겹치는 항인 \(q(x_1\mid x_0)\)를 제거하면 합치면 최종 loss를 구할 수 있다!!!!!</p>
+
+\[L_{VLB}= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) \over q(x_T\mid x_0)} - \sum_{t=2}^T \log{p_\theta(x_{t-1}\mid x_t) \over {q(x_{t-1}\mid x_t, x_0)} } - \log {p_\theta (x_0\mid x_1)}]\]
+
+<hr />
+<h2 id="reparameterization">reparameterization</h2>
+
+<p>자 여기서 첫번째는 p랑 q를 가깝게 하는 term으로, 결국 두개의 KL-divergence를 최소화하는 term이다. 세번째 term은 초기조건 정도로, 결국 얘도 초기조건에서 kl-divergence를 최소화해주는 term이다. 우리가 신경써야 하는 건 두번째 term이다. 여기서 parameterization 테크닉이 들어간다.</p>
+
+<p>우리가 아까 q forward의 평균과 분산을 미리 정의해 놨다.</p>
+
+\[q(x_t|x_{t-1})=\mathbf{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t I)\]
+
+<p>근데 우리 loss식에는 q reverse(\({q(x_{t-1}\mid x_t, x_0)}\))의 평균과 분산(\(\tilde \mu(x_t,x_0)\) 와 \(\tilde \beta\))을 찾기를 요구하고 있다. 얘도 결국 가우시안이다. 그래서 아까 열심히 유도해 놓은 요 \(q(x_t\mid x_{t-1})\) 으로 얘의 평균과 분산을 찾아내야 한다.</p>
+
+\[q(x_{t-1}|x_{t})= \mathbf{N}(x_{t-1}; \tilde \mu(x_t,x_0), \tilde \beta I)\]
+
+\[q(x_t|x_{t-1})= {q(x_{t-1}\mid x_t, x_0)} \cdot {q(x_t, x_0)\over q(x_{t-1}, x_0)}\]
+
+<hr />
+
+<p>잠깐 \(\alpha=1-\beta\)이고 다 알파 표현 식으로 바꾸고 가자. (내가 너무 헷갈림)</p>
+
+\[q(x_t|x_{t-1})=\mathbf{N}(x_t; \sqrt{\alpha}x_{t-1}, (1-\alpha) I)\]
+
+<p>가우시안이고 marcov chain때문에 0번째에서 바로 t step으로 점프가 된다. 그냥 \(x_t=\sqrt{\alpha}\cdot x_{t-1}+\sqrt{1-\alpha}\epsilon\) 점화식 가지고 계속 유도하다보면 밑에처럼 바꿀 수 있다. (나중에 되면 자세하게 적겠으나 어느 정도 할 수 있을 거라고 믿는다)</p>
+
+\[q(x_t|x_{0})=\mathbf{N}(x_t; \sqrt{\bar\alpha_t}x_{0}, (1-\bar\alpha_t) I)\]
+
+<hr />
+
+<p>결국 \({q(x_{t-1}\mid x_t, x_0)} \cdot {q(x_t, x_0)\over q(x_{t-1}, x_0)}\) 이 세개를 다 가우시안으로 표현할 준비가 다 되었다. 바로 위의 두 식을 잘 끼워 넣으면 된다.</p>
+
+\[q(x_t|x_{t-1})= \mathbf{N}(x_t; \sqrt{\alpha}x_{t-1}, (1-\alpha) I) \cdot {\mathbf{N}(x_{t-1}; \sqrt{\bar\alpha_{t-1}}x_{0}, (1-\bar\alpha_{t-1}) I)\over \mathbf{N}(x_t; \sqrt{\bar\alpha_t}x_{0}, (1-\bar\alpha_t) I)}\]
+
+\[q(x_t|x_{t-1})= \mathbf{N}(x_t; \sqrt{\alpha}x_{t-1}, (\beta_t) I) \cdot {\mathbf{N}(x_{t-1}; \sqrt{\bar\alpha_{t-1}}x_{0}, (1-\bar\alpha_{t-1}) I)\over \mathbf{N}(x_t; \sqrt{\bar\alpha_t}x_{0}, (1-\bar\alpha_t) I)}\]
+
+<p>여기서 실제 가우시안 식을 잠깐 보고 가자. 얘를 이용해야 한다. 우리가 지금 평균과 분산이 보이는 형태로 식을 다 바꿔놨으므로 위에 식을 아래식을 이용해 실제 가우시안 식으로 표현 가능하다.
+\(p(x)={1\over \sigma \sqrt{2\pi}} \exp (-{(x-\mu)^2 \over 2\sigma^2})\)</p>
+
+<p>앞에 상수 (\({1\over \sigma \sqrt{2\pi}}\))를 떼버리고 등호 대신 \(\propto\)로 표현해보자</p>
+
+\[q(x_t|x_{t-1}) \propto \exp (-{1\over 2}({(x_t-\sqrt{\alpha}x_{t-1})^2\over \beta_t} + {(x_{t-1}-\sqrt{\bar\alpha_{t-1}})^2\over (1-\bar\alpha_{t-1})} - {(x_t-\sqrt{\bar\alpha_t})^2\over (1-\bar\alpha_t)}))\]
+
+<p>얘를 다 풀어보자. (또 새로운 가우시안 폼으로 만들기 위해서다.) const라고 표현한 부분은 어차피 가우시안 폼 만들때 필요없는거라 유도하지 않은거다.</p>
+
+\[= \exp (-{1\over 2}({x_t^2-2\sqrt{\alpha_t}x_t x_{t-1}+\alpha_t x_{t-1}^2\over \beta_t}+{x_{t-1}^2-2\sqrt{\bar\alpha_{t-1}x_{t-1}x_0}+\bar\alpha_{t-1}x_0^2\over 1-\bar\alpha_{t-1}}-{x_t^2-2\sqrt{\bar\alpha_t}x_tx_0+\bar\alpha_t x_0^2\over 1-\bar\alpha_t}))\]
+
+\[= \exp (-{1\over 2}(({\alpha_t\over \beta_t}+{1\over 1-\bar\alpha_{t-1}})x_{t-1}^2+(-{2\sqrt{\alpha_{t-1}}\cdot x_0 \over 1- \bar\alpha_{t-1}}-{2\sqrt{\alpha_t}x_t\over \beta_t})x_{t-1}+const))\]
+
+<p>식이 너무 복잡하니까 \(({\alpha_t\over \beta_t}+{1\over 1-\bar\alpha_{t-1}})\) 얘를 \(A\)라고 치환하고 \((-{2\sqrt{\alpha_{t-1}}\cdot x_0 \over 1- \bar\alpha_{t-1}}-{2\sqrt{\alpha_t}x_t\over \beta_t})\) 얘를 \(B\)라고 치환하고 가우시안 폼으로 바꿔보자.</p>
+
+\[= \exp (-{1\over 2}(Ax_{t-1}^2-Bx_{t-1}+const))\]
+
+\[= \exp (-{1\over 2}(A(x_{t-1}^2-{B\over A}x_{t-1}+{B\over 2A}^2)+const'))\]
+
+\[= \exp (-{1\over 2}(A(x_{t-1}-{B\over 2A})^2+const'))\]
+
+<p>결국 이 가우시안의 평균은 \(B\over 2A\)이고 분산은 \(1\over A\) 인 것이다. 즉, \(q(x_t\mid x_{t-1})\)의 평균(뮤티)과 분산(틸테베타티)이 이것이 된다. A,B를 다시 넣어 보면</p>
+
+\[q(x_{t-1}|x_{t})= \mathbf{N}(x_{t-1}; \tilde \mu(x_t,x_0), \tilde \beta_t I)\]
+
+\[\tilde \mu(x_t,x_0)={B \over 2A}={\frac{\sqrt{\alpha_t}}{\beta_t} x_t + {1\over 1-\bar\alpha_{t-1}} x_0 \over {\frac{\sqrt{\alpha_t}}{\beta_t} \over \beta_t}+{1\over 1-\bar\alpha_{t-1}}}\]
+
+<p>여기서 분모가 깔끔하게 정리가 되는데, 통분하면</p>
+
+\[{\frac{\sqrt{\alpha_t}}{\beta_t} \over \beta_t}+{1\over 1-\bar\alpha_{t-1}}={\alpha_t - \alpha_t \bar\alpha_{t-1} + \beta_t\over \beta_t (1-\bar\alpha_{t-1})}={\alpha_t - \alpha_t \bar\alpha_{t-1} + 1-\alpha_t \over \beta_t (1-\bar\alpha_{t-1})}={1-\bar\alpha_t \over \beta_t (1-\bar\alpha_t)}\]
+
+<p>결국 뮤티는</p>
+
+\[\tilde \mu(x_t,x_0)=({\frac{\sqrt{\alpha_t}}{\beta_t} x_t + {\sqrt{\bar\alpha_{t-1}}\over 1-\bar\alpha_{t-1}} x_0})\cdot {(1-\bar\alpha_{t-1})\beta_t \over 1-\bar\alpha_t}\]
+
+\[\tilde \mu(x_t,x_0)={\frac{\sqrt{\alpha_t}(1-\bar\alpha_{t-1})}{1-\bar\alpha_t} x_t + {\sqrt{\bar\alpha_{t-1}}\over 1-\bar\alpha_t} x_0}\]
+
+<p>가 된다. 뮤티를 한번만 더 정리하자. 아까 말했던 이 점화식 \(x_t=\sqrt{\alpha}\cdot x_{t-1}+\sqrt{1-\alpha}\epsilon\) 가지고 0번째에서 t step 점프하는 식을 유도했다. 가지고 오자.</p>
+
+\[x_t=\sqrt{\bar\alpha_t} x_0+\sqrt{1-\bar\alpha_t} \epsilon_t\]
+
+<p>얘를 x_0에 대해서 정리하면은
+\(x_0={x_t-\sqrt{1-\bar\alpha_t}\epsilon_0}\sqrt{\bar\alpha_t}\)</p>
+
+<p>얘를 q reverse의 평균인 뮤티식에 대입해서 정리해보면</p>
+
+\[\tilde \mu(x_t,x_0)={1\over\sqrt{\alpha_t}}(x_t-\frac{1-\alpha_t}{1-\bar\alpha_t}\epsilon_t)\]
+
+<p>q reverse의 분산인 틸테베타티는 (유도 생략 위에꺼 치느라 너무 힘들었다. 비슷하게 유도하면 된다)</p>
+
+\[\tilde \beta_t = {1-\bar\alpha_{t-1}\over 1-\bar\alpha_t}\cdot \beta_t\]
+
+<p>이로써 결국 여기까지 내용을 정리해보면, loss term을 ELBO를 통해서 유도했더니 세 개의 term이 나왔었고, + 우리가 미리 정의해놓아서 알고 있는 q forward의 평균, 분산 (\(\sqrt{\alpha_t}, (1-\alpha_t)\))을 통해서 q reverse의 평균, 분산(\(\tilde \mu(x_t,x_0), \tilde \beta_t\))를 유도해냈다.</p>
+
+<hr />
+
+<h2 id="simplification">simplification</h2>
+<p>자, 이제 진짜 위에서 말했던 loss에서 두번째 term을 진짜진짜 정리할 수 있게 되었다. 모든 식을 다 유도했다. 집어넣기만 하면 된다.</p>
+
+<p>loss를 다시 복기해보자. ddpm은 시그마(\(\beta\))를 고정하기 때문에 첫번째 loss term은 상수가 된다. 세번째 term은 아주 작은 noise가 더해진 이미지에서 원본 이미지로 reconstruction되는 term이므로 무시해도 된다. 결국 두번째 term만 잘 만져주면 된다.</p>
+
+\[L_{VLB}= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) \over q(x_T\mid x_0)} - \sum_{t=2}^T \log{p_\theta(x_{t-1}\mid x_t) \over {q(x_{t-1}\mid x_t, x_0)} } - \log {p_\theta (x_0\mid x_1)}]\]
+
+<p>우리가 죽도록 모든 분포가 가우시안을 따른다고 가정해왔기 때문에, 저 kl-divergence를 minimize하는 두번째 loss term은 더 간단하게 표현이 된다. (위에 있는 논문에서 말하는 위키 링크이다. <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence#Multivariate_normal_distributions">kl-divergence between two gaussian distribution</a>)</p>
+
+\[D_{KL}(\mathbf{N}(x;\mu_x,\Sigma_x)\mid\mid \mathbf{N}(y;\mu_y,\Sigma_y))={1\over 2}[\log \frac{|\Sigma_y}{\Sigma_x}-d+tr(\Sigma_y^{-1}\Sigma_x)+(\mu_y-\mu_x)^T\Sigma_y^{-1}(\mu_y-\mu_x)]\]
+
+<p>또 ddpm은 저 시그마(variance)가 동일하다고 아까 가정을 했기 때문에, (시그마 고정!) 그렇기 때문에 더 쉬운 문제가 되어버리는데</p>
+
+\[D_{KL}(q(x_{t-1}|x_t, x_0)\mid\mid p_\theta(x_{t-1}x_t))={1\over 2}[\log \frac{|\Sigma_q(t)}{\Sigma_q(t)}-d+tr(\Sigma_q(t)^{-1}\Sigma_q(t))+(\mu_\theta-\mu_q)^T\Sigma_q(t)^{-1}(\mu_\theta-\mu_q)]\]
+
+\[={1\over 2}[\log 1-d+d+(\mu_\theta-\mu_q)^T\Sigma_q(t)^{-1}(\mu_\theta-\mu_q)]\]
+
+\[={1\over 2}[(\mu_\theta-\mu_q)^T(\sigma_q^2(t)I)^{-1}(\mu_\theta-\mu_q)]\]
+
+\[={1\over2\sigma_q^2(t)}[||\mu_\theta-\mu_q||^2_2]\]
+
+<p>결국 그냥 뮤세타랑 뮤티 mse하는 거랑 똑같애진다. 이게 무슨말이냐면 뮤세타가 뮤티에 가까워지도록 학습한다는 얘기다. 우리가 위에서 우리가 열심히 뮤티를 유도했었던 걸 기억해보자. 이 뮤티를 가져와보면,</p>
+
+\[\tilde \mu(x_t,x_0)={1\over\sqrt{\alpha_t}}(x_t-\frac{1-\alpha_t}{1-\bar\alpha_t}\epsilon_t)\]
+
+<p>그리고 우리는 어차피 뮤티랑 뮤세타가 가까워져야 하는거니까 뮤티랑 뮤세타를 입실론 제외하고 똑같은 형태로 놓고 푸는게 이득이다. 따라서 뮤세타는</p>
+
+\[\mu_\theta(x_t,x_0)={1\over\sqrt{\alpha_t}}(x_t-\frac{1-\alpha_t}{1-\bar\alpha_t}\epsilon_\theta(x_t, t))\]
+
+<p>결국 우리는 입실론을 optimize하겠다는 말이 된다. 결국, 이 모델은 reparameterization을 통해 노이즈(\(\epsilon_\theta(x_t, t\))를 추론하는 모델이 된다. (L_t가 두번째 loss term이다) 정리해보면</p>
+
+\[L_t={1\over2\sigma_q^2(t)}[||\mu_\theta-\mu_q||^2_2]\]
+
+\[L_t={1\over2\sigma_q^2(t)}[||{1\over \alpha_t}(x_t-\frac{1-\alpha_t}{\sqrt{1-\bar\alpha_t}}\epsilon_t-{1\over \alpha_t}(x_t-\frac{1-\alpha_t}{\sqrt{1-\bar\alpha_t}}\epsilon_\theta(x_t, t))||^2_2]\]
+
+\[L_t={(1-\alpha_t)^2\over2\alpha_t(1-\bar\alpha_t)\sigma_q^2(t)}[||\epsilon_t-\epsilon_\theta(x_t, t||^2_2]\]
+
+<p>우리가 또 x_t를 x_0에 대해 유도해놓은 식이 있기 때문에 얘를 대입하면</p>
+
+\[x_t=\sqrt{\bar\alpha_t} x_0+\sqrt{1-\bar\alpha_t} \epsilon_t\]
+
+\[L_t={(1-\alpha_t)^2\over2\alpha_t(1-\bar\alpha_t)\sigma_q^2(t)}[||\epsilon_t-\epsilon_\theta(\sqrt{\bar\alpha_t} x_0+\sqrt{1-\bar\alpha_t} \epsilon_t, t||^2_2]\]
+
+<p>1번, 3번 텀을 무시하고 L_t만 사용해서 얘를 \(L_{simple}\) 이라고 부른다. 결국 얘가 loss다.</p>
+
+<h2 id="정리">정리</h2>
+<p>결국 diffusion은 조금씩 가우시안 노이즈를 더하는, 우리가 생각하기 쉬운 t step을 q forward라 정의하고, p reverse를 추론하는 문제이다. 이때 q reverse를 q forward로 유도해 낼 수 있고, ELBO를 통한 loss 또한 p reverse와 q reverse를 가깝게 만드는(kl-divergence) 형태로 나오기 때문에 학습이 가능해진다. 이때, p reverse와 q reverse (사실 forward도 마찬가지지만)가 모두 가우시안을 따르기 때문에 p reverse와 q reverse 두 분포의 평균과 분산 두 variable을 맞춰주는 문제가 되어버린다. ddpm은 여기서 분산까지 고정해버리기 때문에 결국 평균을 맞춰주는 형태가 되어 버리고, 평균이 랜덤 노이즈로 표현되기 때문에 p와 q의 노이즈를 맞춰주는 문제로 simplification 되어버린다!</p>
+
+<p>유도하느라 정말 너무 힘들었다. 가우시안 식 적을 때 즈음 부터 후회했지만 어찌저찌 해냈다. ㅋㅋ 평생 쓸 latex 다 쓴 것 같다. 기억안날 때마다 이거 보러 와야겠다.</p>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/blog/tag/#/AI" rel="tag"># AI</a>
+          
+            
+            <a href="/blog/tag/#/diffusion" rel="tag"># diffusion</a>
+          
+            
+            <a href="/blog/tag/#/ddpm" rel="tag"># ddpm</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/wireshark-packet-analysis/" rel="next" title="[Computer Network] 와이어샤크를 이용해 패킷 분석하기">
+                <i class="fa fa-chevron-left"></i> [Computer Network] 와이어샤크를 이용해 패킷 분석하기
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/MAR-beta-cycleGAN/" rel="prev" title="[MAR] Unsupervised CT Metal Artifact Learning Attention-guided β-CycleGAN">
+                [MAR] Unsupervised CT Metal Artifact Learning Attention-guided β-CycleGAN <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/assets/images/avatar.gif"
+               alt="Mok" />
+          <p class="site-author-name" itemprop="name">Mok</p>
+           
+              <p class="site-description motion-element" itemprop="description">My blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/blog/archives/">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags/">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/blog/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#q-p"> <span class="nav-number">1</span> <span class="nav-text">q, p</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#forward-process"> <span class="nav-number">1.1</span> <span class="nav-text">forward process</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#backward-process"> <span class="nav-number">1.2</span> <span class="nav-text">backward process</span> </a> </li> </ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#minimize-negative-log-likelihood-elbo"> <span class="nav-number">2</span> <span class="nav-text">minimize negative log likelihood (ELBO)</span> </a> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#reparameterization"> <span class="nav-number">3</span> <span class="nav-text">reparameterization</span> </a> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#simplification"> <span class="nav-number">4</span> <span class="nav-text">simplification</span> </a> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#정리"> <span class="nav-number">5</span> <span class="nav-text">정리</span> </a> </li>
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mok</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://jekyllrb.com">Jekyll</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/blog/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/blog/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/blog/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+
+
+  
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <div>
+    <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fmok0102.github.io%2Fhit-counter&count_bg=%233D8CC8&title_bg=%23555555&icon=kickstarter.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
+  </div>
+  <div></div>
+</body>
+</html>
+

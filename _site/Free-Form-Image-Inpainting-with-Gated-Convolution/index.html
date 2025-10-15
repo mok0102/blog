@@ -1,0 +1,1557 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="AI,inpainting,GAN,gated convolution," />
+
+
+
+
+
+  <link rel="alternate" href="/blog/atom.xml" title="M0kI's bloG" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/blog/assets/profile.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="블로그에 AI 관련 포스트는 안하고 있었는데, AI 대학원 진학을 하기로 마음을 먹고 난 후라, 그동안 노션에 정리해두었던 논문들을 하나씩 포스트하면서 내가 공부한 것들을 정리해보려고 한다. **날짜는 논문을 읽었던 날짜순으로 포스팅된다.">
+<meta name="keywords" content="AI, inpainting, GAN, gated convolution">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[AI] Free-Form Image Inpainting with Gated Convolution">
+<meta property="og:url" content="http://localhost:4000/blog/Free-Form-Image-Inpainting-with-Gated-Convolution/">
+<meta property="og:site_name" content="M0kI's bloG">
+<meta property="og:description" content="블로그에 AI 관련 포스트는 안하고 있었는데, AI 대학원 진학을 하기로 마음을 먹고 난 후라, 그동안 노션에 정리해두었던 논문들을 하나씩 포스트하면서 내가 공부한 것들을 정리해보려고 한다. **날짜는 논문을 읽었던 날짜순으로 포스팅된다.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_o_post1.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post2.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post3.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post4.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post5.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post6.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post7.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post8.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post9.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post10.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post11.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post12.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post13.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post14.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post15.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post16.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post17.png?raw=true">
+<meta property="og:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post18.png?raw=true">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[AI] Free-Form Image Inpainting with Gated Convolution">
+<meta name="twitter:description" content="블로그에 AI 관련 포스트는 안하고 있었는데, AI 대학원 진학을 하기로 마음을 먹고 난 후라, 그동안 노션에 정리해두었던 논문들을 하나씩 포스트하면서 내가 공부한 것들을 정리해보려고 한다. **날짜는 논문을 읽었던 날짜순으로 포스팅된다.">
+<meta name="twitter:image" content="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_o_post1.png?raw=true">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/blog"/>
+
+
+
+
+
+  <title>[AI] Free-Form Image Inpainting with Gated Convolution | M0kI's bloG</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-298875661', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">M0kI's bloG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">뭐가 올라올지 저도 몰라요</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/Free-Form-Image-Inpainting-with-Gated-Convolution/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mok">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="assets/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M0kI's bloG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            [AI] Free-Form Image Inpainting with Gated Convolution
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-11-19T09:00:00+09:00">
+                2021-11-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/category/#/AI" itemprop="url" rel="index">
+                    <span itemprop="name">AI</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+                <div class="post-description">
+                    
+                </div>
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <p>블로그에 AI 관련 포스트는 안하고 있었는데, AI 대학원 진학을 하기로 마음을 먹고 난 후라, 그동안 노션에 정리해두었던 논문들을 하나씩 포스트하면서 내가 공부한 것들을 정리해보려고 한다. **날짜는 논문을 읽었던 날짜순으로 포스팅된다.</p>
+
+<p><a href="https://arxiv.org/abs/1806.03589">논문 링크</a></p>
+
+<h2 id="introduction">Introduction</h2>
+<p>computer vision의 큰 두 분야에는 patch matching using low-level image features (ex. PatchMatch) 와 feed-forward generative models with deep convolutional networks (ex. Ours)로 이루어진다. 즉 딥러닝을 사용하지 않는 단순한 traditional 방법론이 앞에 속하고, 딥러닝을 사용하는 CNN 네트워크가 후자에 속한다.</p>
+
+<h3 id="vanilla-convolution">Vanilla convolution</h3>
+<p>vanilla convolution은 우리가 알고 있는 평범한 CNN을 말하는 것이다.</p>
+
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_o_post1.png?raw=true" alt="image1" />
+kh, kw : kernel size. kh’=(kh-1)/2, kw’=(kw-1) W: convolution filter I: Input, O: Output</p>
+
+<ul>
+  <li>공유된 convolution filter들은 모든 pixel &amp; feature를 valid 하다고 생각하고 처리해버린다.</li>
+  <li>따라서 mask가 없는 image classification, object detection에서 문제 없이 작동한다. 즉, 모든 pixel이 valid한 경우에 문제없이 작동한다.</li>
+  <li>그러나 mask가 있는 task의 경우 valid한 픽셀에 대해서만 처리를 할 수 있도록 convolution을 변경해 주어야 한다. valid한 픽셀에 대한 구분 없이 처리하게 되면</li>
+</ul>
+
+<p>→ leading to visual artifacts such as color discrepancy, blurriness and obvious edge reponses surrounding holes when tested on free-form masks.</p>
+
+<p>⇒ <strong>partial convolution</strong>이 제안된다.</p>
+
+<h3 id="partial-convolution">Partial convolution</h3>
+
+<ul>
+  <li>adapts a masking and re-normalization step to make the convolution dependent only on valid pixels</li>
+  <li>followed by rule-based mask-update step to update valid locations for next layer</li>
+  <li>0-1 mask를 모든 input에 곱한다 (viewed as a single un-learnable feature gating channel) wmr hole이 mask된 부분으로 0, non-hole은 1.</li>
+</ul>
+
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post2.png?raw=true" alt="image2" />
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post3.png?raw=true" alt="image2" /></p>
+
+<ul>
+  <li>convolution을 진행 할 때 따라서 non-hole인 부분이 아주 조금이라도 있으면 계산, 모두 hole이라면 0을 부여</li>
+  <li>UNet based 방법론</li>
+  <li>총 6개의 Loss (L_valid + 6L_hole + 0.05L_perceptual + 120(L_style_out + L_style_comp) + 0.1 L_tv)를 사용</li>
+</ul>
+
+<h4 id="partial-convolution의-limitation">partial convolution의 limitation</h4>
+
+<ol>
+  <li>It <em>heuristically classifies</em> all spatial locations to be either valid or invalid. (경험적으로 분류)
+    <ul>
+      <li>따라서 다음 mask를 업데이트 할 때, filter 영역 안에 valid한 픽셀이 몇개가 있던 모두 1로 설정이 된다.</li>
+    </ul>
+  </li>
+  <li>User-guide를 도입했을 때, 이 픽셀들은 valid인가 아니면 invalid인가?
+    <ul>
+      <li>User-guide와 같이 새로운 특징을 도입했을 때 0, 1 둘중에 하나로 binarize하기 어려워진다.</li>
+    </ul>
+  </li>
+  <li>“Invalid” pixels will progressively disappear layer by layer and the rule-based mask will be all ones in deep layers.
+    <ul>
+      <li>다 채워지지도 않았는데 이미 mask는 모두 1이 되어버리는 현상 : 모든 픽셀이 valid하다고 생각해버리게 된다.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>→ We will show that if we allow the network to learn the mask automatically, the mask may have different values based on whether current locations are masked or not in input image, even in deep layers.</p>
+
+<ol>
+  <li>All channels in each layer share the same mask
+    <ul>
+      <li>which limits the flexibility</li>
+    </ul>
+  </li>
+</ol>
+
+<p>즉 partial convolution을 정리해보면,
+ <strong>un-learnable single-channel feature hard-gating</strong>이라는 점이다. (hard-gating은 값이 0, 1 두개로만 결정되는 것을 말함)
+따라서 저자는 Gated convolution을 제안하는데,</p>
+
+<h3 id="gated-convolution">Gated convolution</h3>
+<ul>
+  <li>learns a dynamic feature gating mechanism for each channel and each spatial location</li>
+  <li>formulation
+    <ul>
+      <li>input feature는 먼저 gating value g = σ(wgx)에 들어가 계산된다. (σ : 시그모이드, wg : learnable parameter)</li>
+      <li>최종 output은 learned feature와 gating value의 곱으로 표현되고, 여기에 activation function을 씌워준 것이 된다.</li>
+    </ul>
+  </li>
+  <li>mask가 arbitrary shape일 때, 아니면 input이 심플한 RGB 채널이 아닌 conditional inputs를 가지고 있을 때 굉장히 잘 작동한다. (결국 user-guide를 수용한다는 의미)</li>
+</ul>
+
+<h2 id="materials-and-methods">Materials and Methods</h2>
+
+<h3 id="gated-convolution-1">Gated Convolution</h3>
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post4.png?raw=true" alt="image4" />
+partial convolution의 경우 binary mask가 단순히 rule-based update된다.
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post5.png?raw=true" alt="image5" />
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post6.png?raw=true" alt="image6" /></p>
+
+<ul>
+  <li>그러나 gated convolution을 보면 mask가 soft gating을 통해(0,1 둘만의 값으로 밀리는 hard gating이 아닌) 업데이트됨.</li>
+  <li>
+    <p>soft gating 과정
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post7.png?raw=true" alt="image7" /></p>
+  </li>
+  <li>convolution layer가 sigmoid를 거친 것으로 mask가 업데이트됨.</li>
+  <li>0, 1사이의 값으로 나오게 되고 이것은 validness를 의미하고 있다고 볼 수 있다.</li>
+  <li>soft mask와 feature를 element-wise product 진행하여 valid에 가까울수록 더욱 큰 attention이 들어가도록 연산 (dynamic feature selection mechanism)</li>
+</ul>
+
+<h3 id="sn-patchgan">SN-PatchGAN</h3>
+<ul>
+  <li>이전의 rectangular mask가 아닌, free-form mask를 처리하기 위해 고안됨.</li>
+  <li>motivated by global and local GANs, MarkovianGANs, perceptual loss, spectral-normalized GANs</li>
+</ul>
+
+<h4 id="marchovian-discriminator">Marchovian Discriminator</h4>
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post8.png?raw=true" alt="image8" /></p>
+
+<ol>
+  <li>kernel size 5, stride 2인 여섯개의 convolution network가 feature statistics of Markovian patches를 잡는다.</li>
+  <li>여기에 GAN을 바로 적용 → R^(h * w * c) 의 GAN이 만들어짐.</li>
+</ol>
+
+<p><em>그럼 Markovian patches가 뭔가?</em></p>
+
+<ul>
+  <li>Markovian GANs - GAN의 계산적 효율성 이슈를 해결하기 위해 생김</li>
+  <li>
+    <p>deep generative model을 full-image models와 deep Markovian models로 구분(local patches의 통계만을 잡음)</p>
+  </li>
+  <li>기존의 방법들은 deconvolution과 feature activations(higher network layer)의 pre-image( pixels)를 추정하기 위해 역전파 요구가 굉장히 커서 run-time cost가 굉장히 컸다.</li>
+  <li>이것을 해결하기 위해 strided convolution network를 inversion process에 맞춰서 network의 inversion을 미리 계산하는 방법!!!</li>
+  <li>strided convolution 연산을 통해 feature statistics를 잡음. strided convolution 연산을 feed forward 한 것이 feature 통계를 잘 잡기 때문에 이러한 구조를 사용</li>
+</ul>
+
+<p>deepfillv1에 있는 local discriminator와 global discriminator에서 왜 global discriminator가 사라졌는가?- 각 뉴런의 receptive field가 전체의 Input image를 커버할 수 있다.</p>
+
+<h4 id="spectral-normalization">Spectral Normalization</h4>
+<ul>
+  <li>Weight normalization 중 하나</li>
+  <li>Lipschitz 상수 하나만을 hyperparameter로 가짐</li>
+</ul>
+
+<h5 id="그럼-립시츠-상수란">그럼 립시츠 상수란?</h5>
+<p>Lipschitz function:</p>
+
+\[Let \ a \ function \ f : [a,b] \rightarrow \mathbb{R} \ s.t. \ for \  some\  constant\  \mathbb{M}\  and\  for\  all\  \mathbb{x,y} \in\  [a,b] ,\\ \mid f(x) - f(y) \mid \le M \mid x-y \mid \qquad - (1). \\ Then \ the \ function \ f \ is \ called \ Lipschits\ on \ [a,b], \ and \ one \ writes \ f \ \in Lip([a,b])\]
+
+<p>(1)에서 x-y로 나누면 결국 미분계수가 M을 넘어가지 않는 함수라고 생각할 수 있다.</p>
+
+<ul>
+  <li>그럼 Lipschitz 상수는??</li>
+</ul>
+
+\[\sup_{x \ne y} {|f(y)-f(x)| \over {| y - x |}} \qquad - (2)\\\]
+
+<p>→ 미분계수의 최솟값으로 생각할 수 있다!</p>
+
+<h5 id="sn-gan에서-쓰이는-방법">SN-GAN에서 쓰이는 방법</h5>
+<p>우리가 GAN을 사용할 때</p>
+
+\[\min_{G}\max_{D}V(G,D)\]
+
+<p>인데, 여기서 가정하는 것이 D에 대해 max라는 점 (optimal한 D)</p>
+
+<p>G가 fix되어 있을 때</p>
+
+\[D^{*}_{G}(x) := q_{data}(x) / (q_{data}(x) + p_G(x))\]
+
+\[D^{*}_{G}(x) := {q_{data}(x) \over (q_{data}(x) + p_G(x))} \\ = sigmoid(f^*(x) = log_{q_data}(x) - log_{P_G}(x), \qquad (3)\]
+
+\[\text{its derivative }, \nabla_x f^*(x)= {1 \over q_{data}(x)} \nabla_x q_{data}(x) - {1 \over P_G(x)}\nabla_x P_G(x) \qquad (4)\]
+
+<p>결국 f가 unbounded 되어 있다는 말은 lipschitz 상수 또한 unbounded 되어 있다는 말</p>
+
+<p>→ lipschitz 상수가 bounded 하도록 만들어서 D의 gradient가 폭발하는 것을 막음</p>
+
+\[\underset{\lVert f \rVert_{Lip} \le K}{\arg\max}V(G,D) \qquad (5)\]
+
+<p>이렇게 표현이 가능함.</p>
+
+<p>WGAN : weights clipping으로 제약</p>
+
+<p>WGAN-GP : real과 fake에서 sample을 뽑아 gradient를 계산하고, lipschitz constraint를 둠</p>
+
+<ul>
+  <li>이런 방법들은 local하게 제약이 걸릴 가능성이 높다. → SN</li>
+</ul>
+
+<p>Spectral normalization은 lipschitz constraint가 1이 되도록 Weight matrix를 normalization 하는 것이다.</p>
+
+<h4 id="hinge-loss">Hinge Loss</h4>
+<ul>
+  <li>두 데이터 분포 간 거리가 가장 먼 decision boundary를 찾기 위해 고안</li>
+</ul>
+
+<p>loss = max{0, 1- (y’ * y)}</p>
+
+<p>y’ : 예측값, y: 실제값</p>
+
+<p>따라서</p>
+
+<p>Dsn : spectral-normalized discriminator, G: image inpainting network</p>
+
+<ul>
+  <li>perceptual loss: 이미 patch-level 정보가 encoded되어서 사용하지 않음</li>
+</ul>
+
+<p>결국 loss는:
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post9.png?raw=true" alt="image9" />
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post10.png?raw=true" alt="image10" /></p>
+
+<ul>
+  <li>pixel-wise L1 reconstruction loss</li>
+  <li>SN-PatchGAN loss</li>
+</ul>
+
+<h3 id="architecture">Architecture</h3>
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post11.png?raw=true" alt="deepvillv1" /></p>
+<ul>
+  <li>deepfillv1과 비교해보면, 1) convolution이 gated convolution으로 변경되었고, 2) 2nd generator 부분이 two-branch refinement network with contextual attention으로 변경되었음 3) 하나의 discriminator : local discriminator가 전체 그림을 처리 가능하여 하나로 바뀌었다.</li>
+</ul>
+
+<p>1st generator - for a coarse reconstruction</p>
+
+<p>2nd generator - for a refinement of the coarse filled image
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post12.png?raw=true" alt="deepvillv2" /></p>
+<ul>
+  <li>coarse와 refinement에서는 partial convolution에서 사용되었던 Unet 대신 simple encoder-decoder block이 사용됨
+→ non-narrow mask에서 UNet의 skip-connection이 큰 영향이 없다고 한다.</li>
+</ul>
+
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post13.png?raw=true" alt="residual learning" /></p>
+
+<p>(This is mainly because for center of a masked region, the inputs of these skip connections are almost zeros thus cannot propagate detailed color or texture information to the decoder of that region.)</p>
+
+<ul>
+  <li>encoder - decoder 부분에 gated convolution을 적용</li>
+  <li>gated convolution의 potential problem : 너무 많은 parameter가 생성됨</li>
+</ul>
+
+<p>→ model의 width를 25%로 얇게 진행되도록 하였다고 함.</p>
+
+<h2 id="result">Result</h2>
+<h3 id="quantitative-result">Quantitative Result</h3>
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post14.png?raw=true" alt="result" /></p>
+
+<ul>
+  <li>learning-based methods perform better than Patch- Match in terms of mean l1 and l2 errors</li>
+  <li>partial convolution 결과가 안 좋은 이유: un-learnable rule-based gating</li>
+</ul>
+
+<h3 id="qualitative-comparisons">Qualitative Comparisons</h3>
+<ol>
+  <li>
+    <p>User-guidance가 없을 때
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post15.png?raw=true" alt="result" /></p>
+  </li>
+  <li>
+    <p>User-guidance가 있을 때
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post16.png?raw=true" alt="result" />
+사진을 보면, user-guidance를 처리할 수 있는 건 gated convolution밖에 없음을 알 수 있음.</p>
+  </li>
+  <li>
+    <p>Object Removal and Creative Editing
+<img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post17.png?raw=true" alt="result" /></p>
+  </li>
+</ol>
+
+<p>Photoshop* 2017 - based on PatchMatch</p>
+
+<ul>
+  <li>따라서 전체 사진에 대해 배우지 않는 traditional한 모델들은 stationary한 사진에서는 잘 작동할 지 몰라도, 사진이 복잡해지면 작동하지 않음</li>
+  <li>learning-based by vanilla convolution은 나아졌지만 홀 부근에 artifact를 만듬</li>
+</ul>
+
+<p><img src="https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2021_11_19_post18.png?raw=true" alt="result" /></p>
+
+<p>User-guide가 들어가는 사진도 굉장히 잘 처리하는 모습!</p>
+
+<h2 id="4-discussion">4. Discussion</h2>
+<p>논문의 contribution을 정리해보면,</p>
+<ol>
+  <li>convolution 방식의 개선이 이루어졌다 → vanilla convolution, partial convolution, gated convolution</li>
+  <li>GAN 성능을 올리기 위한 방법 또한 지속적인 개선이 이루어지고 있다 → WGAN, WGAN-GP, SN-GAN</li>
+  <li>User-guide를 처리할 수 있는 방법론의 제안</li>
+</ol>
+
+<p>내가 생각했을 때의 이 논문에서 주목해서 봐야 하는 부분은, 기존의 partialconv에서 0, 1의 binary mask를 사용하는 hard gating 방법론에서, 마스크를 0,1 사이의 값으로 뱉는 soft gating을 사용했다는 점인 것 같다. soft gating을 사용함으로써 user-guide의 처리가 가능해지고, hard gating에서 오던 문제를 해결할 수 있었기 때문이다. 그러나 이 gated convolution이 모델의 parameter를 과도하게 증가시킨 부분이 있으므로, 파라미터를 최적화할 수 있는 방법이 또 있을 수 있을 것 같다.</p>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/blog/tag/#/AI" rel="tag"># AI</a>
+          
+            
+            <a href="/blog/tag/#/inpainting" rel="tag"># inpainting</a>
+          
+            
+            <a href="/blog/tag/#/GAN" rel="tag"># GAN</a>
+          
+            
+            <a href="/blog/tag/#/gated%20convolution" rel="tag"># gated convolution</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2022/01/01/%EB%82%B4-%EC%B2%AB%EB%B2%88%EC%A7%B8-%EA%B9%83%ED%97%99-%EB%B8%94%EB%A1%9C%EA%B7%B8-%EA%B8%80-!/" rel="next" title="내 첫번째 깃헙 블로그 글 !">
+                <i class="fa fa-chevron-left"></i> 내 첫번째 깃헙 블로그 글 !
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/test/2014/02/16/Mathjax-with-jekyll/" rel="prev" title="MathJax with Jekyll">
+                MathJax with Jekyll <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/assets/images/avatar.gif"
+               alt="Mok" />
+          <p class="site-author-name" itemprop="name">Mok</p>
+           
+              <p class="site-description motion-element" itemprop="description">My blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/blog/archives/">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags/">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/blog/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#introduction"> <span class="nav-number">1</span> <span class="nav-text">Introduction</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#vanilla-convolution"> <span class="nav-number">1.1</span> <span class="nav-text">Vanilla convolution</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#partial-convolution"> <span class="nav-number">1.2</span> <span class="nav-text">Partial convolution</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-4"> <a class="nav-link" href="#partial-convolution의-limitation"> <span class="nav-number">1.2.1</span> <span class="nav-text">partial convolution의 limitation</span> </a> </li> </ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#gated-convolution"> <span class="nav-number">1.3</span> <span class="nav-text">Gated convolution</span> </a> </li> </ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#materials-and-methods"> <span class="nav-number">2</span> <span class="nav-text">Materials and Methods</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#gated-convolution-1"> <span class="nav-number">2.1</span> <span class="nav-text">Gated Convolution</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#sn-patchgan"> <span class="nav-number">2.2</span> <span class="nav-text">SN-PatchGAN</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-4"> <a class="nav-link" href="#marchovian-discriminator"> <span class="nav-number">2.2.1</span> <span class="nav-text">Marchovian Discriminator</span> </a> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#spectral-normalization"> <span class="nav-number">2.2.2</span> <span class="nav-text">Spectral Normalization</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-5"> <a class="nav-link" href="#그럼-립시츠-상수란"> <span class="nav-number">2.2.2.1</span> <span class="nav-text">그럼 립시츠 상수란?</span> </a> </li> <li class="nav-item nav-level-5"> <a class="nav-link" href="#sn-gan에서-쓰이는-방법"> <span class="nav-number">2.2.2.2</span> <span class="nav-text">SN-GAN에서 쓰이는 방법</span> </a> </li> </ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#hinge-loss"> <span class="nav-number">2.2.3</span> <span class="nav-text">Hinge Loss</span> </a> </li> </ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#architecture"> <span class="nav-number">2.3</span> <span class="nav-text">Architecture</span> </a> </li> </ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#result"> <span class="nav-number">3</span> <span class="nav-text">Result</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#quantitative-result"> <span class="nav-number">3.1</span> <span class="nav-text">Quantitative Result</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#qualitative-comparisons"> <span class="nav-number">3.2</span> <span class="nav-text">Qualitative Comparisons</span> </a> </li> </ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#4-discussion"> <span class="nav-number">4</span> <span class="nav-text">4. Discussion</span> </a> </li>
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mok</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://jekyllrb.com">Jekyll</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/blog/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/blog/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/blog/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/blog/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+
+
+  
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/blog/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <div>
+    <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fmok0102.github.io%2Fhit-counter&count_bg=%233D8CC8&title_bg=%23555555&icon=kickstarter.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
+  </div>
+  <div></div>
+</body>
+</html>
+

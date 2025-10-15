@@ -1,0 +1,1658 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://localhost:4000/blog/atom.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/blog/" rel="alternate" type="text/html" /><updated>2025-10-15T17:56:51+09:00</updated><id>http://localhost:4000/blog/atom.xml</id><title type="html">M0kI’s bloG</title><subtitle>My blog</subtitle><author><name>Mok</name></author><entry><title type="html">[알고리즘/코테 합격자 되기] 시간복잡도/문법</title><link href="http://localhost:4000/blog/time-complexity/" rel="alternate" type="text/html" title="[알고리즘/코테 합격자 되기] 시간복잡도/문법" /><published>2023-10-24T00:00:00+09:00</published><updated>2023-10-24T00:00:00+09:00</updated><id>http://localhost:4000/blog/%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84</id><content type="html" xml:base="http://localhost:4000/blog/time-complexity/">&lt;p&gt;**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다!
+&lt;a href=&quot;https://wikidocs.net/222560&quot;&gt;코딩 테스트 합격자 되기 - 파이썬 편&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;시간복잡도&quot;&gt;시간복잡도&lt;/h2&gt;
+&lt;p&gt;보통 시간복잡도와 공간복잡도는 알고리즘의 성능을 나타내는 지표로써 쓰인다. 이때 공간복잡도보다도 시간복잡도가 주로 고려되야 할 사항인 것 같다.&lt;/p&gt;
+
+&lt;p&gt;시간복잡도는 보통 연산 횟수와 관련이 있어서, 나는 1번 연산이 들어갈 때 (변수에 값 할당, 또는 연산) 시간복잡도가 1이 늘어난다고 생각하며 계산한다. 따라서 내가 짠 코드에서 최대 n번 연산이 들어갈 때 시간복잡도를 O(n)이라고 표현한다. (빅오 표기법)&lt;/p&gt;
+
+&lt;p&gt;보통은 시간복잡도를 최악의 상황에서 도는 빅오 표기법을 사용하지만, 빅-세타 표기법(평균적인 경우)과 빅-오메가 표기법(최선의 경우) 또한 존재한다. 이것은 시간복잡도 계산 방식 자체는 비슷하고, 최선의 경우와 평균 경우를 고려하여 시간복잡도를 계산하면 된다.&lt;/p&gt;
+
+&lt;h3 id=&quot;빅오-표기법&quot;&gt;빅오 표기법&lt;/h3&gt;
+&lt;p&gt;빅오 표기법은 최악의 상황을 고려하기 때문에 계산이 간결해지는 경향이 있다. 만약 시간복잡도가 O(1n^2+2n-1)이라면 이 시간복잡도는 O(n^2)과 동일하다. 빅오는 최악의 상황을 고려하기 때문에, n이 무한히 커지는 상황(최악의 상황)을 고려한다. 따라서 무한히 커지는 n이 있을 때, 최고차항만 남기고 나머지 차수는 버려도 되는 것이다.&lt;/p&gt;
+
+&lt;p&gt;이는 아래 빅오 표기법의 수식을 보면 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;특정 x 시점 이후부터 항상 \(f(x) ≤ C * g(x)\)를 만족&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;C는 상수&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;따라서 \(n^2+2n-1&amp;lt;=C*n^2\)가 특정 n에서 만족되기 때문에 (여기서는 n=1부터 만족된다) 시간복잡도를 단순히 O(n^2)이라고 표현할 수 있다.&lt;/p&gt;
+
+&lt;!-- ![이미지](https://wikidocs.net/images/page/222560/03-1-4.png)
+1. there exists x such that $$3x^2+5x+6&lt;=C*(x^2)$$, c is constant
+이므로 어떤 x를 찾기만 하면 된다. 이때 C가 4, x가 5 이상이면 항상 이 조건을 만족한다. ($$(x-5)(x+1)$$)
+
+2. $$x+logx&lt;=C*(x)$$ 인 x, C
+C가 2이고 --&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;코딩-테스트-필수-문법&quot;&gt;코딩 테스트 필수 문법&lt;/h2&gt;
+
+&lt;h3 id=&quot;빌트인-데이터-타입&quot;&gt;빌트인 데이터 타입&lt;/h3&gt;
+&lt;p&gt;정수형(int), 부동소수형(float), 문자열 타입이 있음.
+산술연산, 비교연산, 비트연산, 논리연산이 모두 가능함.
+심지어 c에서는 math.h include 해야 가능한 abs도 가능함.&lt;/p&gt;
+
+&lt;p&gt;부동소수형에서는 엡실론을 주의해야함. 부동소수를 이진법으로 표현하는 과정에서 오차가 발생하기 때문인데, 이 오차 때문에 문제 통과를 못하는 경우도 있으므로 주의해야 한다.&lt;/p&gt;
+
+&lt;h3 id=&quot;컬렉션-데이터-타입&quot;&gt;컬렉션 데이터 타입&lt;/h3&gt;
+&lt;p&gt;리스트(list), 튜플(tuple), 딕셔너리(dictionary), 셋(set), 문자열(string) 등이 있음.
+특히 나는 리스트에서 중복 원소 제거할 때 for문 돌면서 막 지우지 말고 그냥 set변환 한번 했다가 다시 리스트로 변환하곤 했음.!&lt;/p&gt;
+
+&lt;p&gt;뮤터블 객체는 리스트, 튜플, 셋임. 따라서 뮤터블 객체를 다른 변수에 담고 수정하면 함께 수정이 됨. 따라서 .copy() 같은 걸 이용해서 복사해서 넣어줘야 같이 동시에 수정이 안됨.
+이 외에 이뮤터블 객체들은 복사해서 넣어주지 않아도 동시에 수정이 안됨.!&lt;/p&gt;
+
+&lt;p&gt;리스트 슬라이싱, 딕셔너리 사용법은 내가 대충 알고 있으므로 따로 자세히 정리하지는 않겠음.
+!!튜플은 삽입, 삭제가 안됨.&lt;/p&gt;
+
+&lt;h4 id=&quot;리스트의-시간복잡도&quot;&gt;리스트의 시간복잡도&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;list.append() : 맨 뒤에 그냥 넣으면 되므로 O(1)&lt;/li&gt;
+  &lt;li&gt;list.insert(i, num) : i번째까지 가야하므로 O(n)&lt;/li&gt;
+  &lt;li&gt;list.pop() : 맨 뒤에 그냥 제거하면 되므로 O(1)&lt;/li&gt;
+  &lt;li&gt;list.remove(num) : num을 list에서 찾아내는데 걸리는 시간 O(n), 삽입 시간 O(1) =&amp;gt; O(n)&lt;/li&gt;
+  &lt;li&gt;list.extend([list2]) : 맨 뒤에 list2 원소들을 하나씩 append 하므로 O(1)이 k번 =&amp;gt; O(k)&lt;/li&gt;
+  &lt;li&gt;list[k] : 접근 자체는 상수 시간 O(1) (연결리스트는 O(n)으로 알고 있는데 그 리스트가 아닌 것 같다.?)&lt;/li&gt;
+  &lt;li&gt;list1+list2 : list.extend는 기존 리스트에 append하므로 O(k)였지만 얘는 새로 빈 리스트에 list1, list2원소를 모두 append하기 때문에 O(n+m)&lt;/li&gt;
+  &lt;li&gt;list(set(list)) : 시간복잡도가 O(n)&lt;/li&gt;
+  &lt;li&gt;k in list : k를 찾아서 존재여부를 리턴하므로 탐색 시 걸리는 O(n)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;딕셔너리의-시간복잡도&quot;&gt;딕셔너리의 시간복잡도&lt;/h4&gt;
+&lt;p&gt;딕셔너리는 리스트와 달리 탐색에 걸리는 시간이 모두 상수시간이다.&lt;/p&gt;
+
+&lt;p&gt;따라서 dic.get[key], dic[key], dic.pop(key) 모두 O(1).&lt;/p&gt;
+
+&lt;h4 id=&quot;셋의-시간복잡도&quot;&gt;셋의 시간복잡도&lt;/h4&gt;
+&lt;p&gt;set은 add, remove, discard는 모두 O(1) 상수시간에 이루어진다. 나머지는&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;set1.union(set2): O(len(set1)+len(set2)) (셋 안에 모든 요소를 흩으므로)&lt;/li&gt;
+  &lt;li&gt;set1.intersection(set2): O(min(len(set1), len(set2)))&lt;/li&gt;
+  &lt;li&gt;set1.difference(set2) : O(len(set1))&lt;/li&gt;
+  &lt;li&gt;list(set(set1)) : O(len(set1)) (모든 요소를 list에 append)&lt;/li&gt;
+  &lt;li&gt;k in set1 : 탐색은 O(1)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;문자열의-시간복잡도&quot;&gt;문자열의 시간복잡도&lt;/h4&gt;
+&lt;p&gt;문자열은 내가 잘 모르는 문법도 있어서 좀 정리를 해보겠다. (ㅠ)&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;str1 + str2 : O(str1+str2) 두 문자열을 더함&lt;/li&gt;
+  &lt;li&gt;delimiter.join(string_list) : O(총 문자열 길이) string list를 delimiter로 연결&lt;/li&gt;
+  &lt;li&gt;str.replace(old, new) : O(n) 특정 문자를 찾아 변경&lt;/li&gt;
+  &lt;li&gt;str.split(sep) : O(n) sep 기준으로 문자열 split (리스트 리턴)&lt;/li&gt;
+  &lt;li&gt;str.startswith(prefix) : O(len(prefix)) prefix로 문자열이 시작하는지 체크&lt;/li&gt;
+  &lt;li&gt;str.endswith(suffix) : O(len(suffix)) suffix로 문자열이 끝나는지 체크 (뒤에서부터 탐색)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;람다식함수&quot;&gt;람다식(함수)&lt;/h3&gt;
+&lt;p&gt;람다식은 다음처럼 정의함! c에는 못 본 거라 내가 잘 쓸 줄 모름(ㅠ)&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;람다로 간단하게 함수를 위처럼 정의하고 변수에 담아서 부를 수도 있고, 아니면 인수로 람다식을 넘기는 방법도 있다. 두번째를 오며가며 더 많이 본 것 같다..?&lt;/p&gt;</content><author><name>이정목</name></author><category term="CS" /><category term="CS" /><category term="algorithm" /><category term="시간복잡도" /><category term="time complexity" /><category term="코딩 테스트 합격자 되기" /><summary type="html">**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다! 코딩 테스트 합격자 되기 - 파이썬 편</summary></entry><entry><title type="html">[Computer Network] 와이어샤크를 이용해 패킷 분석하기</title><link href="http://localhost:4000/blog/wireshark-packet-analysis/" rel="alternate" type="text/html" title="[Computer Network] 와이어샤크를 이용해 패킷 분석하기" /><published>2023-10-24T00:00:00+09:00</published><updated>2023-10-24T00:00:00+09:00</updated><id>http://localhost:4000/blog/%ED%8C%A8%ED%82%B7-%EB%B6%84%EC%84%9D</id><content type="html" xml:base="http://localhost:4000/blog/wireshark-packet-analysis/">&lt;p&gt;ping
+nslookup
+nmap (port 분석)&lt;/p&gt;
+
+&lt;p&gt;tcp 3 way handshake
+dns handshake
+tls handshake(https://babbab2.tistory.com/7)&lt;/p&gt;</content><author><name>이정목</name></author><category term="CS" /><category term="CS" /><category term="Computer Network" /><category term="wireshark" /><category term="packet" /><summary type="html">ping nslookup nmap (port 분석)</summary></entry><entry><title type="html">[AI] DDPM: Denoising Diffusion Probabilistic Model</title><link href="http://localhost:4000/blog/ddpm/" rel="alternate" type="text/html" title="[AI] DDPM: Denoising Diffusion Probabilistic Model" /><published>2023-10-01T00:00:00+09:00</published><updated>2023-10-01T00:00:00+09:00</updated><id>http://localhost:4000/blog/ddpm</id><content type="html" xml:base="http://localhost:4000/blog/ddpm/">&lt;p&gt;diffusion 공부를 시작하고 수식 파티에서 헤어나오지 못하고 있다가 정신차리고 유도과정을 차근차근 기록해보려고 한다. 너무너무 복잡하고 내용도 많아서 이거 유도하는데만 며칠을 쓴 것 같다. 아무튼 이번에는 ddpm loss 유도 관련된 수식 정리이고 이전까지 했던 논문리뷰와는 좀 다를 수도 있다. (논문 정리가 아니라 수식 정리에 가깝다) 나중에 내가 다시 보려고 올리는 거라 내맘대로일 수 있다. ㅎ&lt;/p&gt;
+
+&lt;p&gt;수식 파티를 넘기고 코드만 돌리는 게 아니라 이해하기 위해서 내가 읽었던 논문/포스트 링크들을 남겨 놓는다.
+&lt;a href=&quot;https://lilianweng.github.io/posts/2021-07-11-diffusion-models/#speed-up-diffusion-model-sampling&quot;&gt;수식 파티1&lt;/a&gt;
+&lt;a href=&quot;https://developers-shack.tistory.com/8&quot;&gt;loss 유도만 보려면&lt;/a&gt;
+&lt;a href=&quot;https://arxiv.org/abs/2208.11970&quot;&gt;Understanding Diffusion Models: A Unified Perspective&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;q-p&quot;&gt;q, p&lt;/h2&gt;
+&lt;p&gt;ddpm은 vae랑 비슷하게 수식을 가져가는 경향이 있다. (likelihood 모델이니까) vae에서는 맞추지 못하는 p(intractable하다고 표현한다)를 q로 근사하고 ELBO를 이용해 q가 p에 가까워지게 optimize 했다면, ddpm은 q forward를 우리가 아는 가우시안으로 정의해놓은 후 p reverse를 q를 이용해 ELBO로 추론해가는(학습하는) 과정이다. 
+그리고 Marcov chain과 각 step의 확률이 Gaussian distribution을 따른다는 가정이 들어간다. (저 두 가정 때문에 모든 유도가 가능해진다.) ddim에서는 Marcov chain을 안쓴다는데 ddpm 정리 끝나면 읽어봐야겠다.&lt;/p&gt;
+
+&lt;h3 id=&quot;forward-process&quot;&gt;forward process&lt;/h3&gt;
+&lt;p&gt;우리는 각 step에서의 q를 다음과 같이 정의한다. 각 step에서 gaussian을 따른다.
+즉 내가 t-1 step을 알면 t step에서의 이미지를 추론할 수 있게 된다 (q를 알고 있으므로)&lt;/p&gt;
+
+\[q(x_t|x_{t-1})=\mathbf{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t I)\]
+
+\[q(x_{1:T}|x_0)=\prod_{t=1}^T q(x_t|x_{t-1})\]
+
+&lt;h3 id=&quot;backward-process&quot;&gt;backward process&lt;/h3&gt;
+&lt;p&gt;비슷한 방법으로 추론해야하는 p또한 정의할 수 있다. p를 알기 위해 우리가 맞춰야 하는(학습해야 하는) 게 각 step의 평균, 분산이 되겠다. (가우시안이므로)&lt;/p&gt;
+
+\[p_\theta(x_0:T):=p(x_T)\cdot \prod_{t=1}^Y p(x_{t-1}|x_t)\]
+
+\[p_\theta(x_{t-1}|x_t):=\mathbf{N}(\mu_\theta(x_t,t),\Sigma_\theta(x_t,t))\]
+
+&lt;p&gt;VAE ELBO 유도랑 비슷한 감이 있는데 내가 &lt;a href=&quot;https://mok0102.github.io/MAR-beta-cycleGAN/&quot;&gt;링크&lt;/a&gt; 여기서 VAE ELBO 유도를 했으므로 이걸로 퉁치겠다. DDPM도 여러 ELBO를 유도할 수 있는데, 그중에 가장 tractable한 ELBO, 즉 ddpm에서 사용하는 ELBO만 여기서 설명하겠다. (intractable한 ELBO는 내가 힘이 닿으면 추가하겠다)&lt;/p&gt;
+
+&lt;h2 id=&quot;minimize-negative-log-likelihood-elbo&quot;&gt;minimize negative log likelihood (ELBO)&lt;/h2&gt;
+
+\[\mathbf{E}_{x_1:T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0)}]\]
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0, x_1, ..., x_T) \over p_\theta(x_1, x_2, ..., x_T|x_0)}]\]
+
+&lt;p&gt;양변에 $q(x_{1:T}\mid x_0)\over q(x_{1:T}\mid x+0)$ 를 쑤셔넣자.&lt;/p&gt;
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0, x_1, ..., x_T) \over p_\theta(x_1, x_2, ..., x_T|x_0)}*{q(x_{1:T}\mid x_0)\over q(x_{1:T}\mid x_0)}]\]
+
+&lt;p&gt;$p_\theta(x_0, x_1, …, x_T)$ 랑 $q(x_{1:T}\mid x_0)$ 랑 묶고 $p_\theta(x_1, x_2, …, x_T\mid x_0)$랑 $q(x_{1:T}\mid x_0)$ 랑 묶자. 그리고 로그니까 뺄셈으로 분리하면 두번째 항이 kl-divergence 폼이 된다.&lt;/p&gt;
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0, x_1, ..., x_T) \over q(x_{1:T}\mid x_0)}- \log{q(x_{1:T}\mid x_0)\over p_\theta(x_1, x_2, ..., x_T|x_0)}]\]
+
+&lt;p&gt;kl-divergence는 대충 이렇게 생겼다. 인테그랄을 지금 보이는 평균 notation으로 바꾸면 된다(이정도는 미래의 나도 기억하겠지?)&lt;/p&gt;
+
+\[D_{KL}(P||Q)=\int_{\infty} p(x)log{p(x) \over q(x)}dx\]
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0, x_1, ..., x_T) \over q(x_{1:T}\mid x_0)}]-D_{KL}(p\mid\mid q)\]
+
+&lt;p&gt;그런데 kl-divergence는 항상 0보다 크므로 앞에 항만 써서 부등식으로 나타낼 수 있게 된다.&lt;/p&gt;
+
+\[&amp;lt;= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_0, x_1, ..., x_T) \over q(x_{1:T}\mid x_0)}]\]
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_{1:T}) \over q(x_{1:T}\mid x_0)}]\]
+
+&lt;p&gt;마르코브 체인에 의해,&lt;/p&gt;
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T)\cdot \prod_{t=1}^T p_\theta(x_{t-1}\mid x_t) \over \prod_{t=1}^T q(x_t\mid x_{t-1}) }]\]
+
+&lt;p&gt;로그니까 또 뺄셈으로 빼내면,&lt;/p&gt;
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) - \sum_{t=1}^T \log{p_\theta(x_{t-1}\mid x_t) \over q(x_t\mid x_{t-1})} }]\]
+
+&lt;p&gt;일단 여기까지 하면 loss 반의반정도 유도까지 왔다. 근데 저 \(q(x_t\mid x_{t-1})\) 를 위에 p처럼 뒤집어 주고 싶다. 우리가 \(q(x_t\mid x_{t-1})\) 얘를 알고 있기 때문에 \(q(x_{t-1}\mid x_{t})\)를 유도해낼 수만 있으면 무적이 된다. 유도해보자.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;마르코브 체인 때문에 x_0라는 조건을 걸어 줘도 상관이 없다. (어차피 initialization 조건 이니까.)&lt;/p&gt;
+
+\[q(x_t|x_{t-1})=q(x_t\mid x_{t-1}, x_0)\]
+
+&lt;p&gt;베이즈 룰 때문에 다음과 같은 식이 성립한다.&lt;/p&gt;
+
+\[q(x_t\mid x_{t-1}, x_0)={q(x_t, x_{t-1}, x_0)\over q(x_{t-1}, x_0)}\]
+
+&lt;p&gt;얘를 저기다 끼워 넣고 \(q(x_t, x_0)\over q(x_t, x_0)\) 를 곱하자&lt;/p&gt;
+
+\[q(x_t|x_{t-1})= {q(x_t, x_{t-1}, x_0)\over q(x_{t-1}, x_0)} \cdot {q(x_t, x_0)\over q(x_t, x_0)}\]
+
+&lt;p&gt;\(q(x_t, x_{t-1}, x_0)\) 랑 \(q(x_t, x_0)\)랑 묶고 남은 애들 둘이 또 묶어주면&lt;/p&gt;
+
+\[q(x_t|x_{t-1})= {q(x_t, x_{t-1}, x_0)\over q(x_t, x_0)} \cdot {q(x_t, x_0)\over q(x_{t-1}, x_0)}\]
+
+&lt;p&gt;결국 둘 사이의 관계성을 이끌어낼 수 있다.&lt;/p&gt;
+
+\[q(x_t|x_{t-1})= {q(x_{t-1}\mid x_t, x_0)} \cdot {q(x_t, x_0)\over q(x_{t-1}, x_0)}\]
+
+&lt;hr /&gt;
+&lt;p&gt;다시 loss 유도 항을 살펴보자. 여기다가 방금 유도한 저 q를 끼워 넣으면,&lt;/p&gt;
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) - \sum_{t=1}^T \log{p_\theta(x_{t-1}\mid x_t) \over q(x_t\mid x_{t-1})} }]\]
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) - \sum_{t=1}^T \log{p_\theta(x_{t-1}\mid x_t) \over {q(x_{t-1}\mid x_t, x_0)} \cdot {q(x_t, x_0)\over q(x_{t-1}, x_0)}} }]\]
+
+&lt;p&gt;열심히 분리한다.&lt;/p&gt;
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) - \sum_{t=2}^T \log{p_\theta(x_{t-1}\mid x_t)\cdot q(x_{t-1}, x_0) \over {q(x_{t-1}\mid x_t, x_0)} \cdot {q(x_t, x_0)} } }]\]
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T)} - \sum_{t=2}^T \log{p_\theta(x_{t-1}\mid x_t) \over {q(x_{t-1}\mid x_t, x_0)} } - \sum_{t=2}^T \log {q(x_{t-1}, x_0) \over {q(x_t, x_0)}} - \log {p_\theta (x_0\mid x_1) \over q(x_1\mid x_0)}]\]
+
+&lt;p&gt;보면 \(\sum_{t=2}^T \log {q(x_{t-1}, x_0) \over {q(x_t, x_0)}}\) 얘가 소거되는 형태의 항이다. 소거하고 보면 제일 첫번째 항(t=2)의 첫번째 항이랑 제일 마지막 항(t=T)의 두번쩨 항만 남는다. 결국&lt;/p&gt;
+
+\[= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T)} - \sum_{t=2}^T \log{p_\theta(x_{t-1}\mid x_t) \over {q(x_{t-1}\mid x_t, x_0)} } - \log {q(x_0, x_1) \over q(x_T, x_0)} - \log {p_\theta (x_0\mid x_1) \over q(x_1\mid x_0)}]\]
+
+&lt;p&gt;다시 로그를 잘 분해해서 겹치는 항인 \(q(x_1\mid x_0)\)를 제거하면 합치면 최종 loss를 구할 수 있다!!!!!&lt;/p&gt;
+
+\[L_{VLB}= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) \over q(x_T\mid x_0)} - \sum_{t=2}^T \log{p_\theta(x_{t-1}\mid x_t) \over {q(x_{t-1}\mid x_t, x_0)} } - \log {p_\theta (x_0\mid x_1)}]\]
+
+&lt;hr /&gt;
+&lt;h2 id=&quot;reparameterization&quot;&gt;reparameterization&lt;/h2&gt;
+
+&lt;p&gt;자 여기서 첫번째는 p랑 q를 가깝게 하는 term으로, 결국 두개의 KL-divergence를 최소화하는 term이다. 세번째 term은 초기조건 정도로, 결국 얘도 초기조건에서 kl-divergence를 최소화해주는 term이다. 우리가 신경써야 하는 건 두번째 term이다. 여기서 parameterization 테크닉이 들어간다.&lt;/p&gt;
+
+&lt;p&gt;우리가 아까 q forward의 평균과 분산을 미리 정의해 놨다.&lt;/p&gt;
+
+\[q(x_t|x_{t-1})=\mathbf{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t I)\]
+
+&lt;p&gt;근데 우리 loss식에는 q reverse(\({q(x_{t-1}\mid x_t, x_0)}\))의 평균과 분산(\(\tilde \mu(x_t,x_0)\) 와 \(\tilde \beta\))을 찾기를 요구하고 있다. 얘도 결국 가우시안이다. 그래서 아까 열심히 유도해 놓은 요 \(q(x_t\mid x_{t-1})\) 으로 얘의 평균과 분산을 찾아내야 한다.&lt;/p&gt;
+
+\[q(x_{t-1}|x_{t})= \mathbf{N}(x_{t-1}; \tilde \mu(x_t,x_0), \tilde \beta I)\]
+
+\[q(x_t|x_{t-1})= {q(x_{t-1}\mid x_t, x_0)} \cdot {q(x_t, x_0)\over q(x_{t-1}, x_0)}\]
+
+&lt;hr /&gt;
+
+&lt;p&gt;잠깐 \(\alpha=1-\beta\)이고 다 알파 표현 식으로 바꾸고 가자. (내가 너무 헷갈림)&lt;/p&gt;
+
+\[q(x_t|x_{t-1})=\mathbf{N}(x_t; \sqrt{\alpha}x_{t-1}, (1-\alpha) I)\]
+
+&lt;p&gt;가우시안이고 marcov chain때문에 0번째에서 바로 t step으로 점프가 된다. 그냥 \(x_t=\sqrt{\alpha}\cdot x_{t-1}+\sqrt{1-\alpha}\epsilon\) 점화식 가지고 계속 유도하다보면 밑에처럼 바꿀 수 있다. (나중에 되면 자세하게 적겠으나 어느 정도 할 수 있을 거라고 믿는다)&lt;/p&gt;
+
+\[q(x_t|x_{0})=\mathbf{N}(x_t; \sqrt{\bar\alpha_t}x_{0}, (1-\bar\alpha_t) I)\]
+
+&lt;hr /&gt;
+
+&lt;p&gt;결국 \({q(x_{t-1}\mid x_t, x_0)} \cdot {q(x_t, x_0)\over q(x_{t-1}, x_0)}\) 이 세개를 다 가우시안으로 표현할 준비가 다 되었다. 바로 위의 두 식을 잘 끼워 넣으면 된다.&lt;/p&gt;
+
+\[q(x_t|x_{t-1})= \mathbf{N}(x_t; \sqrt{\alpha}x_{t-1}, (1-\alpha) I) \cdot {\mathbf{N}(x_{t-1}; \sqrt{\bar\alpha_{t-1}}x_{0}, (1-\bar\alpha_{t-1}) I)\over \mathbf{N}(x_t; \sqrt{\bar\alpha_t}x_{0}, (1-\bar\alpha_t) I)}\]
+
+\[q(x_t|x_{t-1})= \mathbf{N}(x_t; \sqrt{\alpha}x_{t-1}, (\beta_t) I) \cdot {\mathbf{N}(x_{t-1}; \sqrt{\bar\alpha_{t-1}}x_{0}, (1-\bar\alpha_{t-1}) I)\over \mathbf{N}(x_t; \sqrt{\bar\alpha_t}x_{0}, (1-\bar\alpha_t) I)}\]
+
+&lt;p&gt;여기서 실제 가우시안 식을 잠깐 보고 가자. 얘를 이용해야 한다. 우리가 지금 평균과 분산이 보이는 형태로 식을 다 바꿔놨으므로 위에 식을 아래식을 이용해 실제 가우시안 식으로 표현 가능하다.
+\(p(x)={1\over \sigma \sqrt{2\pi}} \exp (-{(x-\mu)^2 \over 2\sigma^2})\)&lt;/p&gt;
+
+&lt;p&gt;앞에 상수 (\({1\over \sigma \sqrt{2\pi}}\))를 떼버리고 등호 대신 \(\propto\)로 표현해보자&lt;/p&gt;
+
+\[q(x_t|x_{t-1}) \propto \exp (-{1\over 2}({(x_t-\sqrt{\alpha}x_{t-1})^2\over \beta_t} + {(x_{t-1}-\sqrt{\bar\alpha_{t-1}})^2\over (1-\bar\alpha_{t-1})} - {(x_t-\sqrt{\bar\alpha_t})^2\over (1-\bar\alpha_t)}))\]
+
+&lt;p&gt;얘를 다 풀어보자. (또 새로운 가우시안 폼으로 만들기 위해서다.) const라고 표현한 부분은 어차피 가우시안 폼 만들때 필요없는거라 유도하지 않은거다.&lt;/p&gt;
+
+\[= \exp (-{1\over 2}({x_t^2-2\sqrt{\alpha_t}x_t x_{t-1}+\alpha_t x_{t-1}^2\over \beta_t}+{x_{t-1}^2-2\sqrt{\bar\alpha_{t-1}x_{t-1}x_0}+\bar\alpha_{t-1}x_0^2\over 1-\bar\alpha_{t-1}}-{x_t^2-2\sqrt{\bar\alpha_t}x_tx_0+\bar\alpha_t x_0^2\over 1-\bar\alpha_t}))\]
+
+\[= \exp (-{1\over 2}(({\alpha_t\over \beta_t}+{1\over 1-\bar\alpha_{t-1}})x_{t-1}^2+(-{2\sqrt{\alpha_{t-1}}\cdot x_0 \over 1- \bar\alpha_{t-1}}-{2\sqrt{\alpha_t}x_t\over \beta_t})x_{t-1}+const))\]
+
+&lt;p&gt;식이 너무 복잡하니까 \(({\alpha_t\over \beta_t}+{1\over 1-\bar\alpha_{t-1}})\) 얘를 \(A\)라고 치환하고 \((-{2\sqrt{\alpha_{t-1}}\cdot x_0 \over 1- \bar\alpha_{t-1}}-{2\sqrt{\alpha_t}x_t\over \beta_t})\) 얘를 \(B\)라고 치환하고 가우시안 폼으로 바꿔보자.&lt;/p&gt;
+
+\[= \exp (-{1\over 2}(Ax_{t-1}^2-Bx_{t-1}+const))\]
+
+\[= \exp (-{1\over 2}(A(x_{t-1}^2-{B\over A}x_{t-1}+{B\over 2A}^2)+const'))\]
+
+\[= \exp (-{1\over 2}(A(x_{t-1}-{B\over 2A})^2+const'))\]
+
+&lt;p&gt;결국 이 가우시안의 평균은 \(B\over 2A\)이고 분산은 \(1\over A\) 인 것이다. 즉, \(q(x_t\mid x_{t-1})\)의 평균(뮤티)과 분산(틸테베타티)이 이것이 된다. A,B를 다시 넣어 보면&lt;/p&gt;
+
+\[q(x_{t-1}|x_{t})= \mathbf{N}(x_{t-1}; \tilde \mu(x_t,x_0), \tilde \beta_t I)\]
+
+\[\tilde \mu(x_t,x_0)={B \over 2A}={\frac{\sqrt{\alpha_t}}{\beta_t} x_t + {1\over 1-\bar\alpha_{t-1}} x_0 \over {\frac{\sqrt{\alpha_t}}{\beta_t} \over \beta_t}+{1\over 1-\bar\alpha_{t-1}}}\]
+
+&lt;p&gt;여기서 분모가 깔끔하게 정리가 되는데, 통분하면&lt;/p&gt;
+
+\[{\frac{\sqrt{\alpha_t}}{\beta_t} \over \beta_t}+{1\over 1-\bar\alpha_{t-1}}={\alpha_t - \alpha_t \bar\alpha_{t-1} + \beta_t\over \beta_t (1-\bar\alpha_{t-1})}={\alpha_t - \alpha_t \bar\alpha_{t-1} + 1-\alpha_t \over \beta_t (1-\bar\alpha_{t-1})}={1-\bar\alpha_t \over \beta_t (1-\bar\alpha_t)}\]
+
+&lt;p&gt;결국 뮤티는&lt;/p&gt;
+
+\[\tilde \mu(x_t,x_0)=({\frac{\sqrt{\alpha_t}}{\beta_t} x_t + {\sqrt{\bar\alpha_{t-1}}\over 1-\bar\alpha_{t-1}} x_0})\cdot {(1-\bar\alpha_{t-1})\beta_t \over 1-\bar\alpha_t}\]
+
+\[\tilde \mu(x_t,x_0)={\frac{\sqrt{\alpha_t}(1-\bar\alpha_{t-1})}{1-\bar\alpha_t} x_t + {\sqrt{\bar\alpha_{t-1}}\over 1-\bar\alpha_t} x_0}\]
+
+&lt;p&gt;가 된다. 뮤티를 한번만 더 정리하자. 아까 말했던 이 점화식 \(x_t=\sqrt{\alpha}\cdot x_{t-1}+\sqrt{1-\alpha}\epsilon\) 가지고 0번째에서 t step 점프하는 식을 유도했다. 가지고 오자.&lt;/p&gt;
+
+\[x_t=\sqrt{\bar\alpha_t} x_0+\sqrt{1-\bar\alpha_t} \epsilon_t\]
+
+&lt;p&gt;얘를 x_0에 대해서 정리하면은
+\(x_0={x_t-\sqrt{1-\bar\alpha_t}\epsilon_0}\sqrt{\bar\alpha_t}\)&lt;/p&gt;
+
+&lt;p&gt;얘를 q reverse의 평균인 뮤티식에 대입해서 정리해보면&lt;/p&gt;
+
+\[\tilde \mu(x_t,x_0)={1\over\sqrt{\alpha_t}}(x_t-\frac{1-\alpha_t}{1-\bar\alpha_t}\epsilon_t)\]
+
+&lt;p&gt;q reverse의 분산인 틸테베타티는 (유도 생략 위에꺼 치느라 너무 힘들었다. 비슷하게 유도하면 된다)&lt;/p&gt;
+
+\[\tilde \beta_t = {1-\bar\alpha_{t-1}\over 1-\bar\alpha_t}\cdot \beta_t\]
+
+&lt;p&gt;이로써 결국 여기까지 내용을 정리해보면, loss term을 ELBO를 통해서 유도했더니 세 개의 term이 나왔었고, + 우리가 미리 정의해놓아서 알고 있는 q forward의 평균, 분산 (\(\sqrt{\alpha_t}, (1-\alpha_t)\))을 통해서 q reverse의 평균, 분산(\(\tilde \mu(x_t,x_0), \tilde \beta_t\))를 유도해냈다.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;simplification&quot;&gt;simplification&lt;/h2&gt;
+&lt;p&gt;자, 이제 진짜 위에서 말했던 loss에서 두번째 term을 진짜진짜 정리할 수 있게 되었다. 모든 식을 다 유도했다. 집어넣기만 하면 된다.&lt;/p&gt;
+
+&lt;p&gt;loss를 다시 복기해보자. ddpm은 시그마(\(\beta\))를 고정하기 때문에 첫번째 loss term은 상수가 된다. 세번째 term은 아주 작은 noise가 더해진 이미지에서 원본 이미지로 reconstruction되는 term이므로 무시해도 된다. 결국 두번째 term만 잘 만져주면 된다.&lt;/p&gt;
+
+\[L_{VLB}= \mathbf{E}_{x_T \thicksim q(x_T|x_0)}[-\log {p_\theta(x_T) \over q(x_T\mid x_0)} - \sum_{t=2}^T \log{p_\theta(x_{t-1}\mid x_t) \over {q(x_{t-1}\mid x_t, x_0)} } - \log {p_\theta (x_0\mid x_1)}]\]
+
+&lt;p&gt;우리가 죽도록 모든 분포가 가우시안을 따른다고 가정해왔기 때문에, 저 kl-divergence를 minimize하는 두번째 loss term은 더 간단하게 표현이 된다. (위에 있는 논문에서 말하는 위키 링크이다. &lt;a href=&quot;https://en.wikipedia.org/wiki/Kullback–Leibler_divergence#Multivariate_normal_distributions&quot;&gt;kl-divergence between two gaussian distribution&lt;/a&gt;)&lt;/p&gt;
+
+\[D_{KL}(\mathbf{N}(x;\mu_x,\Sigma_x)\mid\mid \mathbf{N}(y;\mu_y,\Sigma_y))={1\over 2}[\log \frac{|\Sigma_y}{\Sigma_x}-d+tr(\Sigma_y^{-1}\Sigma_x)+(\mu_y-\mu_x)^T\Sigma_y^{-1}(\mu_y-\mu_x)]\]
+
+&lt;p&gt;또 ddpm은 저 시그마(variance)가 동일하다고 아까 가정을 했기 때문에, (시그마 고정!) 그렇기 때문에 더 쉬운 문제가 되어버리는데&lt;/p&gt;
+
+\[D_{KL}(q(x_{t-1}|x_t, x_0)\mid\mid p_\theta(x_{t-1}x_t))={1\over 2}[\log \frac{|\Sigma_q(t)}{\Sigma_q(t)}-d+tr(\Sigma_q(t)^{-1}\Sigma_q(t))+(\mu_\theta-\mu_q)^T\Sigma_q(t)^{-1}(\mu_\theta-\mu_q)]\]
+
+\[={1\over 2}[\log 1-d+d+(\mu_\theta-\mu_q)^T\Sigma_q(t)^{-1}(\mu_\theta-\mu_q)]\]
+
+\[={1\over 2}[(\mu_\theta-\mu_q)^T(\sigma_q^2(t)I)^{-1}(\mu_\theta-\mu_q)]\]
+
+\[={1\over2\sigma_q^2(t)}[||\mu_\theta-\mu_q||^2_2]\]
+
+&lt;p&gt;결국 그냥 뮤세타랑 뮤티 mse하는 거랑 똑같애진다. 이게 무슨말이냐면 뮤세타가 뮤티에 가까워지도록 학습한다는 얘기다. 우리가 위에서 우리가 열심히 뮤티를 유도했었던 걸 기억해보자. 이 뮤티를 가져와보면,&lt;/p&gt;
+
+\[\tilde \mu(x_t,x_0)={1\over\sqrt{\alpha_t}}(x_t-\frac{1-\alpha_t}{1-\bar\alpha_t}\epsilon_t)\]
+
+&lt;p&gt;그리고 우리는 어차피 뮤티랑 뮤세타가 가까워져야 하는거니까 뮤티랑 뮤세타를 입실론 제외하고 똑같은 형태로 놓고 푸는게 이득이다. 따라서 뮤세타는&lt;/p&gt;
+
+\[\mu_\theta(x_t,x_0)={1\over\sqrt{\alpha_t}}(x_t-\frac{1-\alpha_t}{1-\bar\alpha_t}\epsilon_\theta(x_t, t))\]
+
+&lt;p&gt;결국 우리는 입실론을 optimize하겠다는 말이 된다. 결국, 이 모델은 reparameterization을 통해 노이즈(\(\epsilon_\theta(x_t, t\))를 추론하는 모델이 된다. (L_t가 두번째 loss term이다) 정리해보면&lt;/p&gt;
+
+\[L_t={1\over2\sigma_q^2(t)}[||\mu_\theta-\mu_q||^2_2]\]
+
+\[L_t={1\over2\sigma_q^2(t)}[||{1\over \alpha_t}(x_t-\frac{1-\alpha_t}{\sqrt{1-\bar\alpha_t}}\epsilon_t-{1\over \alpha_t}(x_t-\frac{1-\alpha_t}{\sqrt{1-\bar\alpha_t}}\epsilon_\theta(x_t, t))||^2_2]\]
+
+\[L_t={(1-\alpha_t)^2\over2\alpha_t(1-\bar\alpha_t)\sigma_q^2(t)}[||\epsilon_t-\epsilon_\theta(x_t, t||^2_2]\]
+
+&lt;p&gt;우리가 또 x_t를 x_0에 대해 유도해놓은 식이 있기 때문에 얘를 대입하면&lt;/p&gt;
+
+\[x_t=\sqrt{\bar\alpha_t} x_0+\sqrt{1-\bar\alpha_t} \epsilon_t\]
+
+\[L_t={(1-\alpha_t)^2\over2\alpha_t(1-\bar\alpha_t)\sigma_q^2(t)}[||\epsilon_t-\epsilon_\theta(\sqrt{\bar\alpha_t} x_0+\sqrt{1-\bar\alpha_t} \epsilon_t, t||^2_2]\]
+
+&lt;p&gt;1번, 3번 텀을 무시하고 L_t만 사용해서 얘를 \(L_{simple}\) 이라고 부른다. 결국 얘가 loss다.&lt;/p&gt;
+
+&lt;h2 id=&quot;정리&quot;&gt;정리&lt;/h2&gt;
+&lt;p&gt;결국 diffusion은 조금씩 가우시안 노이즈를 더하는, 우리가 생각하기 쉬운 t step을 q forward라 정의하고, p reverse를 추론하는 문제이다. 이때 q reverse를 q forward로 유도해 낼 수 있고, ELBO를 통한 loss 또한 p reverse와 q reverse를 가깝게 만드는(kl-divergence) 형태로 나오기 때문에 학습이 가능해진다. 이때, p reverse와 q reverse (사실 forward도 마찬가지지만)가 모두 가우시안을 따르기 때문에 p reverse와 q reverse 두 분포의 평균과 분산 두 variable을 맞춰주는 문제가 되어버린다. ddpm은 여기서 분산까지 고정해버리기 때문에 결국 평균을 맞춰주는 형태가 되어 버리고, 평균이 랜덤 노이즈로 표현되기 때문에 p와 q의 노이즈를 맞춰주는 문제로 simplification 되어버린다!&lt;/p&gt;
+
+&lt;p&gt;유도하느라 정말 너무 힘들었다. 가우시안 식 적을 때 즈음 부터 후회했지만 어찌저찌 해냈다. ㅋㅋ 평생 쓸 latex 다 쓴 것 같다. 기억안날 때마다 이거 보러 와야겠다.&lt;/p&gt;</content><author><name>이정목</name></author><category term="AI" /><category term="AI" /><category term="diffusion" /><category term="ddpm" /><summary type="html">diffusion 공부를 시작하고 수식 파티에서 헤어나오지 못하고 있다가 정신차리고 유도과정을 차근차근 기록해보려고 한다. 너무너무 복잡하고 내용도 많아서 이거 유도하는데만 며칠을 쓴 것 같다. 아무튼 이번에는 ddpm loss 유도 관련된 수식 정리이고 이전까지 했던 논문리뷰와는 좀 다를 수도 있다. (논문 정리가 아니라 수식 정리에 가깝다) 나중에 내가 다시 보려고 올리는 거라 내맘대로일 수 있다. ㅎ</summary></entry><entry><title type="html">[MAR] Unsupervised CT Metal Artifact Learning Attention-guided β-CycleGAN</title><link href="http://localhost:4000/blog/MAR-beta-cycleGAN/" rel="alternate" type="text/html" title="[MAR] Unsupervised CT Metal Artifact Learning Attention-guided β-CycleGAN" /><published>2023-04-07T09:00:00+09:00</published><updated>2023-04-07T09:00:00+09:00</updated><id>http://localhost:4000/blog/unsupervised-mar</id><content type="html" xml:base="http://localhost:4000/blog/MAR-beta-cycleGAN/">&lt;p&gt;이번에는 MAR 두번째 논문이다. MAR 연구 특성상 사람한테 한번 metal을 박으면 metal이 없는 CT를 얻을 수가 없기 때문에 data 부족 문제에 시달릴수밖에 없고, 이것을 해결하기 위해 나는 data synthesize 방법을 취했지만, unsupervised로는 어떻게 푸는지 궁금해서 논문을 읽어보았다!&lt;/p&gt;
+
+&lt;p&gt;unsupervised i2i에서 가장 베이스로 사용되는 cycleGAN에서 발생하는 문제인 input domain 생성은 잘 되지만 target domain 생성이 잘 안되는 문제가 여기서도 발생했었는지, 발생했다면 그걸 해결하려고 했는지가 궁금했다. (다 읽고 나니 그게 β-CycleGAN인 이유인것 같다)&lt;/p&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;FDK(Feldkamp, Davis and Kress) is the most widely used algorithm&lt;/li&gt;
+  &lt;li&gt;metal implants 삽입이 ROI부근에 일어나면서 MAR이 중요해졌다
+    &lt;ul&gt;
+      &lt;li&gt;X-ray photons cannot penetrate the metallic object consistently due to the object’s high attenuation&lt;/li&gt;
+      &lt;li&gt;this causes severe streaking and shading artifacts that deteriorate the image quality in reconstructed images&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;related-works&quot;&gt;Related Works&lt;/h2&gt;
+&lt;h3 id=&quot;conventional-methods&quot;&gt;Conventional Methods&lt;/h3&gt;
+&lt;p&gt;modify the sinogram and recnstruct objects by removing the corrupted sinogram and interpolating it from adjacent data&lt;/p&gt;
+
+&lt;p&gt;Conventional method들은 대부분 사이노그램단에서 이루어지는데, metal artifact 부분을 마스킹하고 주변 픽셀 값으로 마스크를 interpolation하는 방법이 주를 이룬다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;LI-MAR
+    &lt;ul&gt;
+      &lt;li&gt;replaces the metallic parts in the original sinogram with linear interpolated values from the boundaries&lt;/li&gt;
+      &lt;li&gt;this usually causes new artifacts due to inaccurate values interpolated in the metallic parts in the sinogram&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;NMAR
+    &lt;ul&gt;
+      &lt;li&gt;sinogram의 normalized 값을 이용하여 interpolation&lt;/li&gt;
+      &lt;li&gt;still have a limitation for generate applications due to the difficulty of optimal parameter selection&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;⇒ difficulty of optimal parameter selection (결국 rule-based가 아니라 optimal한 파라미터를 찾는 deep learning을 사용하겠다는 말이다.)&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;iterative reconstruction methods (iMAR)
+    &lt;ul&gt;
+      &lt;li&gt;iterative하게 CT reconstruction을 하게 되면 artifact가 사라진다는 연구가 있었지만, 경험상 artifact를 완벽하게 지우지는 못하고 이런 효과가 있네?의 느낌이다.&lt;/li&gt;
+      &lt;li&gt;그리고 당연하겠지만 &lt;strong&gt;extremely high computational complexity&lt;/strong&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;dl-based-methods-supervised&quot;&gt;DL-based Methods (supervised)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;CNN based, pix2pix&lt;/li&gt;
+  &lt;li&gt;sinogram network and the image network by learning two CNNs (dudonet)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;⇒ all supervised methods&lt;/p&gt;
+
+&lt;p&gt;⇒ to utilize pairs of unmatched images, unsupervised learning approaches should be used.&lt;/p&gt;
+
+&lt;p&gt;GAN이 input domain의 distribution에서 target domain distribution을 잘 match 시킬 수 있다&lt;/p&gt;
+
+&lt;p&gt;그러나 GAN 자체로는 mode collapse 문제가 존재하므로, cycle-consistent adversairal network&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Recently, the mathematical origin of cycleGAN was revealed using optimal transport theory as an unsupervised distribution matching between two probability spaces.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;unsupervised-mar-methods&quot;&gt;Unsupervised MAR Methods&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;ADN
+    &lt;ul&gt;
+      &lt;li&gt;artifact disentanglement network&lt;/li&gt;
+      &lt;li&gt;ADN은 artifact-affected image에서 artifact와 content components를 각각 encoding 하여 각각의 공간으로 보냄으로써 분리시키는 방법&lt;/li&gt;
+      &lt;li&gt;disentangle이 잘 되었다면 content component가 content information은 모두 가지고 있으면서 artifact에 대한 정보는 하나도 가지고 있지 않을 것&lt;/li&gt;
+      &lt;li&gt;안좋은점
+        &lt;ul&gt;
+          &lt;li&gt;highly complicated network architecture due to the explicit disentanglement steps.&lt;/li&gt;
+          &lt;li&gt;training에 등장하지 않은 artifact에 대해서는 artificial feature가 나타남&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;그리 효과적이지는 않은 것 같고, artifact를 disentangle하겠다는 관점으로 접근했다는 점이 contribution인 것 같다. 그리고 disentangle을 하려고 모델 구조가 되게 복잡해져버리는 단점이 있다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;method proposed by Ranzini et al.
+    &lt;ul&gt;
+      &lt;li&gt;uses paired MRI and CT&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;β-vae-for-feature-space-disentaglement&quot;&gt;β-VAE for feature space disentaglement&lt;/h3&gt;
+&lt;p&gt;논문이 β-VAE에서 아이디어를 얻어서 만들어졌기 때문에, β-VAE에 대한 기본을 공부해보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;maximize ELBO!&lt;/strong&gt; 
+\(p_\theta(x|z)\) : decoder (z→x) ..\(q_\phi(z|x)\) : encoder (x→z) 
+\(q_\phi(z|x)\) : user-chosen posterior distribution model parameterized by \(\phi\).&lt;/p&gt;
+
+&lt;p&gt;objective function:
+ㄴ
+\(logp_{\theta}(x) = log(\int p_{\theta}(x|z)p(z)dz)= log(\int p_{\theta}(x|z){p(z) \over q_\phi(z|x)}q_\phi(z|x)dz)\)&lt;/p&gt;
+
+&lt;p&gt;Jensen’s Inequality에 의해,&lt;/p&gt;
+
+\[log(\int p_{\theta}(x|z){p(z) \over q_\phi(z|x)}\;q_\phi(z|x)dz) &amp;gt;= \int log({p_\theta(x|z)p(z) \over q_\phi(z|x)})\;q_\phi(z|x)dz\]
+
+&lt;p&gt;얘는 이렇게 두개로 가를 수 있고,&lt;/p&gt;
+
+\[\int log({p_\theta(x|z)p(z) \over q_\phi(z|x)})\;q_\phi(z|x)dz = \int log(p_\theta(x|z))q_\phi(z|x)dz + \int log({p(z)\over q_\phi(z|x)})q_\phi(z|x)dz\]
+
+&lt;p&gt;KL-divergence를 활용하기 위해 이 식을 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Kullback–Leibler divergence&lt;/strong&gt;&lt;/p&gt;
+
+\[D_{KL}(P||Q)=\int_{\infty} p(x)log{p(x) \over q(x)}dx\]
+
+&lt;p&gt;이것을 적용하면,&lt;/p&gt;
+
+\[\int log({p(z)\over q_\phi(z|x)})q_\phi(z|x)dz = -\int log({q_\phi(z|x)\over p(z)})q_\phi(z|x)dz = -D_{KL}(q_\phi(z|x)||p(z))\]
+
+&lt;p&gt;결국&lt;/p&gt;
+
+\[logp_{\theta}(x) &amp;gt;= \int log\, p_\theta(x|z) q_\phi(z|x)dz - D_{kl}(q_\phi(z|x)||p(z))\]
+
+\[- logp_{\theta}(x) &amp;lt;= - \int log\, p_\theta(x|z) q_\phi(z|x)dz + D_{kl}(q_\phi(z|x)||p(z))\]
+
+&lt;p&gt;그런데 KL divergence의 최솟값이 0이므로 upper bound의 minimize가 가능해진다.&lt;/p&gt;
+
+&lt;p&gt;이렇게 유도된 VAE 식의 KL-divergence에 $\beta$를 붙인 걸 $\beta$-VAE라고 부른다. 베타를 붙인 이유는&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;As a high $\beta$ imposes more constraint on the latent space, it turns out that the latent space is more interpretable and controllable, which is known as the disentanglement.
+    &lt;ul&gt;
+      &lt;li&gt;$\beta$가 작을수록 z에 constraint를 줄이는 효과가 나서 표현력이 커지고, 클수록 z가 하나의 가우시안에 근사되어 표현력이 낮아짐(VAE는 분포를 가우시안에 근사하므로)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;level of feature disentanglement&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;inspired by β-VAE(vairaitonal uatoencoder), we control the level of the importance in terms olf the statistical distances in the original and target domains using a weighting parameter β.&lt;/li&gt;
+  &lt;li&gt;$\beta$-VAE처럼 cycleGAN에서 weighting paramter β를 활용해 학습을 조절하겠다는 게 이 논문의 의의이다!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;theory&quot;&gt;Theory&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;the transportation from a measure space (Y,ν) to another measure space (X, $\mu$)&lt;/p&gt;
+
+    &lt;p&gt;$G_\theta : Y -&amp;gt; X$&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;the transportation from (X, $\mu$) to (Y, v) : $F_\phi : X-&amp;gt;Y$&lt;/li&gt;
+  &lt;li&gt;Unsupervised learning에서 optimal transport map은 dist($\mu_\theta, \mu$)와 dist($v_\phi, v$)를 minimize하는 것으로 얻을 수 있다&lt;/li&gt;
+&lt;/ul&gt;
+
+\[G_\theta: W_1(\mu, \mu_\theta) = inf \int ||x-G_\theta(y)||d\pi(x, y)\]
+
+\[F_\phi: W_1(v, v_\phi) = inf \int ||F_\phi(x) - y||d\pi(x, y)\]
+
+&lt;p&gt;각각을 따로 minimize하는 대신, joint distribution $\pi$에 대해 같이 minimize&lt;/p&gt;
+
+\[inf \int ||x-G(y)|| + ||F(x)-y|| d\pi(x,y)\]
+
+&lt;p&gt;“Optimal transport, cycleGAN, and penalized LS for unsupervised learning in verse problems” 논문에서 위 식을 dual formulation으로 나타낼 수 있다고 함.&lt;/p&gt;
+
+\[min_{\theta, \phi} max \; l_{cycleGAN}(\theta, \phi, \psi, \varphi) := \lambda l_{cycle}(\theta, \phi) + l_{Disc}(\theta, \phi; \psi, \varphi)\]
+
+\[l_{cycle}(\theta, \phi) = \int_X ||x-G_\theta(F_\phi(x))||d\mu(x) + \int_Y||y-F_\phi(G_\theta(y))||dv(y)\]
+
+\[l_{Disc}(\theta, \phi; \psi, \varphi) = max \int_{X}D_\psi (x) d\mu(x)-\int_Y D_\varphi(G_\theta(y))dv(y) + max \int_{Y}D_\psi (y) dv(y)-\int_Y D_\varphi(F_\phi(x))d\mu(x)\]
+
+&lt;ul&gt;
+  &lt;li&gt;따라서 이 form은 1-Lipschitz discriminators를 사용한 것만 빼면 기존 cyclegan과 동일하다.&lt;/li&gt;
+  &lt;li&gt;LS-GAN 방법론이 imposing the finite Lipschitz condition과 깊은 관련이 있다는 것을 보임
+    &lt;ul&gt;
+      &lt;li&gt;LS-GAN variation as our discriminator term을 사용&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;beta-cyclegan-for-metal-artifact-disentanglement&quot;&gt;$\beta$-CycleGAN for metal artifact disentanglement&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;VAE처럼 G와 F에 다른 weight&lt;/strong&gt;를 주겠다는 게 point이다. (실제로 cycleGAN 실험을 해 보면 G는 잘되는데 F는 안되고 이런 문제가 있다)&lt;/li&gt;
+&lt;/ul&gt;
+
+\[l_{\beta-cycleGAN}(\theta, \phi; \psi, \varphi) = \lambda l_{\beta-cycle}(\theta, \phi) + l_{Disc}(\theta, \phi; \psi, \varphi)\]
+
+\[l_{\beta-cycle}(\theta, \phi) = \int_X ||x-G_\theta(F_\phi(x))||d\mu(x) + {1 \over \beta}\int_Y||y-F_\phi(G_\theta(y))||dv(y)\]
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;del&gt;Y에서&lt;/del&gt; Metal artifact 정도가 모두 다르고, 심지어 clean 이미지도 가지고 있는 경우도 있음
+    &lt;ul&gt;
+      &lt;li&gt;따라서 clean(CT without metal artifact)은 input과 동일한 output을 내놓아야 하므로 Identity loss를 사용&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+\[l_{identity}(\theta, \phi) = \int_X ||x-G_\theta(x)||d\mu(x) + \int_Y||y-F_\phi(y)||dv(y)\]
+
+&lt;p&gt;최종 objective:&lt;/p&gt;
+
+\[l_{MAR}(\theta, \phi; \psi, \varphi) := l_{\beta-cycle}(\theta, \phi) + l_{Disc}(\theta, \phi; \psi, \varphi)+\gamma l_{identity}(\theta, \phi)\]
+
+&lt;h3 id=&quot;geometry-of-attention&quot;&gt;Geometry of Attention&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;artifact가 발생할 수 있는 부분과, 그 부분에 집중할 수 있게 해주는 모듈을 도입&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;To address these issues, a method mimicking the human visual system can be a good option because humans exploit a sequence of partial glimpses and selectively focus on salient parts in order to capture the visual structure much better.&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;The convolutional block attention module(CBAM) is one of the simplest yet effective one.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;GAN-based deep convolutional networks는 geometric/structural pattern을 잘 못 잡아냄
+    &lt;ul&gt;
+      &lt;li&gt;due to small receptive field from convolution operator&lt;/li&gt;
+      &lt;li&gt;kernel size를 키우면 되긴 하지만 computational and the statistical efficiency가 작아짐&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;global dependencies를 잡는 attention mechanisms
+    &lt;ul&gt;
+      &lt;li&gt;self attention
+        &lt;ul&gt;
+          &lt;li&gt;SAGAN efficiently learns to find global and long-range of dependencies within internal representationss of images&lt;/li&gt;
+          &lt;li&gt;그러나 calculating the key and query from entire images is often computationally expensive and can cause memory problems as the spatial sizes of input get bigger&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;CBAM
+        &lt;ul&gt;
+          &lt;li&gt;simple yet effective&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;여기서는 self-attention 대신 CBAM 모듈을 사용했는데, 역시 동감한다. self-attention은 너무 무겁고 생각만큼 안 좋은데, CBAM을 쓰면 훨씬 가벼우면서 성능도 잘 나온다. (나도 처음에 CBAM 사용을 고려했다)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A: spatial attention map, T: channel attention map, Z: feature map&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Deep convolutional framelets theory에 의해, 이것은 1x1 conv 후 global pooling을 하는 것과 동일&lt;/li&gt;
+  &lt;li&gt;CBAM은 spatial/channel attention을 모두 유지하면서, computational complexity도 작게 가져가는 좋은 attention model&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Channel attention module
+    &lt;ul&gt;
+      &lt;li&gt;Channel attention focuses on ‘what’ are important channels&lt;/li&gt;
+      &lt;li&gt;layers
+        &lt;ul&gt;
+          &lt;li&gt;average pooling : aggregate spatial information (squeeze)&lt;/li&gt;
+          &lt;li&gt;maxpooling : gathering another iportant clue about distinctive object features&lt;/li&gt;
+          &lt;li&gt;two multi-layer perceptron (squeeze)&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Spatial attention module
+    &lt;ul&gt;
+      &lt;li&gt;focuses on ‘where’ is an informative&lt;/li&gt;
+      &lt;li&gt;average pooling &amp;amp; maxpooling used&lt;/li&gt;
+      &lt;li&gt;7x7 convolution operator&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;저 channelwise attention이랑 spatial attention을 같이 쓰는 방법론이 되게 많이 나왔는데, CBAM은 channel attention과 spatial attention을 따로 태운 후 merge하는 형태가 아니라 순차적으로 channel attention, spatial attention을 태우기 때문에 가볍다. (개인적으로는 그래서 더 안정적인 것 같기도 하다..?)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2023_04_07_1.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;meterials-and-methods&quot;&gt;Meterials and Methods&lt;/h2&gt;
+
+&lt;h3 id=&quot;dataset&quot;&gt;Dataset&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;Real Metal Artifact Data
+    &lt;ul&gt;
+      &lt;li&gt;From the equal-spaced conebeam projection data, we reconstructed the CT images by FDK.&lt;/li&gt;
+      &lt;li&gt;504x504x400&lt;/li&gt;
+      &lt;li&gt;3 patients for training, 1 patients for validation, 1 patients for test&lt;/li&gt;
+      &lt;li&gt;800 with metal artifact 400 without metal artifacts&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Synthetic Metal Artifact Data
+    &lt;ul&gt;
+      &lt;li&gt;10997 artifact-free images for LiTS (Liver Tumor Segmentation Challenge)&lt;/li&gt;
+      &lt;li&gt;CNN-MAR과 동일한 방법론으로 synthesize&lt;/li&gt;
+      &lt;li&gt;simulates the beam hardening effect and Poisson noise&lt;/li&gt;
+      &lt;li&gt;5860 artifact 4115 clean for train&lt;/li&gt;
+      &lt;li&gt;373 artifact 335 clean for test&lt;/li&gt;
+      &lt;li&gt;256x256 (비교실험 때 ADN이 너무 커서 512x512 할수 없었음)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;network-architecture&quot;&gt;Network Architecture&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;$G_\theta, F_\phi$ 모두 U-net + attention in skip/concatentation 으로 진행된다. MAR을 해본 경험으로써 저 skip쪽에 attention 모듈을 다는 게 되게 중요한데, 그 이유가 encoder feature에서 미처 제거되지 못한 artifact들이 이후에 decoder와 concat하면서 다 살아나 버리기 때문에, encoder feature에 attention을 붙여 artifact를 떨어뜨려 가면서 concat하는 게 매우 관건이다. 여기도 그걸 알고 네트워크를 이런 식으로 구성한 것 같다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2023_04_07_2.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;$D_\psi, D_\varphi$ 는 PatchGAN base
+4 conv + fc with batchnorm&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2023_04_07_3.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;training-detail&quot;&gt;Training Detail&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;input : 504 x 504&lt;/li&gt;
+  &lt;li&gt;$\lambda = 10, \beta = 1, \gamma=1$&lt;/li&gt;
+  &lt;li&gt;$\beta$가 클수록 모델이 artifact-free image generation에 집중하는 경향을 보임
+    &lt;ul&gt;
+      &lt;li&gt;useful in real data case&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;metal artifact가 없는 이미지라도 &lt;em&gt;beam hardening artifacts가 있을 수 있기 때문에&lt;/em&gt; identity loss를줌
+    &lt;ul&gt;
+      &lt;li&gt;lessening the value of the hyper-parameter that is involving property that do not need to be changed&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;50 epoch (early stopping)&lt;/li&gt;
+  &lt;li&gt;xavier initializer&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;lr : 2x10-3&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;synthetic data에서
+    &lt;ul&gt;
+      &lt;li&gt;256x256&lt;/li&gt;
+      &lt;li&gt;$\lambda = 10, \beta = 1, \gamma=5$&lt;/li&gt;
+      &lt;li&gt;synthetic data는 artifact generation procedure가 simple하기때문에, two statistical distance에 동일한 weight를 사용&lt;/li&gt;
+      &lt;li&gt;no artifacts in the images with no metal artifacts, 따라서 높은 identity loss rate&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;real-data&quot;&gt;Real data&lt;/h2&gt;
+&lt;p&gt;(a) input (b) proposed (c) LI (d) NMAR (e) ADN with downsampled input (f) proposed with downsampled input&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2023_04_07_4.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Homogeneous region (tissue)
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2023_04_07_5.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;아쉬운 점은 supervised 방법론과의 비교는 없다는 점이다. 아무래도 synthetic data가 어느 정도 realistic할 수 있는 metal artifact reduction에서 self-supervised가 supervised를 이기기에는 무리가 있었지 않나.. 생각이 든다.&lt;/p&gt;
+
+&lt;h3 id=&quot;synthetic-data&quot;&gt;Synthetic data&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2023_04_07_6.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2023_04_07_7.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;blation-study&quot;&gt;blation Study&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CycleGAN w/o CBAM
+    &lt;ul&gt;
+      &lt;li&gt;artifacts in the background had becom fainter compared to those of the input&lt;/li&gt;
+      &lt;li&gt;real metallic objects are incorrectly removed&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Dependency on the disentanglement parameter
+    &lt;ul&gt;
+      &lt;li&gt;$\beta$=10일때가 더 결과가 좋다&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2023_04_07_8.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;discussion&quot;&gt;Discussion&lt;/h3&gt;
+
+&lt;p&gt;→ novel $\beta$-cyclegan with an attention module for MAR (attention 모듈을 활용한 $\beta$-cyclegan 모델을 MAR task에 활용했다.)&lt;/p&gt;
+
+&lt;p&gt;local position with globally radiating artifact ⇒ CBAM to focus on important features in both spatial and channel domain (CBAM attention을 사용해 spatial/channel 모두에서 attention을 적용했다)&lt;/p&gt;
+
+&lt;p&gt;disentanglement parameter $\beta$  that imposes relative importance on the reconstructed artifact-free images compared to the artifact generation process (disentanglement parameter $\beta$ 가 artifact를 생성하는 네트워크(G)에 비해 artifact를 지우는 네트워크(F)에 더 비중을 가게 해준다.)&lt;/p&gt;
+
+&lt;h3 id=&quot;정리&quot;&gt;정리&lt;/h3&gt;
+&lt;p&gt;MAR에서 self-supervised를 어떻게 사용하는지가 궁금해서 봤는데 역시 MAR에서 self-supervise가 supervise를 이기기는 힘든 것 같다. 성능이 많이 안 따라와줘서 조금 아쉽기도 한데, 그래도 내가 self-supervised로 문제를 풀었다면 이렇게 풀었겠구나를 그대로 따라간 것 같아 논문 하나로 내가 생각한 걸 정리할 수 있었던 것 같다. attention을 사용한 위치랑 이유가 나랑도 비슷해서 신기하기도 하고 역시 다들 비슷한 생각을 하고 있구나를 또 느낄 수 있었다..ㅋㅋ synthesized data가 너무 강력한 MAR task에서 이후에 self-supervised가 언제 그리고 어떻게 superivsed를 능가하게 될 지 궁금하다.&lt;/p&gt;</content><author><name>이정목</name></author><category term="AI" /><category term="AI" /><category term="MAR" /><category term="cycleGAN" /><category term="unsupervised" /><summary type="html">이번에는 MAR 두번째 논문이다. MAR 연구 특성상 사람한테 한번 metal을 박으면 metal이 없는 CT를 얻을 수가 없기 때문에 data 부족 문제에 시달릴수밖에 없고, 이것을 해결하기 위해 나는 data synthesize 방법을 취했지만, unsupervised로는 어떻게 푸는지 궁금해서 논문을 읽어보았다!</summary></entry><entry><title type="html">[AI] PhysFormer: Facial Video-based Physiological Measurement with Temporal Difference Transformer</title><link href="http://localhost:4000/blog/physformer/" rel="alternate" type="text/html" title="[AI] PhysFormer: Facial Video-based Physiological Measurement with Temporal Difference Transformer" /><published>2022-10-28T09:00:00+09:00</published><updated>2022-10-28T09:00:00+09:00</updated><id>http://localhost:4000/blog/physformer</id><content type="html" xml:base="http://localhost:4000/blog/physformer/">&lt;p&gt;회사 인턴을 하면서 heart rate estimation을 해야 하는데 쓸만한 걸 못찾아서 잔뜩 스트레스 받고 있다가 찾은 모델이다. 트랜스포머 기반으로 해서 현재 SOTA 모델이다. 2D CNN기반은 거의 사용 못할 결과가 나오고, 대부분의 모델이 rPPG만 predict해서 실제 rPPG로 심박수를 계산해보면 처참한 수준의 결과만 얻을 수 있다. 그런데 이 모델은 rPPG에서 psd로 심박수로 추출하여 loss term에 활용하고 있기 때문에 심박수만 필요한 내 task에서 심박수가 쓸만한 정도로 나온다. 정말 한 줄기 빛의 모델이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://arxiv.org/abs/2111.12082&quot;&gt;논문 링크&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;배경지식-ppg란&quot;&gt;배경지식 (ppg란?)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://news.samsungdisplay.com/30140&quot;&gt;링크&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;신체에서 얇은 부분(손끝, 볼, 귀)은 빛이 약간 통과 → 혈액의 흐름 관찰 가능&lt;/li&gt;
+  &lt;li&gt;심장이 피를 보내기 위해서 뛸 때 생기는 미세한 변화 : 맥파, Plethysmogram
+    &lt;ul&gt;
+      &lt;li&gt;맥파에 따라 변하는 미세한 혈류량을 조사해서 파악.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;PPG센서에서 피부로 빛을 쏠 때, 혈류량에 따라(심장이 이완 시 혈류량 증가, 수축시 혈류량 감소 ⇒ 심장의 이완, 수축 주기를 알 수 있음 ⇒ 심박수) 흡수되는 빛의 양이 달라지므로 빛이 얼마나 흡수되었는지를 측정하여 혈액량의 변화를 detect&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_1.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;심박수 = \(1/PPI*60\)&lt;/li&gt;
+  &lt;li&gt;반면 ecg는 심박동과 관련되어 나타나는 전위변화 (전기신호 세기와 간격)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;rppg는 remote PPG로, facial video에서 얼굴의 혈류 변화량을 보고 ppg를 예측하는 방식&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;Electrocardiography(ECG)와 Photoplethysmography(PPG)가 심장 활동을 측정하는 가장 큰 두 방식이다. 그러나 두 방식 모두 몸에 부착되어야 하는 불편함이 있기 때문에 remote Photoplethy-smography(rPPG) 가 떠오르고 있다.&lt;/p&gt;
+
+&lt;h3 id=&quot;3-stage-module&quot;&gt;3 stage module&lt;/h3&gt;
+&lt;p&gt;보통의 rppg 연구는 3 stage를 띈다. &lt;a href=&quot;https://arxiv.org/pdf/2111.09748v1.pdf&quot;&gt;paper&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;a pre-processing stage, to minimize nuisance variation (face ROI 추출 및 전처리)
+    &lt;ul&gt;
+      &lt;li&gt;detection + skin segmentation and tracking/ landmark&lt;/li&gt;
+      &lt;li&gt;얼굴 이미지 추출이 얼마나 잘 되느냐가 rppg의 성능을 좌지우지 해서 초반에는 이쪽이 많이 발전&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ppg signal extraction stage
+    &lt;ul&gt;
+      &lt;li&gt;ex. CNN&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;a heart rate estimation stage from the estimated PPG signal (ppg를 bpm(heart rate)로 바꾸는 단)
+    &lt;ul&gt;
+      &lt;li&gt;peak detection&lt;/li&gt;
+      &lt;li&gt;FFT (PSD)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;가장-기본적인-방식&quot;&gt;가장 기본적인 방식&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;analyze subtle color changes on facial regions of interest with classical signal processing approaches&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;그 다음 color 부분 처리를 통한 feature 맵 변환(color subspace transformation methods, which utilize all skin pixels for rPPG measurement)&lt;/p&gt;
+
+&lt;h3 id=&quot;위-방식을-바탕으로-roi-preprocess된-feature-map에서-rppg를-추출하는-learning-based-model-등장-non-end-to-end&quot;&gt;위 방식을 바탕으로 ROI preprocess된 feature map에서 rppg를 추출하는 learning-based model 등장 (non end-to-end)&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ROI based preprocessed signal representations(e.g., time-frequency map and spatio-temporal map) are generated first, and then learnable models could capture rPPG features from these maps.&lt;/li&gt;
+  &lt;li&gt;그러나 굉장히 strict하게 preprocessing 요구&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;아예-processing된-feature-map이-아닌-video-자체를-input으로-받는-end-to-end-모델들이-등장&quot;&gt;아예 processing된 feature map이 아닌 video 자체를 input으로 받는 end-to-end 모델들이 등장&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;treat facial video frames as input and predict rPPG and other physiological signals directly&lt;/li&gt;
+  &lt;li&gt;그러나
+    &lt;ul&gt;
+      &lt;li&gt;전처리단이 사라졌으므로 complex scenarios(e.g, head movement)에서 무너져내리는 경향이 있음&lt;/li&gt;
+      &lt;li&gt;rPPG-unrelated feature가 학습에 주 부분을 차지할 가능성 → large performance decrease in realistic dataset&lt;/li&gt;
+      &lt;li&gt;전처리단에서 정제+증폭해줬던 부분이 없으므로 ppg추출 단이 훨씬 어려운 task로 바뀜&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ppg → Heart rate&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;보통 모델 output이 ppg 추출에서 끝나는 모델이 많다&lt;/p&gt;
+
+    &lt;p&gt;→ heart rate 변환 시 noise 제거 등 signal processing이 또 필요할 수도 있음&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;dl based이 아닌 traditional 방법론을 사용
+    &lt;ul&gt;
+      &lt;li&gt;fft(PSD), peak detection&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;그래프 개형이 비슷한 것(mse)과 주기(bpm=heart rate)가 비슷한 것은 다르다고 생각!
+    &lt;ul&gt;
+      &lt;li&gt;heart rate를 loss term에 사용하지 않는 이상 ppg 그래프보다도 heart rate가 실제와 많이 다른 경우가 존재&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;transformer의-사용&quot;&gt;Transformer의 사용&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;rppg에서도 CNN based 모델이 대거 등장&lt;/li&gt;
+  &lt;li&gt;NLP, image / video analysis에서도 성공적으로 작동했으므로 rppg에서도 적용할 수 있을 것
+    &lt;ul&gt;
+      &lt;li&gt;기존과 다른 점은, subtle한 픽셀 변화에 의존하기 때문에 global spatio-temporal perception이 challenging&lt;/li&gt;
+      &lt;li&gt;the long-range spatio-temporal attention이 필요&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;rPPG measurement from facial videos can be treated as a video sequence to signal sequence problem
+    &lt;ul&gt;
+      &lt;li&gt;LONG RANGE contextual clues should be exploited for semantic modeling&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;contribution&quot;&gt;Contribution&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;powerful video temporal difference transformer backbone으로 이루어진 physformer 모델의 제안
+    &lt;ul&gt;
+      &lt;li&gt;long-range spatio-temporal relationship을 고려한 첫 rppg model&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;PhysFormer의 supervise 방법론들 제안
+    &lt;ul&gt;
+      &lt;li&gt;label distribution learning&lt;/li&gt;
+      &lt;li&gt;curriculum learning guided dynamic loss in frequency domain&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;pretrain 없이 SOTA 달성&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;related-works&quot;&gt;Related Works&lt;/h1&gt;
+
+&lt;h2 id=&quot;remote-physiological-measurement&quot;&gt;Remote physiological measurement&lt;/h2&gt;
+
+&lt;h3 id=&quot;plenty-of-traditional-hand-crafted-approaches&quot;&gt;Plenty of traditional hand-crafted approaches&lt;/h3&gt;
+
+&lt;p&gt;Face input에서 feature map 추출 단:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Selective merging information from different color channels / different ROIs&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;feature map에서 rppg 추출 단:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;to improve signal-to-noise ratio of the recovered rPPG signals, several signal decomposition methods such as independent component analysis(ICA), and matrix completion이 제안&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;learning-based-approach의-등장&quot;&gt;Learning based approach의 등장&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;deep learning based approaches dominate the field of rPPG measurement due to the strong spatio-temporal representation capabilities.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;not end-to-end (facial ROI 전처리단 + rppg 추출단)&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;facial ROI based spatial-temporal signal map 생성 단:
+        &lt;ul&gt;
+          &lt;li&gt;alleviate the interference from non-skin regions&lt;/li&gt;
+          &lt;li&gt;ROI 전처리가 꽤 많은 비중을 차지&lt;/li&gt;
+          &lt;li&gt;ROI 바깥 부분을 전혀 고려하지 못함(배경 밝기 변화 같은)&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;map들에서 feature를 잡아내는 rppg단 (2D-CNN)
+        &lt;ul&gt;
+          &lt;li&gt;실시간성에는 좋음&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;따라서 spatial-temporal 정보들을 고려하기가 힘듬&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;end-to-end&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;인접한 프레임만 고려하고 long range relationship의 주기적인 정보는 고려하지 않음&lt;/p&gt;
+
+        &lt;p&gt;(previous methods only consider the spatio-temporal rPPG features from adjacent frames and neglect the long-range relationship among quasi-periodic rPPG features)&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;transformer-for-vision-tasks&quot;&gt;Transformer for vision tasks&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Most of these works are incompatible for long-video-sequence (over 150 frames)&lt;/p&gt;
+
+&lt;/blockquote&gt;
+
+&lt;p&gt;rppg in vision transformer&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;trans-rppg
+    &lt;ul&gt;
+      &lt;li&gt;extracts rPPG features from the preprocessed signal maps via ViT for face 3D mask presentation attack detection&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;efficientphys (temporal shift networks)
+    &lt;ul&gt;
+      &lt;li&gt;Based on the temporal shift networks, efficientphys adds several swin transformer layers for global spatial attention&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;위 두 모델은 non-end-to-end모델 (feature map에서 rppg 추출 단)&lt;/p&gt;
+
+&lt;h1 id=&quot;materials-and-methods&quot;&gt;Materials and Methods&lt;/h1&gt;
+
+&lt;h2 id=&quot;physformer-architecture&quot;&gt;PhysFormer Architecture.&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_2.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;shallow-stem&quot;&gt;Shallow stem&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Video를 바로 patch로 쪼개서 multi head self attention에 넣는 것이 아니라 얇은 stem을 한번 거친 output을 patch로 쪼개서 MHSA에 넣음
+    &lt;ul&gt;
+      &lt;li&gt;coarse한 local spatio-temporal feature 추출에 도움&lt;/li&gt;
+      &lt;li&gt;benefits the fast convergence and clearer subsequent global self-attention&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;3개의 convolution blocks이루어져 있다 (커널 사이즈: 1x5x5, 3x3x3, 3x3x3)&lt;/li&gt;
+  &lt;li&gt;각 convolution에 Batch Normalization, ReLU, MaxPool을 순차적으로 사용&lt;/li&gt;
+  &lt;li&gt;Pooling layer가 spational dimension을 반으로 나누므로
+    &lt;ul&gt;
+      &lt;li&gt;Facial video input size가 3xTxHxW 일때 shallow stem output size는 D x T x H/8 x W/8&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;tube-tokenization&quot;&gt;Tube tokenization&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;이 shallow stem의 output이 N개의 tube token으로 나뉘어지고, 이렇게 나뉘어진 tube token들이 N개의 temporal transformer block으로 들어가고, global-local refined rPPG 피처인 X_trans을 얻을 수 있다. (X_tube와 동일한 dimension)&lt;/li&gt;
+  &lt;li&gt;stem에서 나온 output을 X_stem이라고 할때, X_stem을 non-overlapping한 tube token들로 나뉘어진다.&lt;/li&gt;
+  &lt;li&gt;stem이 있으므로 position embedding과정을 따로 진행해주지 않았다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;temporal-difference-multi-head-self-attention&quot;&gt;Temporal difference multi-head self-attention&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;AutoHR 논문에서 등장한 temporal difference convolution 개념&lt;/li&gt;
+  &lt;li&gt;기존의 self attention은 Query, Key, Value를 단순히 matmul 해주는 형태(1x1 conv)&lt;/li&gt;
+  &lt;li&gt;matmul (point-wise linear projection) 하는 대신 Temporal difference convolution을 사용
+    &lt;ul&gt;
+      &lt;li&gt;동영상의 밝기와 같은 값들을 인접한 프레임끼리 빼줌으로써 무시 가능
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_3.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;TDC with learnable w&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_4.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;p0 : current spatio-temporal location, R : sampled local (3x3x3) neighborhood, R’ : sampled adjacent neighborhood&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;temporal difference convolution을 Q(query)/K(key)의 projection에 사용.&lt;/p&gt;
+
+    &lt;p&gt;⇒ 미묘한 색 변화 감지를 위해 미세 특징을 포착할 수 있음 (can capture fine-grained local temporal difference features for subtle color change description)&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_5.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;V(value) projection 때에는 temporal difference convolution projection을 사용하지 않고 기존의 point-wise linear projection을 사용&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;i번째 head의 self-attention:
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_6.png?raw=true&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;기존의 self-attention식처럼 τ =√Dh_i를 사용한 것이 rppg에서 효과가 좋지 못했으므로, 더 작은 τ를 사용해 sharper attention activation을 진행. (변수로 받아서 진행)&lt;/li&gt;
+  &lt;li&gt;여기에 residual connection, layer normalization이 마지막으로 진행된다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;spatio-temporal-feed-forward&quot;&gt;Spatio-temporal feed-forward&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;TD-MHSA의 output이 피드포워드 NN의 input
+FFNN(x) = MAX(0, xW1+b1)*W2+b2 (두개의 linear 층)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;vanilla feed-forward network
+    &lt;ul&gt;
+      &lt;li&gt;두개의 linear transformation layer로 구성&lt;/li&gt;
+      &lt;li&gt;두 레이어 사이에서 더 많은 feature 표현을 위해서 hidden dimension이 확장됨 (the hidden dimension D’ between two layers is expanded to learn a richer feature representation)&lt;/li&gt;
+      &lt;li&gt;temporal한 정보 고려가 힘듬&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;depthwise 3D convolution(with BN and nonlinear activation)을 이 두 레이어 사이에 사용
+    &lt;ul&gt;
+      &lt;li&gt;ST-FF가 local inconsistency와 parts of noisy features를 다듬어 줄 수 있다고 제안&lt;/li&gt;
+      &lt;li&gt;richer locality는 TD-MHSA에게 충분한 relative position 신호를 제공&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;label-distribution-learning&quot;&gt;Label Distribution Learning&lt;/h2&gt;
+
+&lt;p&gt;Facial age estimation task에서, 나이 차이가 적을수록 얼굴이 비슷해보이는 점을 이용&lt;/p&gt;
+
+&lt;p&gt;⇒ Facial rPPG signals with close HR values usually have similar periodicity.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;하나의 얼굴 video에 대한 output이 하나의 label(HR)이기보다는, label distribution을 이용해 output이 여러 개의 HR value label에 대한 distribution으로 표현되도록 함.
+    &lt;ul&gt;
+      &lt;li&gt;label distribution은 HR의 특정 범위(42, 180)을 포함하고, output은 각 label들이 얼마나 유력한지에 대한 정도를 표현함.&lt;/li&gt;
+      &lt;li&gt;Through this way, one facial video can contribute to both targeted HR value and its adjacent HRs.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;💡 rPPG-based HR estimation problem을 specific L-classes multi-label classification problem으로 정의했다. (L=139, 42 to 180)&lt;/p&gt;
+
+&lt;h3 id=&quot;gt-label을-어떻게-label-distribution으로-만들었는가&quot;&gt;GT label을 어떻게 label distribution으로 만들었는가?&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;각 label의 entry p는 [0,1] 사이의 real value이고, 모든 label의 p 합은 1이 되도록 했다. (확률)&lt;/li&gt;
+  &lt;li&gt;Gaussian distribution function을 이용
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_7.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;오히려 real distribution을 사용했을 때보다 gaussian distribution을 사용했을 때 더 성능이 괜찮았다!&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;결국 loss function은 L_LD = KL(p, Softmax(ˆp)) 나타낼 수 있다. KL은 Kullback-Leibler divergence이고, p hat은 power spectral density(PSD) of predicted rPPG signals. ⇒ rppg에서 HR 추출을 어떻게 했는지를 알려주고 있음
+    &lt;ul&gt;
+      &lt;li&gt;Kullback-Leibler divergence - 두 확률분포의 차이를 계산하는데 사용하는 함수 (정보 엔트로피 차이를 계산)&lt;/li&gt;
+      &lt;li&gt;Power Spectral density(PSD)
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_8.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이전에도 label distribution을 이용한 사례(A robust rppg approach with distribution learning)가 있었지만, 우리와 차이점은&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;이전에 이 방식을 사용한 이유는 frame마다의 얼굴 움직임에 대해 temporal HR outliers를 smoothen하는 것이지만, 우리는 adjacent label간의 efficient feature를 배우도록 하기 위해 진행하였다.&lt;/li&gt;
+  &lt;li&gt;이전 연구에서는 hand-crafted rppg signal 추출 이후에 HR-estimation를 위한 post HR estimation이지만, 우리는 딥러닝 단에서 적용하였다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;curriculum-learning-guided-dynamic-loss&quot;&gt;Curriculum Learning Guided Dynamic Loss&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Curriculum Learning - 쉬운 task부터 학습&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;temporal-domain-loss&quot;&gt;temporal domain loss&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;mean square error loss, negative Pearson loss
+    &lt;ul&gt;
+      &lt;li&gt;negative Pearson correlation : maximize the trend similarity and minimize peak location errors (Remote Photoplethysmograph Signal Measurement from Facial Videos Using Spatio-Temporal Networks에서 등장한 loss)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;signal-trend-level constraints을 주므로 금방 학습 → 쉬운 overfitting&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;frequency-domain-loss&quot;&gt;frequency domain loss&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;cross-entropy loss, signal to noise ratio loss&lt;/li&gt;
+  &lt;li&gt;target frequency bands에서 주기적인 피처들을 학습해야 함&lt;/li&gt;
+  &lt;li&gt;realistic한 rPPG-irrelevant 노이즈 때문에 주파수단의 강한 constraints&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이게 중요하다. frequency domain loss가 심박수를 loss term으로 활용할 거라는 말이기 때문에 rPPG prediction에서만 잘 작동하는 것이 아니라 heart rate estimation에서도 잘 작동할 수 있게 된다.&lt;/p&gt;
+
+&lt;p&gt;또한, &lt;strong&gt;dynamic supervision to gradually enlarge the frequency constraints&lt;/strong&gt;를 제안.
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_9.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
+linear increment strategy/exponential increment strategy 중 exponential strategy를 적용 (alpha = 0.1, beta_0 = 1.0, n = 5.0)&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;pretrain을 사용하면 HR로만으로도 학습 가능할 수도 있을 것 같다!! 지금 가지고 있는 rPPG 데이터가 없어서 한 줄기 빛이 된다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;results&quot;&gt;Results&lt;/h1&gt;
+
+&lt;p&gt;세개의 physiological signal에 대해 진행 :&lt;/p&gt;
+
+&lt;p&gt;heart rate(HR), heart rate variability(HRV), respiration frequency(RF)&lt;/p&gt;
+
+&lt;h3 id=&quot;사용한-데이터셋&quot;&gt;사용한 데이터셋&lt;/h3&gt;
+
+&lt;h3 id=&quot;vipl-hr&quot;&gt;VIPL-HR&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;large-scale dataset for remote physiological measurement under less-constrained scenarios
+    &lt;ul&gt;
+      &lt;li&gt;head movement, illumination을 포함&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;2378 RGB videos of 107 subjects recorded with different head movements, lighting conditions and acquisition devices&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;mahnob-hci&quot;&gt;MAHNOB-HCI&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;one of the most widely used benchmark for remote HR measurement evaluations&lt;/li&gt;
+  &lt;li&gt;527 facial videos with 61 fps from 27 subjects&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;mmse-hr&quot;&gt;MMSE-HR&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;102 RGB videos from 40 subjects&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;obf&quot;&gt;OBF&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;high-quality dataset for remote physiological signal emeasurement&lt;/li&gt;
+  &lt;li&gt;200 5 min ong RGB videos with 60 fps recorded from 100 healthy adults&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;mean HR estimation은 위의 네개 데이터셋에서 진행&lt;/li&gt;
+  &lt;li&gt;HRV, RF estimation은 OBF에서만 진행
+    &lt;ul&gt;
+      &lt;li&gt;follow existing methods, and report low frequency(LF), high frequency(HF), and LF/HF ratio for HRV and RF estimation&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;SD, MAE, RMSE, pcc(peason’s correlation coefficient)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;implementation-details&quot;&gt;Implementation Details&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MTCNN face detector을 이용하여 첫번째 프레임의 enlarged face area를 crop, 이후 frame들도 이 region으로 fix&lt;/li&gt;
+  &lt;li&gt;MAHNOB-HCI, OBF는 fps=30으로 내렸음&lt;/li&gt;
+  &lt;li&gt;Physformer 세팅 :
+    &lt;ul&gt;
+      &lt;li&gt;N=12, h=4, D=96, D’=144,&lt;/li&gt;
+      &lt;li&gt;TD-MHSA : θ=0.7 (for TDC), τ=2.0&lt;/li&gt;
+      &lt;li&gt;tube size T_s x H_s x W_s = 4x4x4&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;train시에 randomly sample RGB face clips with size 160x128x128(TxHxW)&lt;/li&gt;
+  &lt;li&gt;Random horizontal flipping and temporally up/down-sampling for data augmentation&lt;/li&gt;
+  &lt;li&gt;Adam optimizer&lt;/li&gt;
+  &lt;li&gt;lr = 1e-4, weight decay = 5e-5&lt;/li&gt;
+  &lt;li&gt;batch size=4&lt;/li&gt;
+  &lt;li&gt;25 epoch으로
+    &lt;ul&gt;
+      &lt;li&gt;alpha=0.1 for temporal loss,&lt;/li&gt;
+      &lt;li&gt;exponentially increased parameter beta=[1,5] for frequency loss.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;σ=1.0 for label distriution learning (gaussian distribution)&lt;/li&gt;
+  &lt;li&gt;testing : seperate 30-second videos into three short clips with 10 seconds, and video-level HR is calculated via averaging HR from three short clips&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;intra-dataset-testing&quot;&gt;Intra-dataset Testing&lt;/h3&gt;
+
+&lt;h3 id=&quot;hr-estimation-on-vipl-hr&quot;&gt;HR estimation on VIPL-HR&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;traditional methods(Tulyakov2016, POS, CHROM) perform poorly due to the complex scenarios&lt;/li&gt;
+  &lt;li&gt;end-to-end learning based methods(PhysNet, DeepPhys, AutoHR) predict unreliable HR values with large RMSE compared with non-end-to-end learning approaches(PhythmNet, ST-Attention, NAS-HR, CVD, Dual-GAN)&lt;/li&gt;
+  &lt;li&gt;all five non-end-to-end methods first extract fine-grained signal maps from multiple facial ROIs, and then more dedicated rPPG clues would be extracted via the cascaded models.&lt;/li&gt;
+  &lt;li&gt;Physformer는 pretrain 없이도 좋은 결과를 낸다!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_10.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;hr-estimation-on-mahnob-hci&quot;&gt;HR estimation on MAHNOB-HCI&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;finetune the VIPL-HR pretrained model on MAHNOB-HCI for further 15 epoc
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_11.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;hr-hrv-and-rf-estimation-on-obf&quot;&gt;HR, HRV and RF estimation on OBF&lt;/h3&gt;
+&lt;p&gt;Physformer also gives more accurate estimation in terms of HR, RF, and LF/HF compared with the preprocessed signal map based non-end-to-end learning method CVD.
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_12.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;cross-dataset-testing&quot;&gt;Cross-dataset Testing&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;VIPL에 train 후 MMSE-HR에 finetune 하지 않고 바로 testing&lt;/li&gt;
+  &lt;li&gt;SOTA 달성
+    &lt;ol&gt;
+      &lt;li&gt;The predicted HRs are highly correlated with the ground truth HRs&lt;/li&gt;
+      &lt;li&gt;The model learns domain invariant intrinsic rPPG-aware features.&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;ablation-study&quot;&gt;Ablation Study&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Impact of tube tokenization&lt;/strong&gt;
+four tokenization configuration 유무
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_13.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;stem을 사용했을 때가 더 결과가 좋았음&lt;/li&gt;
+  &lt;li&gt;input resolution을 내릴수록 결과가 안좋아짐&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Impact of TD-MHSA and ST-FF&lt;/strong&gt;
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_14.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Spatio-temporal attention 없을 때 performance degrades sharply&lt;/li&gt;
+  &lt;li&gt;τ가 MHSA에 영향을 많이 준다 ⇒ ViT처럼 타우를 사용하면 성능 drop&lt;/li&gt;
+  &lt;li&gt;ViT보다 τ를 작게 잡았을 때(sharp) 성능이 더 향상 되었다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Impact of label distribution learning&lt;/strong&gt;
+&lt;strong&gt;Impact of dynamic supervision&lt;/strong&gt;
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_15.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Temporal loss와 frequency cross-entropy loss에서, frequency loss쪽이 label distribution&lt;/li&gt;
+  &lt;li&gt;label distribution을 exponential strategy로 사용했을 때 가장 결과가 좋음&lt;/li&gt;
+  &lt;li&gt;label distribution을 아예 사용하지 않았을 때는, exponential strategy를 적용해도 결과가 좋지 않았음
+    &lt;ul&gt;
+      &lt;li&gt;It is interesting to find from the last two rows that using real PSD distribution from ground truth PPG signals as p, the performance is inferior due to the lack of an obvious peak and partial noise. (real PSD distribution보다 가우시안 distribution이 더 좋았다)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Fold-1 VIPL-HR로 fixed/dynamic supervision을 실험하였을 때
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_10_28_16.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Impact of theta and layer/head numbers&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Physformer could achieve smaller RMSE when theta=0.4 and 0.7, indicating the importance of the normalized local temporal difference features for global spatio-temporal attention.&lt;/p&gt;
+
+&lt;p&gt;With deeper temporal transformer blocks, the RMSE are reduced progressively despite heavier computational cost.&lt;/p&gt;
+
+&lt;p&gt;In terms of the impact of head numbers, it is clear to find that PhysFormer with four heads perform the best while fewer heads lead to sharp performance drops.&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;rppg를 위한 End-to-end video transformer architecture를 만듬&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Temporal difference transformer를 사용한 성능 향상&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;더 효율적인 architecture
+    &lt;ul&gt;
+      &lt;li&gt;모바일에서는 사용하기 어려운 parameter 수&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;More accurate yet efficient spatio-temporal self-attention mechanism for long sequence rPPG monitoring&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;rPPG라는 게 얼굴에서 사람의 눈으로 감지하기 어려운 혈색의 변화를 감지해서 ppg 그래프를 그려야 하는 문제이기 때문에, 이게 진짜 가능한거냐라고 말하는 사람들도 있고 나도 어느 정도는 동감한다. 그래서 많은 rPPG 추출 모델들이 이 subtle한 혈색 변화를 증폭시킬 수 있는 모듈을 사용하는데 여기서는 그게 TDC였던 거다.&lt;/p&gt;
+
+&lt;p&gt;그런데 직접 physformer 실험을 해보면 30fps에서는 잘 작동하더라도 frame interpolation으로 fps를 바꿔줬을 때 잘 작동하지 않는다. 이게 모델이 30 fps에서만 주로 학습이 되어서 일수도 있지만, 내가 생각하기에는 모델이 프레임 간의 차이(temporal difference)를 보고 있다기보다 그 순간의 혈색이 얼마나 붉은지를 보는, temporal 정보를 고려하고 있지 않을 수도 있는 것 같다. 사람 혈색이 얼마나 빠르게 주기적으로 변하냐보다도, 특정 프레임에서 사람 얼굴이 붉으면 이 사람이 운동 중이라고 생각하고 높은 심박수를 뱉는 경향성이 있다. 그래서 인종에 대한 bias도 많이 걸리고, 아무튼 참 어려운 문제이다.&lt;/p&gt;</content><author><name>이정목</name></author><category term="AI" /><category term="AI" /><category term="rPPG" /><category term="transformer" /><category term="temporal difference convolution" /><summary type="html">회사 인턴을 하면서 heart rate estimation을 해야 하는데 쓸만한 걸 못찾아서 잔뜩 스트레스 받고 있다가 찾은 모델이다. 트랜스포머 기반으로 해서 현재 SOTA 모델이다. 2D CNN기반은 거의 사용 못할 결과가 나오고, 대부분의 모델이 rPPG만 predict해서 실제 rPPG로 심박수를 계산해보면 처참한 수준의 결과만 얻을 수 있다. 그런데 이 모델은 rPPG에서 psd로 심박수로 추출하여 loss term에 활용하고 있기 때문에 심박수만 필요한 내 task에서 심박수가 쓸만한 정도로 나온다. 정말 한 줄기 빛의 모델이다.</summary></entry><entry><title type="html">[백준] 10775 공항</title><link href="http://localhost:4000/blog/10775-%EA%B3%B5%ED%95%AD/" rel="alternate" type="text/html" title="[백준] 10775 공항" /><published>2022-10-08T09:00:00+09:00</published><updated>2022-10-08T09:00:00+09:00</updated><id>http://localhost:4000/blog/10775-%EA%B3%B5%ED%95%AD</id><content type="html" xml:base="http://localhost:4000/blog/10775-%EA%B3%B5%ED%95%AD/">&lt;p&gt;단계별로 풀어보기 문제를 보다가 내가 예전에 틀린 문제가 있어서 가져와보았다! 유니온 파인드 개념을 쓰는 문제였는데, 유니온 파인드 개념을 전혀 기억을 못해서 유니온 파인드 개념부터 공부해서 풀었다.
+차근차근 한문제씩 풀어 나가는 게 나의 목표이다.&lt;/p&gt;
+
+&lt;h3 id=&quot;문제-설명&quot;&gt;문제 설명&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/10775&quot;&gt;링크&lt;/a&gt;
+공항에 비행기 p대가 있고, 게이트가 g개 있다. 문제만 읽으면 잘 이해가 가지 않는데, i번째 비행기를 1-g_i번째 게이트에는 무조건 도킹할 수 있어야 하고 도킹할 수 없으면 공항이 폐쇄된다고 한다. (g_i가 input으로 주어지게 된다) 이 말은 즉 i번째 비행기에 대해 input g_i가 들어오고, 이 i번째 비행기는 1-g_i번째 게이트에 세울 수 있다. 최대 몇 대의 비행기를 세울 수 있는지를(세울 수 없어서 공항 폐쇄 직전까지) 답으로 내면 된다.&lt;/p&gt;
+
+&lt;h3 id=&quot;문제-풀이&quot;&gt;문제 풀이&lt;/h3&gt;
+&lt;p&gt;유니온 파인드 개념을 알았더라도 풀기 어려웠던 문제 같다.&lt;/p&gt;
+
+&lt;p&gt;먼저 유니온 파인드 개념이 무엇이냐면, 그래프 알고리즘에서 등장한다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;array[i] : i번째 노드의 부모 노드(루트 노드)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;라고 했을 때, union이 두개의 disjoint set(루트 노드가 다른 두 그래프)를 합치는 것이고, find가 해당 그래프의 루트 노드를 return 하는 함수이다. 결국 부모 노드를 잘 다룰 수 있으면 된다. 따라서 union(x, y)는 x와 y의 루트 노드들을 각각 찾고(px, py라고 하겠다) px의 부모 노드를 py로 설정해주면 된다(array[px]=py). find함수는 array[i]=i인 경우 자신의 루트노드이므로 탐색을 멈추고 자신을 return하면 되고, 자신의 루트노드가 아닌 경우는 i의 부모 노드(array[i])에 대해 find함수를 재귀로 한번 더 돌려주면 된다. 여기서 중요한 점은 &lt;strong&gt;시간초과&lt;/strong&gt;를 해결하는 것인데, 메모이제이션을 이용해 return 직전에 i의 부모 노드를 find(i)로 설정해 주면 된다. 즉 부모 노드가 현재 i의 부모 노드의 부모 노드일 수 있기 때문에, 계속 갱신해주면 된다.&lt;/p&gt;
+
+&lt;p&gt;아래 문제는 유니온 파인드 개념을 사용하면 풀 수 있는데, 나는 바로 떠올리지는 못했다. i번째 비행기는 1-g_i게이트들에 위치할 수 있는데, 이미 누군가 g_i게이트에 비행기를 세워 놓았으면 g_i-1에 비행기를 세워야 한다. 따라서 각 비행기를 세울 때마다 몇 번째 게이트에 세울 지 또 탐섹해야하기 때문에 O(p*g) 시간이 걸리게 된다. 따라서 각각의 비행기에 대해 몇 번째 게이트에 세우면 되는지 바로 알 수 있어야 한다. 
+이것은 어떻게 할 수 있냐면, 해당 비행기가 특정 게이트 x에 세워 졌다면, 그 다음 비행기는 무조건 x-1에 세워야 하므로 특정 게이트 x와 x전에 세워진 게이트들과, x-1번째 게이트를 union시켜주면 된다. 즉 내가 세운 게이트의 부모 노드를 내가 세운 게이트 바로 전 노드로 설정해주면 된다. 이렇게 하면 이후에 내가 x번째 게이트에 다시 세우려고 시도할 때, x-1번째 게이트의 부모부터 고려할 수 있게 된다.&lt;/p&gt;
+
+&lt;p&gt;코드는 아래와 같다.&lt;/p&gt;
+
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;cstdio&amp;gt;
+&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;union_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scanf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d%d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ans&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;scanf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;ans&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;union_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ans&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>이정목</name></author><category term="PS" /><category term="백준" /><category term="유니온 파인드" /><category term="union find" /><summary type="html">단계별로 풀어보기 문제를 보다가 내가 예전에 틀린 문제가 있어서 가져와보았다! 유니온 파인드 개념을 쓰는 문제였는데, 유니온 파인드 개념을 전혀 기억을 못해서 유니온 파인드 개념부터 공부해서 풀었다. 차근차근 한문제씩 풀어 나가는 게 나의 목표이다.</summary></entry><entry><title type="html">[백준] 2839 설탕 배달</title><link href="http://localhost:4000/blog/2839-%EC%84%A4%ED%83%95-%EB%B0%B0%EB%8B%AC/" rel="alternate" type="text/html" title="[백준] 2839 설탕 배달" /><published>2022-09-25T09:00:00+09:00</published><updated>2022-09-25T09:00:00+09:00</updated><id>http://localhost:4000/blog/2839-%EC%84%A4%ED%83%95%EB%B0%B0%EB%8B%AC</id><content type="html" xml:base="http://localhost:4000/blog/2839-%EC%84%A4%ED%83%95-%EB%B0%B0%EB%8B%AC/">&lt;p&gt;정말정말 오랜만에 백준 문제를 가지고 왔다! 설탕 배달이라는 문제인데, dp로 풀 수 있는 문제라고 해서 가져왔다. 옛날에 틀린 문제라 무작정 어렵다는 생각을 가지고 도전하지 않았던 문제인데, 왠걸 지금 푸니까 한번만에 맞췄다! 실력이 조금씩 조금씩 늘고 있는 것 같아 기분이 좋다.😊&lt;/p&gt;
+
+&lt;h3 id=&quot;문제-설명&quot;&gt;문제 설명&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/2839&quot;&gt;링크&lt;/a&gt;
+설탕 배달을 하는 문제이다. 설탕 그람 수가 n으로 주어지면, n그램을 3그램 봉지들과 5그램 봉지들로 만들면 된다. 이때, 총 봉지 수가 최소로 하는 문제이다.!&lt;/p&gt;
+
+&lt;h3 id=&quot;문제-풀이&quot;&gt;문제 풀이&lt;/h3&gt;
+&lt;p&gt;dp라는 걸 알고 보아서 그런지는 모르겠지만 간단하다!&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;dp[n] : n그램을 만드는 데 필요한 봉지 수&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;채울 수 없는 봉지들은 INTMAX로 두고, (나는 그냥 엄청 큰 수로 두었다) for문을 돌면서 dp를 갱신해주면 된다. 이때, n번째 그램은 n-3그램을 만드는데 필요한 봉지 수에서 3그램 봉지를 하나 더하거나, n-5그램을 만드는 필요한 봉지 수에서 5그램 봉지를 하나 더하면 구할 수 있다. 봉지 수가 최소가 되야 하므로, 둘 중 더 봉지 수가 작은 걸 선택하면 된다!
+내가 채울 수 없는 봉지들을 INTMAX로 둔 이유는, 채울 수 없는 봉지들을 이용해서 dp값이 갱신 될때, INTMAX값 이상의 값은 무시될 수 있기 때문이다. 
+채울 수 없는 k그램을 이용해 k+3/k+5그램을 갱신하게 되면, 더 작은 봉지 수를 선택하므로 k그램이 무시되거나, 갱신하는 그램 또한 만들 수 없는 그램이 되어 INTMAX보다 더 큰 값으로 갱신이 된다. 결국 INTMAX이상의 값들은 사용할 수 없는 값으로 보고, -1을 출력해 주면 된다.
+아래는 코드이다.!&lt;/p&gt;
+
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;cstdio&amp;gt;
+&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scanf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100000001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100000001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100000001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100000001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;//printf(&quot;%d: %d vs %d =&amp;gt; %d\n&quot;, i, dp[i-3], dp[i-5], dp[i]);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100000001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;?-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>이정목</name></author><category term="PS" /><category term="백준" /><category term="dp" /><summary type="html">정말정말 오랜만에 백준 문제를 가지고 왔다! 설탕 배달이라는 문제인데, dp로 풀 수 있는 문제라고 해서 가져왔다. 옛날에 틀린 문제라 무작정 어렵다는 생각을 가지고 도전하지 않았던 문제인데, 왠걸 지금 푸니까 한번만에 맞췄다! 실력이 조금씩 조금씩 늘고 있는 것 같아 기분이 좋다.😊</summary></entry><entry><title type="html">[백준] 2559 수열</title><link href="http://localhost:4000/blog/25959-%EC%88%98%EC%97%B4/" rel="alternate" type="text/html" title="[백준] 2559 수열" /><published>2022-07-12T09:00:00+09:00</published><updated>2022-07-12T09:00:00+09:00</updated><id>http://localhost:4000/blog/2559-%EC%88%98%EC%97%B4</id><content type="html" xml:base="http://localhost:4000/blog/25959-%EC%88%98%EC%97%B4/">&lt;p&gt;오늘은 어쩌다보니 고른 문제가 쉬워서 블로그에다가 포스팅이라도 해야 겠다 싶어서 포스팅하게 되었다! 쉽든 어렵든 꼬박꼬박 공부하면서 포스팅하려고 한다.
+오늘과 미래의 나에게 파이팅. 👊🏻&lt;/p&gt;
+
+&lt;h3 id=&quot;문제-설명&quot;&gt;문제 설명&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/2559&quot;&gt;링크&lt;/a&gt;
+이 문제는 간단한 문제이다! 금방 생각해 낼 수 있는 문제이나, 슬라이딩 윈도우 개념을 설명하기 위해서 가지고 왔다. 슬라이딩 윈도우는 복잡한 기법은 아니고, 그냥 중복되는 요소들을 재사용하는 것이다(메모리 아끼기 용). 따라서 이 문제에서도 슬라이딩 윈도우 기법을 사용해서 메모리를 아끼게 된다.
+문제는 간단하다. 주어진 수열의 길이가 n일 때 k 길이의 부분 수열 중에서 합이 가장 커지는 부분을 찾아 합을 return하면 된다.&lt;/p&gt;
+
+&lt;h3 id=&quot;문제-풀이&quot;&gt;문제 풀이&lt;/h3&gt;
+&lt;p&gt;간단하다. 그냥 i에서 i+k까지의 합을 구했을 때, i+1에서 i+k+1까지의 합을 구하기 위해서는 i+1~i+k까지의 합에서 i+k+1번째를 더해주고, i번째를 빼주기만 하면 된다. 이런 식으로 s를 갱신하여 슬라이딩 윈도우 기법을 사용할 수 있다. 이렇게 s를 구하면서 max까지 같이 구하면 O(n)에 문제를 풀 수 있다.&lt;/p&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;cstdio&amp;gt;
+&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scanf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%lld%lld&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scanf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+
+    &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+    &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%lld&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>이정목</name></author><category term="PS" /><category term="백준" /><category term="슬라이딩 윈도우" /><category term="수열" /><summary type="html">오늘은 어쩌다보니 고른 문제가 쉬워서 블로그에다가 포스팅이라도 해야 겠다 싶어서 포스팅하게 되었다! 쉽든 어렵든 꼬박꼬박 공부하면서 포스팅하려고 한다. 오늘과 미래의 나에게 파이팅. 👊🏻</summary></entry><entry><title type="html">[백준] 2629 양팔저울</title><link href="http://localhost:4000/blog/2629-%EC%96%91%ED%8C%94%EC%A0%80%EC%9A%B8/" rel="alternate" type="text/html" title="[백준] 2629 양팔저울" /><published>2022-07-11T09:00:00+09:00</published><updated>2022-07-11T09:00:00+09:00</updated><id>http://localhost:4000/blog/2629-%EC%96%91%ED%8C%94%EC%A0%80%EC%9A%B8</id><content type="html" xml:base="http://localhost:4000/blog/2629-%EC%96%91%ED%8C%94%EC%A0%80%EC%9A%B8/">&lt;p&gt;방학 때 또 1일1커밋을 해보기 위해서 오랜만에 블로그를 잡았다! 꼬박꼬박 공부해서 문제를 다 잘 풀 수 있었으면 좋겠다.&lt;/p&gt;
+
+&lt;h3 id=&quot;문제-설명&quot;&gt;문제 설명&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/2629&quot;&gt;링크&lt;/a&gt;
+이 문제는 평범한 배낭과 비슷한 냅색 문제라고 한다! 냅색 문제가 기억이 안나서 다시 보고 왔다.. ㅎㅎ 시간이 나면 평범한 배낭 문제도 포스팅 해봐야 겠다! 어쨌든 이 문제는 양팔 저울에 추랑 구슬을 올려서 구슬 무게를 맞출 수 있는지를 묻는 문제이다. 추의 개수와 각 추의 무게가 주어지면, 그 추를 양팔 저울에 적절히 올려서 구슬 무게를 맞출 수 있는지를 체크하면 된다. 모든 경우의 수를 고려하는 것은 시간초과가 나서 불가능하기때문에, dp를 이용한다.&lt;/p&gt;
+
+&lt;h3 id=&quot;문제-풀이&quot;&gt;문제 풀이&lt;/h3&gt;
+&lt;p&gt;이 문제의 핵심은 dp식을 어떻게 세우느냐에 있다. 나는 바로 생각을 못해서, 살짝살짝 풀이를 참고했다. (ㅎㅎ) &lt;a href=&quot;https://yabmoons.tistory.com/105&quot;&gt;링크&lt;/a&gt; dp식은 다음과 같이 세울 수 있다.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;bool dp[i][w] : i번째까지 고려했을 때 w라는 무게를 만들 수 있는가?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이렇게 dp식을 세우고 나면, i번째까지 고려했을 때 그 다음은 어떻게 해야할지 알 수 있다. 즉, 내가 i번째까지 고려해서 w라는 무게가 만들어 졌다면, dp[i][w]는 true가 된다. 그리고 i+1번째까지 고려할 때의 경우까지 고려할 수 있다. 여기에는 세가지가 있다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;i+1번째 추를 담지 않고 i+1번째까지 고려한다.&lt;/li&gt;
+  &lt;li&gt;i+1번째 추를 담으면서 i+1번째까지 고려한다.&lt;/li&gt;
+  &lt;li&gt;i+1번째 추를 &lt;strong&gt;구슬이랑 같이&lt;/strong&gt; 담으면서 i+1번째까지 고려한다.
+이것을 이용해서 점화식을 세우면 된다. 즉,&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;40000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;chu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;chu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;chu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;가 된다. 여기서 중요한 점은 break되는 조건을 걸어주는 것인데, 이걸 걸어주지 않으면 f가 끝나지 않고 계속 돌게 된다. 즉, i번째까지 고려하는 이 i가 추 개수를 넘어설 때 break해주고, 총 무게가 40000이 넘어갈 때(조건에 있다) break를 걸어주고, 이미 true가 된 dp가 들어오면 break를 걸어준다. 이렇게 하면 양팔저울 문제를 풀 수 있다.
+아래는 코드이다.&lt;/p&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;cstdio&amp;gt;
+&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;31&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;31&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;50000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// dp[i][j] : i번째까지 담아서 j무게를 만들 수 있는가?&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;40000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;chu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;chu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;chu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scanf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scanf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;chu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scanf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scanf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;15000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%s &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;N&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 여기서도 물어보는 무게가 30*500g이상이면 당연히안되므로 dp를 흝을이유도 없다&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%s &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Y&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%s &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;N&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>이정목</name></author><category term="PS" /><category term="백준" /><category term="dp" /><category term="냅색" /><category term="양팔저울" /><summary type="html">방학 때 또 1일1커밋을 해보기 위해서 오랜만에 블로그를 잡았다! 꼬박꼬박 공부해서 문제를 다 잘 풀 수 있었으면 좋겠다.</summary></entry><entry><title type="html">[MAR] Fast Enhanced CT Metal Artifact Reduction Using Data Domain Deep Learning (deepMAR)</title><link href="http://localhost:4000/blog/deepMAR/" rel="alternate" type="text/html" title="[MAR] Fast Enhanced CT Metal Artifact Reduction Using Data Domain Deep Learning (deepMAR)" /><published>2022-06-27T09:00:00+09:00</published><updated>2022-06-27T09:00:00+09:00</updated><id>http://localhost:4000/blog/MAR1</id><content type="html" xml:base="http://localhost:4000/blog/deepMAR/">&lt;p&gt;이번에는 내가 하고 있던 metal artifact reduction에 대한 논문 리뷰이다! MAR은 이미지 postprocessing이랑 preprocessing으로 나눠져서 이미지 도메인을 쓰는 방법론이랑, 사이노그램 도메인을 쓰는 방법론 이렇게 두개가 있는데, 여기서는 사이노그램 도메인을 이용하여 metal artifact를 지웠다!&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://arxiv.org/abs/1904.04691&quot;&gt;논문 링크&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;→ The presence of dense materials, such as metals, can strongly attenuate or even completely block X-rays, producing severe streaking artifacts in the FBP reconstruction.&lt;/p&gt;
+
+&lt;p&gt;CT를 촬영하면 1차적으로 사이노그램 이미지가 나오게 되는데, 이것을 다시 CT image로 reconstruction을 하기 위해서 FBP(Filtered back projection)이라는 방법을 사용하게 된다. 그런데 이때 CT 안에 dense material이 존재 시 streaking artifact를 만들고, 이는 이미지 품질에 매우 치명적이다. 그래서 metal artifact reduction(MAR)를 하는 여러 방법론들이 제안되고 있는 것이다.&lt;/p&gt;
+
+&lt;p&gt;The standard practical approaches to reducing metal artifacts in CT imagery are either simplistic nonadaptive interpolation-based projection data completion methods or direct image post-processing method, which had limited success.
+traditional method such as interpolation-based projection data completion methods(지워진 부분에서 중간값을 취하는 방법) 등이 잘 못하므로, 딥러닝을 이용한 방법론을 활용하는 추세가 점점 늘어나고 있다.&lt;/p&gt;
+
+&lt;p&gt;⇒ This paper aims to reduce metal artifacts in CT images by applying deep learning(DL) directly in the projection-domain, prior to image formation. (우리는 따라서 딥러닝을 이용한 MAR 방법을 제안하고, 이것은 image formation 전에 projection-domain에서 이루어질 것임.)&lt;/p&gt;
+
+&lt;h2 id=&quot;materials-and-methods&quot;&gt;Materials and Methods&lt;/h2&gt;
+&lt;h3 id=&quot;identification-and-suppression-of-metal-contaminated-projection-data&quot;&gt;identification and suppression of metal-contaminated projection data&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_1.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
+In order to identify the metal-contaminated projection data a conventional FBP reconstruction using th eoriginal sinogram is first generated.&lt;/p&gt;
+
+&lt;p&gt;Thresholding followed by morphological operations are then used to segment the metallic objects in the image, which are forward projected to generate a mask, M.&lt;/p&gt;
+
+&lt;p&gt;(Thresholding이 사용되었고, morphological operation(erosion, dilation)이 후처리에 이용된다)
+mask가 generate ⇒ inpainting 모델의 적용 가능성&lt;/p&gt;
+
+&lt;p&gt;mask는 실제 metal부분보다 조금 더 크게 설정하여, 모든 artifact를 확실히 지우도록 했다.&lt;/p&gt;
+
+&lt;h3 id=&quot;cgan-based-sinogram-completion&quot;&gt;cGAN based sinogram completion&lt;/h3&gt;
+&lt;p&gt;overall mini-max objective function:
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_2.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;x: input (incomplete-data), y: ground truth (true complete-data sinograms)
+Discriminator loss의 포함이 l2 only loss를 사용했을 때 비해 전체적인 결과를 향상시켜주었다.
+또한 두번째 term에서 l1 loss의 사용보다 l2 loss의 사용이 더 좋은 performance를 보여주었다.&lt;/p&gt;
+
+&lt;p&gt;LcGAN(G, D):
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_3.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
+Ex : expectation over incomplete data density, approximated by averaging over input training data samples x.&lt;/p&gt;
+
+&lt;h4 id=&quot;generator&quot;&gt;Generator&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_4.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
+modified U-Net architecture with a fully convoluiontal architecture가 사용되었음.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;U-Net의 skip connection 사용, layer i와 layer n-i를 concat하는 방식.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Convolutional kernels of size 5x5 with a stride of 2 are used at each layer for both the generator and discriminator networks.&lt;/p&gt;
+
+&lt;p&gt;Down-sampling에서 max-pooling대신 two-pixel strided convolutions를 사용&lt;/p&gt;
+
+&lt;p&gt;Up-sampling에서는 transposed convolutions with two-pixel strides가 사용됨.&lt;/p&gt;
+
+&lt;p&gt;Overall 6 downsampling and 6 upsampling layer를 사용&lt;/p&gt;
+
+&lt;p&gt;stride-2 convolution이 stride-1 convolution과 비교했을 때 훨씬 큰 practical effective receptive field(ERF)를 제공함
+https://arxiv.org/pdf/1701.04128.pdf ⇒ 여기서 ERF 개념이 소개됨.&lt;/p&gt;
+
+&lt;p&gt;Receptive Field : 각 단계의 입력 이미지에 대해 하나의 필터가 커버할 수 있는 이미지 영역
+theoretical ERF는 layer수와 함께 증가&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;6 downsampling layer와 6 umsampling layer에서는 theoretical ERF가 757x757
+  ⇒ 굉장히 큰 sinogram도 handle&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Kernel size또한 ERF에 근거하여 설정되었음.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;smaller kernels would require more layers to achieve a desired ERF&lt;/li&gt;
+  &lt;li&gt;larger kernels would result in many more learning parameters needing estimation&lt;/li&gt;
+  &lt;li&gt;Empirical testing showed that 5x5 convolutional kernels with a shallower architecture perform better than 3x3 convolutional kernels with a deeper architecture.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Dropout이 overfitting을 방지하기 위해 마지막 layer에 사용되었음. (BN 다음에)&lt;/p&gt;
+
+&lt;h4 id=&quot;discriminator&quot;&gt;Discriminator&lt;/h4&gt;
+&lt;p&gt;based on the full sinogram image, instead of just patches&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Missing data follows sinusoidal structure, which would not be possible to accurately capture using a patch-based discriminator (missing data부분이 사인파 형태를 띄기 때문에 patch기반 discriminator가 형태를 정확히 잡아내기 어렵다)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;By using mask-specific sinogram completion our loss function is focused on the areas of most interest - where the data is missing.
+(loss function이 mask부분만 맞추도록 element-wise multiplication을 진행)
+generator network output is given by : G(x) = x + M ⊙ x_D1
+(x_D1 : the output of the last layer of the generator network, M : the metal mask, ⊙ element-wise multiplication)&lt;/p&gt;
+
+&lt;p&gt;⇒ Inpainting&lt;/p&gt;
+
+&lt;h3 id=&quot;efficient-fbp-image-reconstruction-and-reinsertion-of-metal-objects-back-into-the-reconstructed-image&quot;&gt;efficient FBP image reconstruction and reinsertion of metal objects back into the reconstructed image&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Model의 output인 complete-data sinograms에 FBP를 진행 ⇒ 우리가 아는 CT image가 생성&lt;/li&gt;
+  &lt;li&gt;FBP 이후의 이미지에는 metal위치가 뚫려 있음. 따라서 metal object의 reinsertion 진행&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;dataset-generation&quot;&gt;Dataset Generation&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Transfer Learning (전이 학습)
+    &lt;ul&gt;
+      &lt;li&gt;In the security domain there is a great diversity of possible objects in a scene, yet the amount of physical CT data avilable for training is severely limited.&lt;/li&gt;
+      &lt;li&gt;To address this limitation, we generated a training set for sinogram completion using physically accurate X-ray simulation tools.&lt;/li&gt;
+      &lt;li&gt;After initinal training, our networks are then refined with available physical data through transfer learning.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Areas without metal are considered background(air) in this work. This approach makes the problem more tractable since the network can focus on a smaller space of possibilities.  (메탈이 없는 부분은 air로 간주, 따라서 네트워크가 더 작은 가능성에 집중할 수 있다. ⇒ 메탈이 있으면 티슈 외의 메탈 부분을 맞추기 위해서 모델이 메탈에 더 집중.)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;simulated-training-data-generation&quot;&gt;Simulated Training Data Generation&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;1) Physically accurate X-ray scanner model&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We can accurately model the data obtained from such scanners as a sum of mono-engergetic sinograms weighted by the corresponding relative strength of the source spectrum.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_5.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I_(i): relative X-ray source intensity at enery E(i), I_j(i): Sinogram contribution at engergy E(i) for ray-path j corresponding to the line Lj(Beer-Lambert law사용)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_6.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The projection data contributions are degraded by data-dependent and electronic noise ⇒ Poisson distribution, Gaussian zero-mean으로 표현&lt;/li&gt;
+  &lt;li&gt;By incorporating a full energy aware x-ray model, effects such as beam hardening are inherently included. (Beam hardening과 같은 효과도 연출이 가능하다.)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;2) Stochastic bag simulator&lt;/strong&gt;
+This bag or scene simulator places objects of different material composition(티슈 부분을 랜덤으로 표현) and of varying geometric configuration at random locations in the scene.&lt;/p&gt;
+
+&lt;p&gt;uses material attenuation coefficients drawn from the NIST XCOM database.
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_7.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;real-training-data-generation&quot;&gt;Real Training Data Generation&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Acquiring physical matched sinogram pairs with and without metal objects for training is a challenge&lt;/li&gt;
+  &lt;li&gt;Our approach only requires metal-trace masked and corresponding metal-free complete sinograms for CGAN training since we are focusing our learning on missing data completion. (우리의 방식은 단순히 metal mask와 metal이 없는 사이노그램 이미지이므로, 실제 전체 Metal 이미지를 얻을 필요가 없다.)&lt;/li&gt;
+  &lt;li&gt;We can use sinogram data from scenes which do not contain metal objects, and then create matched sinograms by deleting data in the sinogram that corresponds to geometric configurations of embedded objects.
+⇒ metal이 없는 clean한 sinogram에서 geometric configurations 부분만 간단히 삭제하면 됨. (꼭 metal이 있는 이미지가 필요 없음!)&lt;/li&gt;
+  &lt;li&gt;metal mask identified by applying a threshold of 4000 Modified Hounsfield Units(MHU = 1000 + -1000(μ-μ_water)/μ_water.
+p Threshold mask results were eroded(used to remove very small objects) and dilated with a disk-shaped structuring element of radius 2 and 4 pixels respectively to obtain a final metal mask.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;result&quot;&gt;Result&lt;/h2&gt;
+&lt;p&gt;LI-MAR와 WNN-MAR와 우리 DeepMAR가 비교되었고, simulated data와 real data 모두에 대해 진행되었다.&lt;/p&gt;
+
+&lt;h3 id=&quot;sinogram-completion-experiments&quot;&gt;Sinogram Completion Experiments&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_8.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;(a)가 simulated data, (b), (c)가 real data.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;simulated data에 대해 LI-MAR와 WNN-MAR에 비해 각각 89%, 87% 더 MSE가 적었음.&lt;/li&gt;
+  &lt;li&gt;real data에 대해 80%, 75% 더 MSE가 적었음.&lt;/li&gt;
+  &lt;li&gt;Transfer learning을 사용했을 때 31% 정도의 성능 향상이 있었다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;simulated-data-reconstruction-experiments&quot;&gt;Simulated Data Reconstruction Experiments&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_9.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_10.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Deep-MAR에서 모두 결과가 매우 향샹되었음. artifact가 가장 잘 제거된 모습을 볼 수 있음.&lt;/li&gt;
+  &lt;li&gt;SSIM, PSNR의 향상이 의미하는 것: Deep-MAR approach not only performs well in qualitatively suppressing metal artifacts, but is also good at correcting the underlying attenuation values, and correct attenuation numbers are important for the successful functioning of security algorithms.&lt;/li&gt;
+  &lt;li&gt;(metal artifact를 눈으로 봤을 때 잘 줄이는 것 뿐만 아니라, 감쇠된 부분을 잘 맞춘다는 것을 의미 ⇒ 다른 security algorithms의 작동에 있어서도 중요 (진짜 데이터 같다는 의미)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;real-data-reconstruction-experiments&quot;&gt;Real Data Reconstruction Experiments&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_11.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
+&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_12.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
+기존의 방법들은 오히려 streak artifact가 생겨나는 경우도 존재하지만, Deep-MAR는 가장 자연스럽게 채운 것을 볼 수 있음&lt;/p&gt;
+
+&lt;h3 id=&quot;attention-maps&quot;&gt;Attention Maps&lt;/h3&gt;
+&lt;p&gt;Zeiler and Fergus의 Image to Image translation 연구에서 사용한 방법인데,&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Compute attention maps by occluding different regions of the input image and examining the resulting impace on performance of the deep network on the corresponding image classification task.&lt;/li&gt;
+  &lt;li&gt;The idea is that occlusion of more important image areas to the network will correspondingly have greater resulting performance impact.&lt;/li&gt;
+  &lt;li&gt;In this work, we apply this idea by repeatedly replacing an 11x11 patch of sinogram values with random data sampled from a uniform distribution U(0, m) and then examining the resulting sinogram completion performance.&lt;/li&gt;
+  &lt;li&gt;(11x11 patch의 사이노그램 값들을 U(0, m)으로 바꿔치기후, performance가 어떻게 바뀌는지를 조사)&lt;/li&gt;
+  &lt;li&gt;We then compute the corresponding MSE for the sinogram regions completed by learned network and generate a 2-D attention map by associating this MSE value with the center of the corresponding noise patch.&lt;/li&gt;
+  &lt;li&gt;(해당하는 region의 MSE를 계산 후, 이 MSE value와 해당 noise patch에 대한 2-D attention map을 그렸다.
+Metal artifact reduction은 gt가 없어서 평가가 매우 어려운데, 이러한 식으로 모델이 mask안을 채울 때 주변 픽셀들을 얼마나 참고하고 있는지를 visualize하여 성능 평가를 할 수 있는 척도 중 하나로 사용한 것이다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_13.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;모든 그림에서 metal mask 주변의 attention이 강하게 나타나는 것을 볼 수 있다. (pixels closest to the missing data appear to be the most important in generating an estimate, which seems logical)&lt;/p&gt;
+
+&lt;p&gt;(a), (b)는 메탈이 하나일때의 결과, (c), (d)는 메탈이 5개 일 때의 결과(challenging)이고, 
+(c), (d)에서 전체적인 attention map의 수치가 높아진 것을 확인 가능하다.&lt;/p&gt;
+
+&lt;h2 id=&quot;discussion&quot;&gt;Discussion&lt;/h2&gt;
+&lt;p&gt;따라서 논문의 contribution은 두개 이다.&lt;/p&gt;
+
+&lt;p&gt;MAR 문제에 대해 Deep-MAR라는 DL-based framework를 제안하였다. 그리고 딥러닝에서 발생하는 training data 확보 문제를 해결하기 위해, transfer learning을 활용한 방법론이다. 이때, simulated training data에서 학습 후 (얼마 없는) real data에서 transfer learning을 함으로써 성능을 확보하였다.&lt;/p&gt;</content><author><name>이정목</name></author><category term="AI" /><category term="AI" /><category term="MAR" /><category term="inpainting" /><summary type="html">이번에는 내가 하고 있던 metal artifact reduction에 대한 논문 리뷰이다! MAR은 이미지 postprocessing이랑 preprocessing으로 나눠져서 이미지 도메인을 쓰는 방법론이랑, 사이노그램 도메인을 쓰는 방법론 이렇게 두개가 있는데, 여기서는 사이노그램 도메인을 이용하여 metal artifact를 지웠다!</summary></entry></feed>
