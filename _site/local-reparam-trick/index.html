@@ -79,7 +79,7 @@
 <link href="/blog/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="백준,슬라이딩 윈도우,수열," />
+  <meta name="keywords" content="CS,Deep Learning,reparametrization trick,Bayesian," />
 
 
 
@@ -107,17 +107,17 @@
 
 
 
-<meta name="description" content="오늘은 어쩌다보니 고른 문제가 쉬워서 블로그에다가 포스팅이라도 해야 겠다 싶어서 포스팅하게 되었다! 쉽든 어렵든 꼬박꼬박 공부하면서 포스팅하려고 한다. 오늘과 미래의 나에게 파이팅. 👊🏻">
-<meta name="keywords" content="백준, 슬라이딩 윈도우, 수열">
+<meta name="description" content="대학교 때 들었던 reparametrization trick을 local reparametrization trick을 보면서 다시 보게 되었다. expectation을 계산하기 위해서 항이 같아야 하는데 그렇지 않아서 같게 만들어 주는 것이 reparametrization trick이다. (아래에 자세히 설명하겠다.) 우리는 항상 사실 expectation을 계산하기 위해서 실제 적분 대신 Monte Carlo Estimation을 쓰고 있었던 것이다! 그런데 이 MC estimation을 가능하게 하려면 같은 텀이 있어야 하는데 그렇지 않은 것이다.">
+<meta name="keywords" content="CS, Deep Learning, reparametrization trick, Bayesian">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[백준] 2559 수열">
-<meta property="og:url" content="http://localhost:4000/blog/25959-%EC%88%98%EC%97%B4/">
+<meta property="og:title" content="[DeepLearning] Local Reparametrization Trick">
+<meta property="og:url" content="http://localhost:4000/blog/local-reparam-trick/">
 <meta property="og:site_name" content="M0kI's bloG">
-<meta property="og:description" content="오늘은 어쩌다보니 고른 문제가 쉬워서 블로그에다가 포스팅이라도 해야 겠다 싶어서 포스팅하게 되었다! 쉽든 어렵든 꼬박꼬박 공부하면서 포스팅하려고 한다. 오늘과 미래의 나에게 파이팅. 👊🏻">
+<meta property="og:description" content="대학교 때 들었던 reparametrization trick을 local reparametrization trick을 보면서 다시 보게 되었다. expectation을 계산하기 위해서 항이 같아야 하는데 그렇지 않아서 같게 만들어 주는 것이 reparametrization trick이다. (아래에 자세히 설명하겠다.) 우리는 항상 사실 expectation을 계산하기 위해서 실제 적분 대신 Monte Carlo Estimation을 쓰고 있었던 것이다! 그런데 이 MC estimation을 가능하게 하려면 같은 텀이 있어야 하는데 그렇지 않은 것이다.">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[백준] 2559 수열">
-<meta name="twitter:description" content="오늘은 어쩌다보니 고른 문제가 쉬워서 블로그에다가 포스팅이라도 해야 겠다 싶어서 포스팅하게 되었다! 쉽든 어렵든 꼬박꼬박 공부하면서 포스팅하려고 한다. 오늘과 미래의 나에게 파이팅. 👊🏻">
+<meta name="twitter:title" content="[DeepLearning] Local Reparametrization Trick">
+<meta name="twitter:description" content="대학교 때 들었던 reparametrization trick을 local reparametrization trick을 보면서 다시 보게 되었다. expectation을 계산하기 위해서 항이 같아야 하는데 그렇지 않아서 같게 만들어 주는 것이 reparametrization trick이다. (아래에 자세히 설명하겠다.) 우리는 항상 사실 expectation을 계산하기 위해서 실제 적분 대신 Monte Carlo Estimation을 쓰고 있었던 것이다! 그런데 이 MC estimation을 가능하게 하려면 같은 텀이 있어야 하는데 그렇지 않은 것이다.">
 
 
 <script type="text/javascript" id="hexo.configurations">
@@ -150,7 +150,7 @@
 
 
 
-  <title>[백준] 2559 수열 | M0kI's bloG</title>
+  <title>[DeepLearning] Local Reparametrization Trick | M0kI's bloG</title>
   
 
 
@@ -343,7 +343,7 @@
   
 
   <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/25959-%EC%88%98%EC%97%B4/">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/local-reparam-trick/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Mok">
@@ -363,7 +363,7 @@
           <h1 class="post-title" itemprop="name headline">
           
           
-            [백준] 2559 수열
+            [DeepLearning] Local Reparametrization Trick
           
         </h1>
         
@@ -377,8 +377,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-07-12T09:00:00+09:00">
-                2022-07-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2026-03-28T00:00:00+09:00">
+                2026-03-28
               </time>
             
 
@@ -401,8 +401,8 @@
               
                 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/category/#/PS" itemprop="url" rel="index">
-                    <span itemprop="name">PS</span>
+                  <a href="/blog/category/#/AI" itemprop="url" rel="index">
+                    <span itemprop="name">AI</span>
                   </a>
                 </span>
 
@@ -452,37 +452,13 @@
 
 
 
-  <p>오늘은 어쩌다보니 고른 문제가 쉬워서 블로그에다가 포스팅이라도 해야 겠다 싶어서 포스팅하게 되었다! 쉽든 어렵든 꼬박꼬박 공부하면서 포스팅하려고 한다.
-오늘과 미래의 나에게 파이팅. 👊🏻</p>
+  <p>대학교 때 들었던 reparametrization trick을 local reparametrization trick을 보면서 다시 보게 되었다.
+expectation을 계산하기 위해서 항이 같아야 하는데 그렇지 않아서 같게 만들어 주는 것이 reparametrization trick이다. (아래에 자세히 설명하겠다.)
+우리는 항상 사실 expectation을 계산하기 위해서 실제 적분 대신 Monte Carlo Estimation을 쓰고 있었던 것이다! 그런데 이 MC estimation을 가능하게 하려면 같은 텀이 있어야 하는데 그렇지 않은 것이다.</p>
 
-<h3 id="문제-설명">문제 설명</h3>
-<p><a href="https://www.acmicpc.net/problem/2559">링크</a>
-이 문제는 간단한 문제이다! 금방 생각해 낼 수 있는 문제이나, 슬라이딩 윈도우 개념을 설명하기 위해서 가지고 왔다. 슬라이딩 윈도우는 복잡한 기법은 아니고, 그냥 중복되는 요소들을 재사용하는 것이다(메모리 아끼기 용). 따라서 이 문제에서도 슬라이딩 윈도우 기법을 사용해서 메모리를 아끼게 된다.
-문제는 간단하다. 주어진 수열의 길이가 n일 때 k 길이의 부분 수열 중에서 합이 가장 커지는 부분을 찾아 합을 return하면 된다.</p>
+<h2 id="reparametrization-trick">Reparametrization trick</h2>
 
-<h3 id="문제-풀이">문제 풀이</h3>
-<p>간단하다. 그냥 i에서 i+k까지의 합을 구했을 때, i+1에서 i+k+1까지의 합을 구하기 위해서는 i+1~i+k까지의 합에서 i+k+1번째를 더해주고, i번째를 빼주기만 하면 된다. 이런 식으로 s를 갱신하여 슬라이딩 윈도우 기법을 사용할 수 있다. 이렇게 s를 구하면서 max까지 같이 구하면 O(n)에 문제를 풀 수 있다.</p>
-<div class="language-c++ highlighter-rouge"><div class="highlight"><table style="margin: 0px"><tbody><tr><td class="gutter"><pre>1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11<br/>12<br/>13<br/>14<br/>15<br/>16<br/>17<br/>18<br/>19<br/>20</pre></td><td class="code"><pre class="highlight"><code><span class="cp">#include &lt;cstdio&gt;
-</span>
-<span class="kt">long</span> <span class="kt">long</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span>
-<span class="kt">int</span> <span class="n">t</span><span class="p">[</span><span class="mi">100001</span><span class="p">];</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
-    <span class="n">scanf</span><span class="p">(</span><span class="s">"%lld%lld"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">k</span><span class="p">);</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">scanf</span><span class="p">(</span><span class="s">"%d"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-
-    <span class="kt">long</span> <span class="kt">long</span> <span class="n">sum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">sum</span><span class="o">+=</span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-
-    <span class="kt">long</span> <span class="kt">long</span> <span class="n">max</span><span class="o">=</span><span class="n">sum</span><span class="p">;</span>
-    <span class="kt">long</span> <span class="kt">long</span> <span class="n">s</span><span class="o">=</span><span class="n">sum</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">k</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
-        <span class="n">s</span><span class="o">=</span><span class="p">(</span><span class="n">s</span><span class="o">+</span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">-</span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">k</span><span class="p">];</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="o">&gt;</span><span class="n">max</span><span class="p">)</span> <span class="n">max</span><span class="o">=</span><span class="n">s</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">"%lld</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">max</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></td></tr></tbody></table></div></div>
+\[\mathcal{E}_p(x)\]
 
 
       
@@ -514,13 +490,16 @@
         <div class="post-tags">
           
             
-            <a href="/blog/tag/#/%EB%B0%B1%EC%A4%80" rel="tag"># 백준</a>
+            <a href="/blog/tag/#/CS" rel="tag"># CS</a>
           
             
-            <a href="/blog/tag/#/%EC%8A%AC%EB%9D%BC%EC%9D%B4%EB%94%A9%20%EC%9C%88%EB%8F%84%EC%9A%B0" rel="tag"># 슬라이딩 윈도우</a>
+            <a href="/blog/tag/#/Deep%20Learning" rel="tag"># Deep Learning</a>
           
             
-            <a href="/blog/tag/#/%EC%88%98%EC%97%B4" rel="tag"># 수열</a>
+            <a href="/blog/tag/#/reparametrization%20trick" rel="tag"># reparametrization trick</a>
+          
+            
+            <a href="/blog/tag/#/Bayesian" rel="tag"># Bayesian</a>
           
         </div>
       
@@ -536,18 +515,14 @@
         <div class="post-nav" id="post-nav-id">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/blog/2839-%EC%84%A4%ED%83%95-%EB%B0%B0%EB%8B%AC/" rel="next" title="[백준] 2839 설탕 배달">
-                <i class="fa fa-chevron-left"></i> [백준] 2839 설탕 배달
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/blog/2629-%EC%96%91%ED%8C%94%EC%A0%80%EC%9A%B8/" rel="prev" title="[백준] 2629 양팔저울">
-                [백준] 2629 양팔저울 <i class="fa fa-chevron-right"></i>
+              <a href="/blog/wireshark-packet-analysis/" rel="prev" title="[Computer Network] 와이어샤크를 이용해 패킷 분석하기">
+                [Computer Network] 와이어샤크를 이용해 패킷 분석하기 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -705,7 +680,7 @@
             
               <div class="post-toc-content">
     <ol class=nav>
-      <li class="nav-item nav-level-3"> <a class="nav-link" href="#문제-설명"> <span class="nav-number">1</span> <span class="nav-text">문제 설명</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#문제-풀이"> <span class="nav-number">2</span> <span class="nav-text">문제 풀이</span> </a> </li>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#reparametrization-trick"> <span class="nav-number">1</span> <span class="nav-text">Reparametrization trick</span> </a> </li>
     </ol>
   </div>
             

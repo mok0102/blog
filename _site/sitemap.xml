@@ -109,6 +109,10 @@
 <lastmod>2022-10-08T09:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>http://localhost:4000/blog/time-complexity/</loc>
+<lastmod>2022-10-24T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>http://localhost:4000/blog/physformer/</loc>
 <lastmod>2022-10-28T09:00:00+09:00</lastmod>
 </url>
@@ -125,8 +129,8 @@
 <lastmod>2023-10-24T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/blog/time-complexity/</loc>
-<lastmod>2023-10-24T00:00:00+09:00</lastmod>
+<loc>http://localhost:4000/blog/local-reparam-trick/</loc>
+<lastmod>2026-03-28T00:00:00+09:00</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/blog/old/2017-07-19-highlight-test/</loc>

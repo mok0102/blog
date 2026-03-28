@@ -68,10 +68,6 @@
   
 
   
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
 
 
 
@@ -111,17 +107,14 @@
 
 
 
-<meta name="description" content="My blog">
 <meta name="keywords" content="Jekyll, NexT">
 <meta property="og:type" content="website">
 <meta property="og:title" content="M0kI's bloG">
 <meta property="og:url" content="http://localhost:4000/blog/">
 <meta property="og:site_name" content="M0kI's bloG">
-<meta property="og:description" content="My blog">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="M0kI's bloG">
-<meta name="twitter:description" content="My blog">
 
 
 <script type="text/javascript" id="hexo.configurations">
@@ -350,7 +343,7 @@
   
 
   <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/time-complexity/">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/local-reparam-trick/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Mok">
@@ -372,8 +365,8 @@
           
             
                 
-                <a class="post-title-link" href="/blog/time-complexity/" itemprop="url">
-                [알고리즘/코테 합격자 되기] 시간복잡도/문법
+                <a class="post-title-link" href="/blog/local-reparam-trick/" itemprop="url">
+                [DeepLearning] Local Reparametrization Trick
               </a>
             
           
@@ -389,8 +382,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2023-10-24T00:00:00+09:00">
-                2023-10-24
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2026-03-28T00:00:00+09:00">
+                2026-03-28
               </time>
             
 
@@ -413,8 +406,8 @@
               
                 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/category/#/CS" itemprop="url" rel="index">
-                    <span itemprop="name">CS</span>
+                  <a href="/blog/category/#/AI" itemprop="url" rel="index">
+                    <span itemprop="name">AI</span>
                   </a>
                 </span>
 
@@ -463,14 +456,15 @@
 
 
 
-  <p>**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다!
-<a href="https://wikidocs.net/222560">코딩 테스트 합격자 되기 - 파이썬 편</a></p>
+  <p>대학교 때 들었던 reparametrization trick을 local reparametrization trick을 보면서 다시 보게 되었다.
+expectation을 계산하기 위해서 항이 같아야 하는데 그렇지 않아서 같게 만들어 주는 것이 reparametrization trick이다. (아래에 자세히 설명하겠다.)
+우리는 항상 사실 expectation을 계산하기 위해서 실제 적분 대신 Monte Carlo Estimation을 쓰고 있었던 것이다! 그런데 이 MC estimation을 가능하게 하려면 같은 텀이 있어야 하는데 그렇지 않은 것이다.</p>
 
 
 
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/blog/time-complexity/#more" rel="contents">
+            <a class="btn" href="/blog/local-reparam-trick/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1198,6 +1192,176 @@ nmap (port 분석)</p>
   
 
   <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/time-complexity/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mok">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="assets/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M0kI's bloG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+                
+                <a class="post-title-link" href="/blog/time-complexity/" itemprop="url">
+                [알고리즘/코테 합격자 되기] 시간복잡도/문법
+              </a>
+            
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-10-24T00:00:00+09:00">
+                2022-10-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/category/#/CS" itemprop="url" rel="index">
+                    <span itemprop="name">CS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <p>**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다!
+<a href="https://wikidocs.net/222560">코딩 테스트 합격자 되기 - 파이썬 편</a></p>
+
+
+
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/blog/time-complexity/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+        
+        
+        
+        
+          <div class="post-eof"></div>
+        
+      
+    </footer>
+  </article>
+
+  
+    
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/10775-%EA%B3%B5%ED%95%AD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1859,175 +2023,6 @@ nmap (port 분석)</p>
         
         
         
-          <div class="post-eof"></div>
-        
-      
-    </footer>
-  </article>
-
-  
-    
-    
-
-  
-
-  
-  
-  
-
-  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://localhost:4000/blog/deepMAR/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Mok">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="assets/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="M0kI's bloG">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-                
-                <a class="post-title-link" href="/blog/deepMAR/" itemprop="url">
-                [MAR] Fast Enhanced CT Metal Artifact Reduction Using Data Domain Deep Learning (deepMAR)
-              </a>
-            
-          
-        </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-06-27T09:00:00+09:00">
-                2022-06-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/category/#/AI" itemprop="url" rel="index">
-                    <span itemprop="name">AI</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-  
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  <p>이번에는 내가 하고 있던 metal artifact reduction에 대한 논문 리뷰이다! MAR은 이미지 postprocessing이랑 preprocessing으로 나눠져서 이미지 도메인을 쓰는 방법론이랑, 사이노그램 도메인을 쓰는 방법론 이렇게 두개가 있는데, 여기서는 사이노그램 도메인을 이용하여 metal artifact를 지웠다!</p>
-
-
-
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blog/deepMAR/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-        
-        
-        
-        
       
     </footer>
   </article>
@@ -2081,7 +2076,7 @@ nmap (port 분석)</p>
                alt="Mok" />
           <p class="site-author-name" itemprop="name">Mok</p>
            
-              <p class="site-description motion-element" itemprop="description">My blog</p>
+              <p class="site-description motion-element" itemprop="description"></p>
           
         </div>
         <nav class="site-state motion-element">
@@ -2089,7 +2084,7 @@ nmap (port 분석)</p>
           
             <div class="site-state-item site-state-posts">
               <a href="/blog/archives/">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">33</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -2111,7 +2106,7 @@ nmap (port 분석)</p>
             
             <div class="site-state-item site-state-tags">
               <a href="/blog/tags/">
-                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -2162,7 +2157,7 @@ nmap (port 분석)</p>
   
   
   &copy; 
-  <span itemprop="copyrightYear">2025</span>
+  <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -2676,6 +2671,10 @@ nmap (port 분석)</p>
           inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
           processEscapes: true,
           skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        },
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["TeX"]
         }
       });
     </script>

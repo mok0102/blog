@@ -1,96 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://localhost:4000/blog/atom.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/blog/" rel="alternate" type="text/html" /><updated>2025-10-15T17:56:51+09:00</updated><id>http://localhost:4000/blog/atom.xml</id><title type="html">M0kI’s bloG</title><subtitle>My blog</subtitle><author><name>Mok</name></author><entry><title type="html">[알고리즘/코테 합격자 되기] 시간복잡도/문법</title><link href="http://localhost:4000/blog/time-complexity/" rel="alternate" type="text/html" title="[알고리즘/코테 합격자 되기] 시간복잡도/문법" /><published>2023-10-24T00:00:00+09:00</published><updated>2023-10-24T00:00:00+09:00</updated><id>http://localhost:4000/blog/%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84</id><content type="html" xml:base="http://localhost:4000/blog/time-complexity/">&lt;p&gt;**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다!
-&lt;a href=&quot;https://wikidocs.net/222560&quot;&gt;코딩 테스트 합격자 되기 - 파이썬 편&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://localhost:4000/blog/atom.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/blog/" rel="alternate" type="text/html" /><updated>2026-03-28T18:50:32+09:00</updated><id>http://localhost:4000/blog/atom.xml</id><title type="html">M0kI’s bloG</title><author><name>Mok</name></author><entry><title type="html">[DeepLearning] Local Reparametrization Trick</title><link href="http://localhost:4000/blog/local-reparam-trick/" rel="alternate" type="text/html" title="[DeepLearning] Local Reparametrization Trick" /><published>2026-03-28T00:00:00+09:00</published><updated>2026-03-28T00:00:00+09:00</updated><id>http://localhost:4000/blog/local-parametrization-trick</id><content type="html" xml:base="http://localhost:4000/blog/local-reparam-trick/">&lt;p&gt;대학교 때 들었던 reparametrization trick을 local reparametrization trick을 보면서 다시 보게 되었다.
+expectation을 계산하기 위해서 항이 같아야 하는데 그렇지 않아서 같게 만들어 주는 것이 reparametrization trick이다. (아래에 자세히 설명하겠다.)
+우리는 항상 사실 expectation을 계산하기 위해서 실제 적분 대신 Monte Carlo Estimation을 쓰고 있었던 것이다! 그런데 이 MC estimation을 가능하게 하려면 같은 텀이 있어야 하는데 그렇지 않은 것이다.&lt;/p&gt;
 
-&lt;h2 id=&quot;시간복잡도&quot;&gt;시간복잡도&lt;/h2&gt;
-&lt;p&gt;보통 시간복잡도와 공간복잡도는 알고리즘의 성능을 나타내는 지표로써 쓰인다. 이때 공간복잡도보다도 시간복잡도가 주로 고려되야 할 사항인 것 같다.&lt;/p&gt;
+&lt;h2 id=&quot;reparametrization-trick&quot;&gt;Reparametrization trick&lt;/h2&gt;
 
-&lt;p&gt;시간복잡도는 보통 연산 횟수와 관련이 있어서, 나는 1번 연산이 들어갈 때 (변수에 값 할당, 또는 연산) 시간복잡도가 1이 늘어난다고 생각하며 계산한다. 따라서 내가 짠 코드에서 최대 n번 연산이 들어갈 때 시간복잡도를 O(n)이라고 표현한다. (빅오 표기법)&lt;/p&gt;
-
-&lt;p&gt;보통은 시간복잡도를 최악의 상황에서 도는 빅오 표기법을 사용하지만, 빅-세타 표기법(평균적인 경우)과 빅-오메가 표기법(최선의 경우) 또한 존재한다. 이것은 시간복잡도 계산 방식 자체는 비슷하고, 최선의 경우와 평균 경우를 고려하여 시간복잡도를 계산하면 된다.&lt;/p&gt;
-
-&lt;h3 id=&quot;빅오-표기법&quot;&gt;빅오 표기법&lt;/h3&gt;
-&lt;p&gt;빅오 표기법은 최악의 상황을 고려하기 때문에 계산이 간결해지는 경향이 있다. 만약 시간복잡도가 O(1n^2+2n-1)이라면 이 시간복잡도는 O(n^2)과 동일하다. 빅오는 최악의 상황을 고려하기 때문에, n이 무한히 커지는 상황(최악의 상황)을 고려한다. 따라서 무한히 커지는 n이 있을 때, 최고차항만 남기고 나머지 차수는 버려도 되는 것이다.&lt;/p&gt;
-
-&lt;p&gt;이는 아래 빅오 표기법의 수식을 보면 알 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;특정 x 시점 이후부터 항상 \(f(x) ≤ C * g(x)\)를 만족&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;C는 상수&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;따라서 \(n^2+2n-1&amp;lt;=C*n^2\)가 특정 n에서 만족되기 때문에 (여기서는 n=1부터 만족된다) 시간복잡도를 단순히 O(n^2)이라고 표현할 수 있다.&lt;/p&gt;
-
-&lt;!-- ![이미지](https://wikidocs.net/images/page/222560/03-1-4.png)
-1. there exists x such that $$3x^2+5x+6&lt;=C*(x^2)$$, c is constant
-이므로 어떤 x를 찾기만 하면 된다. 이때 C가 4, x가 5 이상이면 항상 이 조건을 만족한다. ($$(x-5)(x+1)$$)
-
-2. $$x+logx&lt;=C*(x)$$ 인 x, C
-C가 2이고 --&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;코딩-테스트-필수-문법&quot;&gt;코딩 테스트 필수 문법&lt;/h2&gt;
-
-&lt;h3 id=&quot;빌트인-데이터-타입&quot;&gt;빌트인 데이터 타입&lt;/h3&gt;
-&lt;p&gt;정수형(int), 부동소수형(float), 문자열 타입이 있음.
-산술연산, 비교연산, 비트연산, 논리연산이 모두 가능함.
-심지어 c에서는 math.h include 해야 가능한 abs도 가능함.&lt;/p&gt;
-
-&lt;p&gt;부동소수형에서는 엡실론을 주의해야함. 부동소수를 이진법으로 표현하는 과정에서 오차가 발생하기 때문인데, 이 오차 때문에 문제 통과를 못하는 경우도 있으므로 주의해야 한다.&lt;/p&gt;
-
-&lt;h3 id=&quot;컬렉션-데이터-타입&quot;&gt;컬렉션 데이터 타입&lt;/h3&gt;
-&lt;p&gt;리스트(list), 튜플(tuple), 딕셔너리(dictionary), 셋(set), 문자열(string) 등이 있음.
-특히 나는 리스트에서 중복 원소 제거할 때 for문 돌면서 막 지우지 말고 그냥 set변환 한번 했다가 다시 리스트로 변환하곤 했음.!&lt;/p&gt;
-
-&lt;p&gt;뮤터블 객체는 리스트, 튜플, 셋임. 따라서 뮤터블 객체를 다른 변수에 담고 수정하면 함께 수정이 됨. 따라서 .copy() 같은 걸 이용해서 복사해서 넣어줘야 같이 동시에 수정이 안됨.
-이 외에 이뮤터블 객체들은 복사해서 넣어주지 않아도 동시에 수정이 안됨.!&lt;/p&gt;
-
-&lt;p&gt;리스트 슬라이싱, 딕셔너리 사용법은 내가 대충 알고 있으므로 따로 자세히 정리하지는 않겠음.
-!!튜플은 삽입, 삭제가 안됨.&lt;/p&gt;
-
-&lt;h4 id=&quot;리스트의-시간복잡도&quot;&gt;리스트의 시간복잡도&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;list.append() : 맨 뒤에 그냥 넣으면 되므로 O(1)&lt;/li&gt;
-  &lt;li&gt;list.insert(i, num) : i번째까지 가야하므로 O(n)&lt;/li&gt;
-  &lt;li&gt;list.pop() : 맨 뒤에 그냥 제거하면 되므로 O(1)&lt;/li&gt;
-  &lt;li&gt;list.remove(num) : num을 list에서 찾아내는데 걸리는 시간 O(n), 삽입 시간 O(1) =&amp;gt; O(n)&lt;/li&gt;
-  &lt;li&gt;list.extend([list2]) : 맨 뒤에 list2 원소들을 하나씩 append 하므로 O(1)이 k번 =&amp;gt; O(k)&lt;/li&gt;
-  &lt;li&gt;list[k] : 접근 자체는 상수 시간 O(1) (연결리스트는 O(n)으로 알고 있는데 그 리스트가 아닌 것 같다.?)&lt;/li&gt;
-  &lt;li&gt;list1+list2 : list.extend는 기존 리스트에 append하므로 O(k)였지만 얘는 새로 빈 리스트에 list1, list2원소를 모두 append하기 때문에 O(n+m)&lt;/li&gt;
-  &lt;li&gt;list(set(list)) : 시간복잡도가 O(n)&lt;/li&gt;
-  &lt;li&gt;k in list : k를 찾아서 존재여부를 리턴하므로 탐색 시 걸리는 O(n)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;딕셔너리의-시간복잡도&quot;&gt;딕셔너리의 시간복잡도&lt;/h4&gt;
-&lt;p&gt;딕셔너리는 리스트와 달리 탐색에 걸리는 시간이 모두 상수시간이다.&lt;/p&gt;
-
-&lt;p&gt;따라서 dic.get[key], dic[key], dic.pop(key) 모두 O(1).&lt;/p&gt;
-
-&lt;h4 id=&quot;셋의-시간복잡도&quot;&gt;셋의 시간복잡도&lt;/h4&gt;
-&lt;p&gt;set은 add, remove, discard는 모두 O(1) 상수시간에 이루어진다. 나머지는&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;set1.union(set2): O(len(set1)+len(set2)) (셋 안에 모든 요소를 흩으므로)&lt;/li&gt;
-  &lt;li&gt;set1.intersection(set2): O(min(len(set1), len(set2)))&lt;/li&gt;
-  &lt;li&gt;set1.difference(set2) : O(len(set1))&lt;/li&gt;
-  &lt;li&gt;list(set(set1)) : O(len(set1)) (모든 요소를 list에 append)&lt;/li&gt;
-  &lt;li&gt;k in set1 : 탐색은 O(1)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;문자열의-시간복잡도&quot;&gt;문자열의 시간복잡도&lt;/h4&gt;
-&lt;p&gt;문자열은 내가 잘 모르는 문법도 있어서 좀 정리를 해보겠다. (ㅠ)&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;str1 + str2 : O(str1+str2) 두 문자열을 더함&lt;/li&gt;
-  &lt;li&gt;delimiter.join(string_list) : O(총 문자열 길이) string list를 delimiter로 연결&lt;/li&gt;
-  &lt;li&gt;str.replace(old, new) : O(n) 특정 문자를 찾아 변경&lt;/li&gt;
-  &lt;li&gt;str.split(sep) : O(n) sep 기준으로 문자열 split (리스트 리턴)&lt;/li&gt;
-  &lt;li&gt;str.startswith(prefix) : O(len(prefix)) prefix로 문자열이 시작하는지 체크&lt;/li&gt;
-  &lt;li&gt;str.endswith(suffix) : O(len(suffix)) suffix로 문자열이 끝나는지 체크 (뒤에서부터 탐색)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;람다식함수&quot;&gt;람다식(함수)&lt;/h3&gt;
-&lt;p&gt;람다식은 다음처럼 정의함! c에는 못 본 거라 내가 잘 쓸 줄 모름(ㅠ)&lt;/p&gt;
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;람다로 간단하게 함수를 위처럼 정의하고 변수에 담아서 부를 수도 있고, 아니면 인수로 람다식을 넘기는 방법도 있다. 두번째를 오며가며 더 많이 본 것 같다..?&lt;/p&gt;</content><author><name>이정목</name></author><category term="CS" /><category term="CS" /><category term="algorithm" /><category term="시간복잡도" /><category term="time complexity" /><category term="코딩 테스트 합격자 되기" /><summary type="html">**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다! 코딩 테스트 합격자 되기 - 파이썬 편</summary></entry><entry><title type="html">[Computer Network] 와이어샤크를 이용해 패킷 분석하기</title><link href="http://localhost:4000/blog/wireshark-packet-analysis/" rel="alternate" type="text/html" title="[Computer Network] 와이어샤크를 이용해 패킷 분석하기" /><published>2023-10-24T00:00:00+09:00</published><updated>2023-10-24T00:00:00+09:00</updated><id>http://localhost:4000/blog/%ED%8C%A8%ED%82%B7-%EB%B6%84%EC%84%9D</id><content type="html" xml:base="http://localhost:4000/blog/wireshark-packet-analysis/">&lt;p&gt;ping
+\[\mathcal{E}_p(x)\]</content><author><name>이정목</name></author><category term="AI" /><category term="CS" /><category term="Deep Learning" /><category term="reparametrization trick" /><category term="Bayesian" /><summary type="html">대학교 때 들었던 reparametrization trick을 local reparametrization trick을 보면서 다시 보게 되었다. expectation을 계산하기 위해서 항이 같아야 하는데 그렇지 않아서 같게 만들어 주는 것이 reparametrization trick이다. (아래에 자세히 설명하겠다.) 우리는 항상 사실 expectation을 계산하기 위해서 실제 적분 대신 Monte Carlo Estimation을 쓰고 있었던 것이다! 그런데 이 MC estimation을 가능하게 하려면 같은 텀이 있어야 하는데 그렇지 않은 것이다.</summary></entry><entry><title type="html">[Computer Network] 와이어샤크를 이용해 패킷 분석하기</title><link href="http://localhost:4000/blog/wireshark-packet-analysis/" rel="alternate" type="text/html" title="[Computer Network] 와이어샤크를 이용해 패킷 분석하기" /><published>2023-10-24T00:00:00+09:00</published><updated>2023-10-24T00:00:00+09:00</updated><id>http://localhost:4000/blog/%ED%8C%A8%ED%82%B7-%EB%B6%84%EC%84%9D</id><content type="html" xml:base="http://localhost:4000/blog/wireshark-packet-analysis/">&lt;p&gt;ping
 nslookup
 nmap (port 분석)&lt;/p&gt;
 
@@ -1267,7 +1181,99 @@ four tokenization configuration 유무
 
 &lt;p&gt;rPPG라는 게 얼굴에서 사람의 눈으로 감지하기 어려운 혈색의 변화를 감지해서 ppg 그래프를 그려야 하는 문제이기 때문에, 이게 진짜 가능한거냐라고 말하는 사람들도 있고 나도 어느 정도는 동감한다. 그래서 많은 rPPG 추출 모델들이 이 subtle한 혈색 변화를 증폭시킬 수 있는 모듈을 사용하는데 여기서는 그게 TDC였던 거다.&lt;/p&gt;
 
-&lt;p&gt;그런데 직접 physformer 실험을 해보면 30fps에서는 잘 작동하더라도 frame interpolation으로 fps를 바꿔줬을 때 잘 작동하지 않는다. 이게 모델이 30 fps에서만 주로 학습이 되어서 일수도 있지만, 내가 생각하기에는 모델이 프레임 간의 차이(temporal difference)를 보고 있다기보다 그 순간의 혈색이 얼마나 붉은지를 보는, temporal 정보를 고려하고 있지 않을 수도 있는 것 같다. 사람 혈색이 얼마나 빠르게 주기적으로 변하냐보다도, 특정 프레임에서 사람 얼굴이 붉으면 이 사람이 운동 중이라고 생각하고 높은 심박수를 뱉는 경향성이 있다. 그래서 인종에 대한 bias도 많이 걸리고, 아무튼 참 어려운 문제이다.&lt;/p&gt;</content><author><name>이정목</name></author><category term="AI" /><category term="AI" /><category term="rPPG" /><category term="transformer" /><category term="temporal difference convolution" /><summary type="html">회사 인턴을 하면서 heart rate estimation을 해야 하는데 쓸만한 걸 못찾아서 잔뜩 스트레스 받고 있다가 찾은 모델이다. 트랜스포머 기반으로 해서 현재 SOTA 모델이다. 2D CNN기반은 거의 사용 못할 결과가 나오고, 대부분의 모델이 rPPG만 predict해서 실제 rPPG로 심박수를 계산해보면 처참한 수준의 결과만 얻을 수 있다. 그런데 이 모델은 rPPG에서 psd로 심박수로 추출하여 loss term에 활용하고 있기 때문에 심박수만 필요한 내 task에서 심박수가 쓸만한 정도로 나온다. 정말 한 줄기 빛의 모델이다.</summary></entry><entry><title type="html">[백준] 10775 공항</title><link href="http://localhost:4000/blog/10775-%EA%B3%B5%ED%95%AD/" rel="alternate" type="text/html" title="[백준] 10775 공항" /><published>2022-10-08T09:00:00+09:00</published><updated>2022-10-08T09:00:00+09:00</updated><id>http://localhost:4000/blog/10775-%EA%B3%B5%ED%95%AD</id><content type="html" xml:base="http://localhost:4000/blog/10775-%EA%B3%B5%ED%95%AD/">&lt;p&gt;단계별로 풀어보기 문제를 보다가 내가 예전에 틀린 문제가 있어서 가져와보았다! 유니온 파인드 개념을 쓰는 문제였는데, 유니온 파인드 개념을 전혀 기억을 못해서 유니온 파인드 개념부터 공부해서 풀었다.
+&lt;p&gt;그런데 직접 physformer 실험을 해보면 30fps에서는 잘 작동하더라도 frame interpolation으로 fps를 바꿔줬을 때 잘 작동하지 않는다. 이게 모델이 30 fps에서만 주로 학습이 되어서 일수도 있지만, 내가 생각하기에는 모델이 프레임 간의 차이(temporal difference)를 보고 있다기보다 그 순간의 혈색이 얼마나 붉은지를 보는, temporal 정보를 고려하고 있지 않을 수도 있는 것 같다. 사람 혈색이 얼마나 빠르게 주기적으로 변하냐보다도, 특정 프레임에서 사람 얼굴이 붉으면 이 사람이 운동 중이라고 생각하고 높은 심박수를 뱉는 경향성이 있다. 그래서 인종에 대한 bias도 많이 걸리고, 아무튼 참 어려운 문제이다.&lt;/p&gt;</content><author><name>이정목</name></author><category term="AI" /><category term="AI" /><category term="rPPG" /><category term="transformer" /><category term="temporal difference convolution" /><summary type="html">회사 인턴을 하면서 heart rate estimation을 해야 하는데 쓸만한 걸 못찾아서 잔뜩 스트레스 받고 있다가 찾은 모델이다. 트랜스포머 기반으로 해서 현재 SOTA 모델이다. 2D CNN기반은 거의 사용 못할 결과가 나오고, 대부분의 모델이 rPPG만 predict해서 실제 rPPG로 심박수를 계산해보면 처참한 수준의 결과만 얻을 수 있다. 그런데 이 모델은 rPPG에서 psd로 심박수로 추출하여 loss term에 활용하고 있기 때문에 심박수만 필요한 내 task에서 심박수가 쓸만한 정도로 나온다. 정말 한 줄기 빛의 모델이다.</summary></entry><entry><title type="html">[알고리즘/코테 합격자 되기] 시간복잡도/문법</title><link href="http://localhost:4000/blog/time-complexity/" rel="alternate" type="text/html" title="[알고리즘/코테 합격자 되기] 시간복잡도/문법" /><published>2022-10-24T00:00:00+09:00</published><updated>2022-10-24T00:00:00+09:00</updated><id>http://localhost:4000/blog/%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84</id><content type="html" xml:base="http://localhost:4000/blog/time-complexity/">&lt;p&gt;**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다!
+&lt;a href=&quot;https://wikidocs.net/222560&quot;&gt;코딩 테스트 합격자 되기 - 파이썬 편&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;시간복잡도&quot;&gt;시간복잡도&lt;/h2&gt;
+&lt;p&gt;보통 시간복잡도와 공간복잡도는 알고리즘의 성능을 나타내는 지표로써 쓰인다. 이때 공간복잡도보다도 시간복잡도가 주로 고려되야 할 사항인 것 같다.&lt;/p&gt;
+
+&lt;p&gt;시간복잡도는 보통 연산 횟수와 관련이 있어서, 나는 1번 연산이 들어갈 때 (변수에 값 할당, 또는 연산) 시간복잡도가 1이 늘어난다고 생각하며 계산한다. 따라서 내가 짠 코드에서 최대 n번 연산이 들어갈 때 시간복잡도를 O(n)이라고 표현한다. (빅오 표기법)&lt;/p&gt;
+
+&lt;p&gt;보통은 시간복잡도를 최악의 상황에서 도는 빅오 표기법을 사용하지만, 빅-세타 표기법(평균적인 경우)과 빅-오메가 표기법(최선의 경우) 또한 존재한다. 이것은 시간복잡도 계산 방식 자체는 비슷하고, 최선의 경우와 평균 경우를 고려하여 시간복잡도를 계산하면 된다.&lt;/p&gt;
+
+&lt;h3 id=&quot;빅오-표기법&quot;&gt;빅오 표기법&lt;/h3&gt;
+&lt;p&gt;빅오 표기법은 최악의 상황을 고려하기 때문에 계산이 간결해지는 경향이 있다. 만약 시간복잡도가 O(1n^2+2n-1)이라면 이 시간복잡도는 O(n^2)과 동일하다. 빅오는 최악의 상황을 고려하기 때문에, n이 무한히 커지는 상황(최악의 상황)을 고려한다. 따라서 무한히 커지는 n이 있을 때, 최고차항만 남기고 나머지 차수는 버려도 되는 것이다.&lt;/p&gt;
+
+&lt;p&gt;이는 아래 빅오 표기법의 수식을 보면 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;특정 x 시점 이후부터 항상 \(f(x) ≤ C * g(x)\)를 만족&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;C는 상수&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;따라서 \(n^2+2n-1&amp;lt;=C*n^2\)가 특정 n에서 만족되기 때문에 (여기서는 n=1부터 만족된다) 시간복잡도를 단순히 O(n^2)이라고 표현할 수 있다.&lt;/p&gt;
+
+&lt;!-- ![이미지](https://wikidocs.net/images/page/222560/03-1-4.png)
+1. there exists x such that $$3x^2+5x+6&lt;=C*(x^2)$$, c is constant
+이므로 어떤 x를 찾기만 하면 된다. 이때 C가 4, x가 5 이상이면 항상 이 조건을 만족한다. ($$(x-5)(x+1)$$)
+
+2. $$x+logx&lt;=C*(x)$$ 인 x, C
+C가 2이고 --&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;코딩-테스트-필수-문법&quot;&gt;코딩 테스트 필수 문법&lt;/h2&gt;
+
+&lt;h3 id=&quot;빌트인-데이터-타입&quot;&gt;빌트인 데이터 타입&lt;/h3&gt;
+&lt;p&gt;정수형(int), 부동소수형(float), 문자열 타입이 있음.
+산술연산, 비교연산, 비트연산, 논리연산이 모두 가능함.
+심지어 c에서는 math.h include 해야 가능한 abs도 가능함.&lt;/p&gt;
+
+&lt;p&gt;부동소수형에서는 엡실론을 주의해야함. 부동소수를 이진법으로 표현하는 과정에서 오차가 발생하기 때문인데, 이 오차 때문에 문제 통과를 못하는 경우도 있으므로 주의해야 한다.&lt;/p&gt;
+
+&lt;h3 id=&quot;컬렉션-데이터-타입&quot;&gt;컬렉션 데이터 타입&lt;/h3&gt;
+&lt;p&gt;리스트(list), 튜플(tuple), 딕셔너리(dictionary), 셋(set), 문자열(string) 등이 있음.
+특히 나는 리스트에서 중복 원소 제거할 때 for문 돌면서 막 지우지 말고 그냥 set변환 한번 했다가 다시 리스트로 변환하곤 했음.!&lt;/p&gt;
+
+&lt;p&gt;뮤터블 객체는 리스트, 튜플, 셋임. 따라서 뮤터블 객체를 다른 변수에 담고 수정하면 함께 수정이 됨. 따라서 .copy() 같은 걸 이용해서 복사해서 넣어줘야 같이 동시에 수정이 안됨.
+이 외에 이뮤터블 객체들은 복사해서 넣어주지 않아도 동시에 수정이 안됨.!&lt;/p&gt;
+
+&lt;p&gt;리스트 슬라이싱, 딕셔너리 사용법은 내가 대충 알고 있으므로 따로 자세히 정리하지는 않겠음.
+!!튜플은 삽입, 삭제가 안됨.&lt;/p&gt;
+
+&lt;h4 id=&quot;리스트의-시간복잡도&quot;&gt;리스트의 시간복잡도&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;list.append() : 맨 뒤에 그냥 넣으면 되므로 O(1)&lt;/li&gt;
+  &lt;li&gt;list.insert(i, num) : i번째까지 가야하므로 O(n)&lt;/li&gt;
+  &lt;li&gt;list.pop() : 맨 뒤에 그냥 제거하면 되므로 O(1)&lt;/li&gt;
+  &lt;li&gt;list.remove(num) : num을 list에서 찾아내는데 걸리는 시간 O(n), 삽입 시간 O(1) =&amp;gt; O(n)&lt;/li&gt;
+  &lt;li&gt;list.extend([list2]) : 맨 뒤에 list2 원소들을 하나씩 append 하므로 O(1)이 k번 =&amp;gt; O(k)&lt;/li&gt;
+  &lt;li&gt;list[k] : 접근 자체는 상수 시간 O(1) (연결리스트는 O(n)으로 알고 있는데 그 리스트가 아닌 것 같다.?)&lt;/li&gt;
+  &lt;li&gt;list1+list2 : list.extend는 기존 리스트에 append하므로 O(k)였지만 얘는 새로 빈 리스트에 list1, list2원소를 모두 append하기 때문에 O(n+m)&lt;/li&gt;
+  &lt;li&gt;list(set(list)) : 시간복잡도가 O(n)&lt;/li&gt;
+  &lt;li&gt;k in list : k를 찾아서 존재여부를 리턴하므로 탐색 시 걸리는 O(n)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;딕셔너리의-시간복잡도&quot;&gt;딕셔너리의 시간복잡도&lt;/h4&gt;
+&lt;p&gt;딕셔너리는 리스트와 달리 탐색에 걸리는 시간이 모두 상수시간이다.&lt;/p&gt;
+
+&lt;p&gt;따라서 dic.get[key], dic[key], dic.pop(key) 모두 O(1).&lt;/p&gt;
+
+&lt;h4 id=&quot;셋의-시간복잡도&quot;&gt;셋의 시간복잡도&lt;/h4&gt;
+&lt;p&gt;set은 add, remove, discard는 모두 O(1) 상수시간에 이루어진다. 나머지는&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;set1.union(set2): O(len(set1)+len(set2)) (셋 안에 모든 요소를 흩으므로)&lt;/li&gt;
+  &lt;li&gt;set1.intersection(set2): O(min(len(set1), len(set2)))&lt;/li&gt;
+  &lt;li&gt;set1.difference(set2) : O(len(set1))&lt;/li&gt;
+  &lt;li&gt;list(set(set1)) : O(len(set1)) (모든 요소를 list에 append)&lt;/li&gt;
+  &lt;li&gt;k in set1 : 탐색은 O(1)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;문자열의-시간복잡도&quot;&gt;문자열의 시간복잡도&lt;/h4&gt;
+&lt;p&gt;문자열은 내가 잘 모르는 문법도 있어서 좀 정리를 해보겠다. (ㅠ)&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;str1 + str2 : O(str1+str2) 두 문자열을 더함&lt;/li&gt;
+  &lt;li&gt;delimiter.join(string_list) : O(총 문자열 길이) string list를 delimiter로 연결&lt;/li&gt;
+  &lt;li&gt;str.replace(old, new) : O(n) 특정 문자를 찾아 변경&lt;/li&gt;
+  &lt;li&gt;str.split(sep) : O(n) sep 기준으로 문자열 split (리스트 리턴)&lt;/li&gt;
+  &lt;li&gt;str.startswith(prefix) : O(len(prefix)) prefix로 문자열이 시작하는지 체크&lt;/li&gt;
+  &lt;li&gt;str.endswith(suffix) : O(len(suffix)) suffix로 문자열이 끝나는지 체크 (뒤에서부터 탐색)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;람다식함수&quot;&gt;람다식(함수)&lt;/h3&gt;
+&lt;p&gt;람다식은 다음처럼 정의함! c에는 못 본 거라 내가 잘 쓸 줄 모름(ㅠ)&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;람다로 간단하게 함수를 위처럼 정의하고 변수에 담아서 부를 수도 있고, 아니면 인수로 람다식을 넘기는 방법도 있다. 두번째를 오며가며 더 많이 본 것 같다..?&lt;/p&gt;</content><author><name>이정목</name></author><category term="CS" /><category term="CS" /><category term="algorithm" /><category term="시간복잡도" /><category term="time complexity" /><category term="코딩 테스트 합격자 되기" /><summary type="html">**코딩테스트 합격자 되기 파이썬편 1주차 스터디 내용을 정리해본다! 코딩 테스트 합격자 되기 - 파이썬 편</summary></entry><entry><title type="html">[백준] 10775 공항</title><link href="http://localhost:4000/blog/10775-%EA%B3%B5%ED%95%AD/" rel="alternate" type="text/html" title="[백준] 10775 공항" /><published>2022-10-08T09:00:00+09:00</published><updated>2022-10-08T09:00:00+09:00</updated><id>http://localhost:4000/blog/10775-%EA%B3%B5%ED%95%AD</id><content type="html" xml:base="http://localhost:4000/blog/10775-%EA%B3%B5%ED%95%AD/">&lt;p&gt;단계별로 풀어보기 문제를 보다가 내가 예전에 틀린 문제가 있어서 가져와보았다! 유니온 파인드 개념을 쓰는 문제였는데, 유니온 파인드 개념을 전혀 기억을 못해서 유니온 파인드 개념부터 공부해서 풀었다.
 차근차근 한문제씩 풀어 나가는 게 나의 목표이다.&lt;/p&gt;
 
 &lt;h3 id=&quot;문제-설명&quot;&gt;문제 설명&lt;/h3&gt;
@@ -1467,192 +1473,4 @@ four tokenization configuration 유무
     &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
     
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>이정목</name></author><category term="PS" /><category term="백준" /><category term="dp" /><category term="냅색" /><category term="양팔저울" /><summary type="html">방학 때 또 1일1커밋을 해보기 위해서 오랜만에 블로그를 잡았다! 꼬박꼬박 공부해서 문제를 다 잘 풀 수 있었으면 좋겠다.</summary></entry><entry><title type="html">[MAR] Fast Enhanced CT Metal Artifact Reduction Using Data Domain Deep Learning (deepMAR)</title><link href="http://localhost:4000/blog/deepMAR/" rel="alternate" type="text/html" title="[MAR] Fast Enhanced CT Metal Artifact Reduction Using Data Domain Deep Learning (deepMAR)" /><published>2022-06-27T09:00:00+09:00</published><updated>2022-06-27T09:00:00+09:00</updated><id>http://localhost:4000/blog/MAR1</id><content type="html" xml:base="http://localhost:4000/blog/deepMAR/">&lt;p&gt;이번에는 내가 하고 있던 metal artifact reduction에 대한 논문 리뷰이다! MAR은 이미지 postprocessing이랑 preprocessing으로 나눠져서 이미지 도메인을 쓰는 방법론이랑, 사이노그램 도메인을 쓰는 방법론 이렇게 두개가 있는데, 여기서는 사이노그램 도메인을 이용하여 metal artifact를 지웠다!&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://arxiv.org/abs/1904.04691&quot;&gt;논문 링크&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;→ The presence of dense materials, such as metals, can strongly attenuate or even completely block X-rays, producing severe streaking artifacts in the FBP reconstruction.&lt;/p&gt;
-
-&lt;p&gt;CT를 촬영하면 1차적으로 사이노그램 이미지가 나오게 되는데, 이것을 다시 CT image로 reconstruction을 하기 위해서 FBP(Filtered back projection)이라는 방법을 사용하게 된다. 그런데 이때 CT 안에 dense material이 존재 시 streaking artifact를 만들고, 이는 이미지 품질에 매우 치명적이다. 그래서 metal artifact reduction(MAR)를 하는 여러 방법론들이 제안되고 있는 것이다.&lt;/p&gt;
-
-&lt;p&gt;The standard practical approaches to reducing metal artifacts in CT imagery are either simplistic nonadaptive interpolation-based projection data completion methods or direct image post-processing method, which had limited success.
-traditional method such as interpolation-based projection data completion methods(지워진 부분에서 중간값을 취하는 방법) 등이 잘 못하므로, 딥러닝을 이용한 방법론을 활용하는 추세가 점점 늘어나고 있다.&lt;/p&gt;
-
-&lt;p&gt;⇒ This paper aims to reduce metal artifacts in CT images by applying deep learning(DL) directly in the projection-domain, prior to image formation. (우리는 따라서 딥러닝을 이용한 MAR 방법을 제안하고, 이것은 image formation 전에 projection-domain에서 이루어질 것임.)&lt;/p&gt;
-
-&lt;h2 id=&quot;materials-and-methods&quot;&gt;Materials and Methods&lt;/h2&gt;
-&lt;h3 id=&quot;identification-and-suppression-of-metal-contaminated-projection-data&quot;&gt;identification and suppression of metal-contaminated projection data&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_1.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
-In order to identify the metal-contaminated projection data a conventional FBP reconstruction using th eoriginal sinogram is first generated.&lt;/p&gt;
-
-&lt;p&gt;Thresholding followed by morphological operations are then used to segment the metallic objects in the image, which are forward projected to generate a mask, M.&lt;/p&gt;
-
-&lt;p&gt;(Thresholding이 사용되었고, morphological operation(erosion, dilation)이 후처리에 이용된다)
-mask가 generate ⇒ inpainting 모델의 적용 가능성&lt;/p&gt;
-
-&lt;p&gt;mask는 실제 metal부분보다 조금 더 크게 설정하여, 모든 artifact를 확실히 지우도록 했다.&lt;/p&gt;
-
-&lt;h3 id=&quot;cgan-based-sinogram-completion&quot;&gt;cGAN based sinogram completion&lt;/h3&gt;
-&lt;p&gt;overall mini-max objective function:
-&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_2.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;x: input (incomplete-data), y: ground truth (true complete-data sinograms)
-Discriminator loss의 포함이 l2 only loss를 사용했을 때 비해 전체적인 결과를 향상시켜주었다.
-또한 두번째 term에서 l1 loss의 사용보다 l2 loss의 사용이 더 좋은 performance를 보여주었다.&lt;/p&gt;
-
-&lt;p&gt;LcGAN(G, D):
-&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_3.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
-Ex : expectation over incomplete data density, approximated by averaging over input training data samples x.&lt;/p&gt;
-
-&lt;h4 id=&quot;generator&quot;&gt;Generator&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_4.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
-modified U-Net architecture with a fully convoluiontal architecture가 사용되었음.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;U-Net의 skip connection 사용, layer i와 layer n-i를 concat하는 방식.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Convolutional kernels of size 5x5 with a stride of 2 are used at each layer for both the generator and discriminator networks.&lt;/p&gt;
-
-&lt;p&gt;Down-sampling에서 max-pooling대신 two-pixel strided convolutions를 사용&lt;/p&gt;
-
-&lt;p&gt;Up-sampling에서는 transposed convolutions with two-pixel strides가 사용됨.&lt;/p&gt;
-
-&lt;p&gt;Overall 6 downsampling and 6 upsampling layer를 사용&lt;/p&gt;
-
-&lt;p&gt;stride-2 convolution이 stride-1 convolution과 비교했을 때 훨씬 큰 practical effective receptive field(ERF)를 제공함
-https://arxiv.org/pdf/1701.04128.pdf ⇒ 여기서 ERF 개념이 소개됨.&lt;/p&gt;
-
-&lt;p&gt;Receptive Field : 각 단계의 입력 이미지에 대해 하나의 필터가 커버할 수 있는 이미지 영역
-theoretical ERF는 layer수와 함께 증가&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;6 downsampling layer와 6 umsampling layer에서는 theoretical ERF가 757x757
-  ⇒ 굉장히 큰 sinogram도 handle&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Kernel size또한 ERF에 근거하여 설정되었음.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;smaller kernels would require more layers to achieve a desired ERF&lt;/li&gt;
-  &lt;li&gt;larger kernels would result in many more learning parameters needing estimation&lt;/li&gt;
-  &lt;li&gt;Empirical testing showed that 5x5 convolutional kernels with a shallower architecture perform better than 3x3 convolutional kernels with a deeper architecture.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Dropout이 overfitting을 방지하기 위해 마지막 layer에 사용되었음. (BN 다음에)&lt;/p&gt;
-
-&lt;h4 id=&quot;discriminator&quot;&gt;Discriminator&lt;/h4&gt;
-&lt;p&gt;based on the full sinogram image, instead of just patches&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Missing data follows sinusoidal structure, which would not be possible to accurately capture using a patch-based discriminator (missing data부분이 사인파 형태를 띄기 때문에 patch기반 discriminator가 형태를 정확히 잡아내기 어렵다)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;By using mask-specific sinogram completion our loss function is focused on the areas of most interest - where the data is missing.
-(loss function이 mask부분만 맞추도록 element-wise multiplication을 진행)
-generator network output is given by : G(x) = x + M ⊙ x_D1
-(x_D1 : the output of the last layer of the generator network, M : the metal mask, ⊙ element-wise multiplication)&lt;/p&gt;
-
-&lt;p&gt;⇒ Inpainting&lt;/p&gt;
-
-&lt;h3 id=&quot;efficient-fbp-image-reconstruction-and-reinsertion-of-metal-objects-back-into-the-reconstructed-image&quot;&gt;efficient FBP image reconstruction and reinsertion of metal objects back into the reconstructed image&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;Model의 output인 complete-data sinograms에 FBP를 진행 ⇒ 우리가 아는 CT image가 생성&lt;/li&gt;
-  &lt;li&gt;FBP 이후의 이미지에는 metal위치가 뚫려 있음. 따라서 metal object의 reinsertion 진행&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;dataset-generation&quot;&gt;Dataset Generation&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;Transfer Learning (전이 학습)
-    &lt;ul&gt;
-      &lt;li&gt;In the security domain there is a great diversity of possible objects in a scene, yet the amount of physical CT data avilable for training is severely limited.&lt;/li&gt;
-      &lt;li&gt;To address this limitation, we generated a training set for sinogram completion using physically accurate X-ray simulation tools.&lt;/li&gt;
-      &lt;li&gt;After initinal training, our networks are then refined with available physical data through transfer learning.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Areas without metal are considered background(air) in this work. This approach makes the problem more tractable since the network can focus on a smaller space of possibilities.  (메탈이 없는 부분은 air로 간주, 따라서 네트워크가 더 작은 가능성에 집중할 수 있다. ⇒ 메탈이 있으면 티슈 외의 메탈 부분을 맞추기 위해서 모델이 메탈에 더 집중.)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;simulated-training-data-generation&quot;&gt;Simulated Training Data Generation&lt;/h4&gt;
-&lt;p&gt;&lt;strong&gt;1) Physically accurate X-ray scanner model&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;We can accurately model the data obtained from such scanners as a sum of mono-engergetic sinograms weighted by the corresponding relative strength of the source spectrum.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_5.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I_(i): relative X-ray source intensity at enery E(i), I_j(i): Sinogram contribution at engergy E(i) for ray-path j corresponding to the line Lj(Beer-Lambert law사용)&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_6.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;The projection data contributions are degraded by data-dependent and electronic noise ⇒ Poisson distribution, Gaussian zero-mean으로 표현&lt;/li&gt;
-  &lt;li&gt;By incorporating a full energy aware x-ray model, effects such as beam hardening are inherently included. (Beam hardening과 같은 효과도 연출이 가능하다.)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;2) Stochastic bag simulator&lt;/strong&gt;
-This bag or scene simulator places objects of different material composition(티슈 부분을 랜덤으로 표현) and of varying geometric configuration at random locations in the scene.&lt;/p&gt;
-
-&lt;p&gt;uses material attenuation coefficients drawn from the NIST XCOM database.
-&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_7.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;real-training-data-generation&quot;&gt;Real Training Data Generation&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Acquiring physical matched sinogram pairs with and without metal objects for training is a challenge&lt;/li&gt;
-  &lt;li&gt;Our approach only requires metal-trace masked and corresponding metal-free complete sinograms for CGAN training since we are focusing our learning on missing data completion. (우리의 방식은 단순히 metal mask와 metal이 없는 사이노그램 이미지이므로, 실제 전체 Metal 이미지를 얻을 필요가 없다.)&lt;/li&gt;
-  &lt;li&gt;We can use sinogram data from scenes which do not contain metal objects, and then create matched sinograms by deleting data in the sinogram that corresponds to geometric configurations of embedded objects.
-⇒ metal이 없는 clean한 sinogram에서 geometric configurations 부분만 간단히 삭제하면 됨. (꼭 metal이 있는 이미지가 필요 없음!)&lt;/li&gt;
-  &lt;li&gt;metal mask identified by applying a threshold of 4000 Modified Hounsfield Units(MHU = 1000 + -1000(μ-μ_water)/μ_water.
-p Threshold mask results were eroded(used to remove very small objects) and dilated with a disk-shaped structuring element of radius 2 and 4 pixels respectively to obtain a final metal mask.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;result&quot;&gt;Result&lt;/h2&gt;
-&lt;p&gt;LI-MAR와 WNN-MAR와 우리 DeepMAR가 비교되었고, simulated data와 real data 모두에 대해 진행되었다.&lt;/p&gt;
-
-&lt;h3 id=&quot;sinogram-completion-experiments&quot;&gt;Sinogram Completion Experiments&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_8.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;(a)가 simulated data, (b), (c)가 real data.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;simulated data에 대해 LI-MAR와 WNN-MAR에 비해 각각 89%, 87% 더 MSE가 적었음.&lt;/li&gt;
-  &lt;li&gt;real data에 대해 80%, 75% 더 MSE가 적었음.&lt;/li&gt;
-  &lt;li&gt;Transfer learning을 사용했을 때 31% 정도의 성능 향상이 있었다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;simulated-data-reconstruction-experiments&quot;&gt;Simulated Data Reconstruction Experiments&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_9.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
-&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_10.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Deep-MAR에서 모두 결과가 매우 향샹되었음. artifact가 가장 잘 제거된 모습을 볼 수 있음.&lt;/li&gt;
-  &lt;li&gt;SSIM, PSNR의 향상이 의미하는 것: Deep-MAR approach not only performs well in qualitatively suppressing metal artifacts, but is also good at correcting the underlying attenuation values, and correct attenuation numbers are important for the successful functioning of security algorithms.&lt;/li&gt;
-  &lt;li&gt;(metal artifact를 눈으로 봤을 때 잘 줄이는 것 뿐만 아니라, 감쇠된 부분을 잘 맞춘다는 것을 의미 ⇒ 다른 security algorithms의 작동에 있어서도 중요 (진짜 데이터 같다는 의미)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;real-data-reconstruction-experiments&quot;&gt;Real Data Reconstruction Experiments&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_11.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
-&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_12.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;
-기존의 방법들은 오히려 streak artifact가 생겨나는 경우도 존재하지만, Deep-MAR는 가장 자연스럽게 채운 것을 볼 수 있음&lt;/p&gt;
-
-&lt;h3 id=&quot;attention-maps&quot;&gt;Attention Maps&lt;/h3&gt;
-&lt;p&gt;Zeiler and Fergus의 Image to Image translation 연구에서 사용한 방법인데,&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Compute attention maps by occluding different regions of the input image and examining the resulting impace on performance of the deep network on the corresponding image classification task.&lt;/li&gt;
-  &lt;li&gt;The idea is that occlusion of more important image areas to the network will correspondingly have greater resulting performance impact.&lt;/li&gt;
-  &lt;li&gt;In this work, we apply this idea by repeatedly replacing an 11x11 patch of sinogram values with random data sampled from a uniform distribution U(0, m) and then examining the resulting sinogram completion performance.&lt;/li&gt;
-  &lt;li&gt;(11x11 patch의 사이노그램 값들을 U(0, m)으로 바꿔치기후, performance가 어떻게 바뀌는지를 조사)&lt;/li&gt;
-  &lt;li&gt;We then compute the corresponding MSE for the sinogram regions completed by learned network and generate a 2-D attention map by associating this MSE value with the center of the corresponding noise patch.&lt;/li&gt;
-  &lt;li&gt;(해당하는 region의 MSE를 계산 후, 이 MSE value와 해당 noise patch에 대한 2-D attention map을 그렸다.
-Metal artifact reduction은 gt가 없어서 평가가 매우 어려운데, 이러한 식으로 모델이 mask안을 채울 때 주변 픽셀들을 얼마나 참고하고 있는지를 visualize하여 성능 평가를 할 수 있는 척도 중 하나로 사용한 것이다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://github.com/JungMok-Lee/JungMok-Lee.github.io/blob/master/assets/images/2022_06_27_13.png?raw=true&quot; alt=&quot;이미지&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;모든 그림에서 metal mask 주변의 attention이 강하게 나타나는 것을 볼 수 있다. (pixels closest to the missing data appear to be the most important in generating an estimate, which seems logical)&lt;/p&gt;
-
-&lt;p&gt;(a), (b)는 메탈이 하나일때의 결과, (c), (d)는 메탈이 5개 일 때의 결과(challenging)이고, 
-(c), (d)에서 전체적인 attention map의 수치가 높아진 것을 확인 가능하다.&lt;/p&gt;
-
-&lt;h2 id=&quot;discussion&quot;&gt;Discussion&lt;/h2&gt;
-&lt;p&gt;따라서 논문의 contribution은 두개 이다.&lt;/p&gt;
-
-&lt;p&gt;MAR 문제에 대해 Deep-MAR라는 DL-based framework를 제안하였다. 그리고 딥러닝에서 발생하는 training data 확보 문제를 해결하기 위해, transfer learning을 활용한 방법론이다. 이때, simulated training data에서 학습 후 (얼마 없는) real data에서 transfer learning을 함으로써 성능을 확보하였다.&lt;/p&gt;</content><author><name>이정목</name></author><category term="AI" /><category term="AI" /><category term="MAR" /><category term="inpainting" /><summary type="html">이번에는 내가 하고 있던 metal artifact reduction에 대한 논문 리뷰이다! MAR은 이미지 postprocessing이랑 preprocessing으로 나눠져서 이미지 도메인을 쓰는 방법론이랑, 사이노그램 도메인을 쓰는 방법론 이렇게 두개가 있는데, 여기서는 사이노그램 도메인을 이용하여 metal artifact를 지웠다!</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>이정목</name></author><category term="PS" /><category term="백준" /><category term="dp" /><category term="냅색" /><category term="양팔저울" /><summary type="html">방학 때 또 1일1커밋을 해보기 위해서 오랜만에 블로그를 잡았다! 꼬박꼬박 공부해서 문제를 다 잘 풀 수 있었으면 좋겠다.</summary></entry></feed>
